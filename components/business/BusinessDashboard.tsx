@@ -11,12 +11,13 @@ import { JobsList } from './JobsList'
 import { ApplicationsList } from './ApplicationsList'
 import { ProfilePage } from './ProfilePage'
 import { PostJobModal } from './PostJobModal'
+import { AnalyticsPage } from './AnalyticsPage'
 
-type TabType = 'jobs' | 'applications' | 'profile'
+type TabType = 'dashboard' | 'jobs' | 'applications' | 'analytics' | 'profile'
 
 export function BusinessDashboard() {
   const { user } = useAuth()
-  const [activeTab, setActiveTab] = useState<TabType>('jobs')
+  const [activeTab, setActiveTab] = useState<TabType>('dashboard')
   const [showPostJobModal, setShowPostJobModal] = useState(false)
 
   useEffect(() => {
@@ -30,14 +31,18 @@ export function BusinessDashboard() {
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'dashboard':
+        return <AnalyticsPage />
       case 'jobs':
         return <JobsList />
       case 'applications':
         return <ApplicationsList />
+      case 'analytics':
+        return <AnalyticsPage />
       case 'profile':
         return <ProfilePage />
       default:
-        return <JobsList />
+        return <AnalyticsPage />
     }
   }
 

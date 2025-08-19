@@ -5,7 +5,7 @@ import { useAuth, UserType } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Building2, User, Star, Zap, Heart, Shield } from 'lucide-react'
+import { Building2, User, Star, Mail, Lock } from 'lucide-react'
 
 interface LoginProps {
   onToggleMode: () => void
@@ -40,207 +40,214 @@ export function Login({ onToggleMode }: LoginProps) {
 
     const success = await login(formData.email, formData.password, formData.userType)
     if (!success) {
-      setErrors({ general: 'Invalid credentials. Try demo accounts: business@demo.com or worker@demo.com with password "demo123"' })
+      setErrors({ general: 'Invalid credentials. Try demo accounts with password "demo123"' })
     }
   }
-
-  const floatingElements = [
-    { icon: Star, position: 'top-20 left-20', delay: '0s' },
-    { icon: Zap, position: 'top-32 right-32', delay: '0.5s' },
-    { icon: Heart, position: 'bottom-40 left-16', delay: '1s' },
-    { icon: Shield, position: 'bottom-20 right-20', delay: '1.5s' }
-  ]
 
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0" style={{background: '#000000'}}></div>
-
+      
       <div className="absolute inset-0">
-        {floatingElements.map((element, index) => {
-          const Icon = element.icon
-          return (
-            <div
-              key={index}
-              className={`absolute ${element.position} w-8 h-8 text-blue-400 opacity-20 animate-pulse`}
-              style={{ animationDelay: element.delay }}
-            >
-              <Icon className="w-full h-full" />
-            </div>
-          )
-        })}
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-purple-400 rounded-full animate-particle-float opacity-20"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 4}s`,
+              animationDuration: `${4 + Math.random() * 6}s`
+            }}
+          />
+        ))}
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-transparent to-purple-600/5"></div>
-
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 via-transparent to-pink-600/5"></div>
+      <div className="absolute top-20 left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-20 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+      
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-6xl flex items-center justify-center gap-12">
-          <div className={`hidden lg:block flex-1 transform transition-all duration-1000 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'}`}>
-            <div className="text-center space-y-8">
-              <div className="flex items-center justify-center mb-8">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-2xl">
-                  <span className="text-white font-bold text-3xl">W</span>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h1 className="text-5xl font-bold">
-                  <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
-                    Welcome to Worksta
-                  </span>
-                </h1>
-                <p className="text-xl text-text-secondary leading-relaxed max-w-lg mx-auto">
-                  Southeast Asia's premier platform connecting F&B businesses with talented gig workers in real-time
-                </p>
-              </div>
-
-              <div className="grid grid-cols-3 gap-6 max-w-md mx-auto">
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mx-auto mb-3">
-                    <Zap className="w-6 h-6 text-white" />
-                  </div>
-                  <p className="text-sm text-text-muted">Lightning Fast</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-3">
-                    <Shield className="w-6 h-6 text-white" />
-                  </div>
-                  <p className="text-sm text-text-muted">Secure & Trusted</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center mx-auto mb-3">
-                    <Heart className="w-6 h-6 text-white" />
-                  </div>
-                  <p className="text-sm text-text-muted">Built for F&B</p>
-                </div>
-              </div>
-
-              <div className="space-y-3 text-sm text-text-muted">
-                <div className="flex items-center justify-center gap-6">
-                  <span className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-yellow-400" />
-                    4.8/5 Rating
-                  </span>
-                  <span>500+ Businesses</span>
-                  <span>2.5K+ Workers</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={`w-full max-w-md transform transition-all duration-1000 delay-300 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-20 opacity-0'}`}>
-            <Card className="backdrop-blur-xl bg-bg-card/80 border-border-color/50 shadow-2xl">
-              <CardHeader className="text-center pb-6">
-                <div className="lg:hidden flex items-center justify-center mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                    <span className="text-white font-bold text-xl">W</span>
-                  </div>
-                </div>
-                <CardTitle className="text-2xl mb-2">
-                  <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                    Sign In
-                  </span>
-                </CardTitle>
-                <p className="text-text-muted text-sm">Welcome back! Please sign in to continue</p>
-              </CardHeader>
-
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {errors.general && (
-                    <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm backdrop-blur-sm">
-                      {errors.general}
-                    </div>
-                  )}
-
-                  <div className="space-y-3">
-                    <p className="text-sm font-medium text-text-primary">I am a:</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        className={`group relative p-4 rounded-xl border text-sm font-medium transition-all duration-300 overflow-hidden ${
-                          formData.userType === 'business'
-                            ? 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-blue-400 text-blue-400 shadow-lg'
-                            : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-blue-400/50 hover:bg-bg-card'
-                        }`}
-                        onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
-                      >
-                        <div className="flex flex-col items-center gap-2 relative z-10">
-                          <Building2 className="w-5 h-5" />
-                          <span>Business</span>
-                        </div>
-                        {formData.userType === 'business' && (
-                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent"></div>
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        className={`group relative p-4 rounded-xl border text-sm font-medium transition-all duration-300 overflow-hidden ${
-                          formData.userType === 'worker'
-                            ? 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-blue-400 text-blue-400 shadow-lg'
-                            : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-blue-400/50 hover:bg-bg-card'
-                        }`}
-                        onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
-                      >
-                        <div className="flex flex-col items-center gap-2 relative z-10">
-                          <User className="w-5 h-5" />
-                          <span>Worker</span>
-                        </div>
-                        {formData.userType === 'worker' && (
-                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent"></div>
-                        )}
-                      </button>
+        <div className="w-full max-w-lg">
+          <div className={`transform transition-all duration-1000 ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-purple-600/10 to-pink-500/20 blur-2xl rounded-3xl"></div>
+              <Card className="relative glass-card border-purple-500/30 shadow-2xl rounded-3xl overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600"></div>
+                
+                <CardHeader className="text-center pb-6 pt-8">
+                  <div className="flex items-center justify-center mb-6">
+                    <div className="relative">
+                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-2xl animate-glow">
+                        <span className="text-white font-bold text-3xl">W</span>
+                      </div>
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full animate-bounce"></div>
+                      <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
                     </div>
                   </div>
-
-                  <Input
-                    label="Email Address"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    error={errors.email}
-                    placeholder="Enter your email"
-                  />
-
-                  <Input
-                    label="Password"
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                    error={errors.password}
-                    placeholder="Enter your password"
-                  />
-
-                  <Button type="submit" className="w-full h-12 text-lg font-semibold" loading={loading}>
-                    {loading ? 'Signing In...' : 'Sign In'}
-                  </Button>
-                </form>
-
-                <div className="mt-8 text-center">
-                  <button
-                    onClick={onToggleMode}
-                    className="text-blue-400 hover:text-blue-300 text-sm transition-colors font-medium"
-                  >
-                    Don't have an account? <span className="underline">Sign up here</span>
-                  </button>
-                </div>
-
-                <div className="mt-6 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl border border-blue-500/20 backdrop-blur-sm">
-                  <p className="text-xs text-blue-300 text-center mb-3 font-medium">🚀 Try Demo Accounts</p>
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="bg-bg-tertiary/50 p-2 rounded-lg">
-                      <p className="text-blue-400 font-semibold">Business</p>
-                      <p className="text-text-muted">business@demo.com</p>
-                    </div>
-                    <div className="bg-bg-tertiary/50 p-2 rounded-lg">
-                      <p className="text-green-400 font-semibold">Worker</p>
-                      <p className="text-text-muted">worker@demo.com</p>
-                    </div>
-                  </div>
-                  <p className="text-center text-text-muted text-xs mt-2">
-                    Password: <span className="text-yellow-400 font-mono">demo123</span>
+                  
+                  <CardTitle className="text-3xl mb-2 font-bold">
+                    <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent animate-gradient-shift">
+                      Welcome to Worksta
+                    </span>
+                  </CardTitle>
+                  <p className="text-text-muted text-sm">
+                    🚀 Southeast Asia's premier gig economy platform
                   </p>
-                </div>
-              </CardContent>
-            </Card>
+                  
+                  <div className="flex items-center justify-center gap-6 mt-4 text-xs text-text-muted">
+                    <span className="flex items-center gap-1">
+                      <Star className="w-3 h-3 text-yellow-400" />
+                      4.8/5
+                    </span>
+                    <span>500+ Businesses</span>
+                    <span>2.5K+ Workers</span>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="px-8 pb-8">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {errors.general && (
+                      <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm backdrop-blur-sm">
+                        {errors.general}
+                      </div>
+                    )}
+
+                    <div className="space-y-4">
+                      <p className="text-sm font-semibold text-text-primary flex items-center justify-center gap-2">
+                        <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+                        I am a:
+                        <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+                      </p>
+                      <div className="grid grid-cols-2 gap-4">
+                        <button
+                          type="button"
+                          className={`group relative p-5 rounded-xl border-2 text-sm font-semibold transition-all duration-300 overflow-hidden ${
+                            formData.userType === 'business'
+                              ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-300 shadow-lg shadow-purple-500/25'
+                              : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
+                          }`}
+                          onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
+                        >
+                          <div className="flex flex-col items-center gap-3 relative z-10">
+                            <div className={`p-3 rounded-xl ${formData.userType === 'business' ? 'bg-purple-500/20' : 'bg-gray-700/20'}`}>
+                              <Building2 className="w-6 h-6" />
+                            </div>
+                            <span>🏢 Business</span>
+                            <span className="text-xs opacity-75">Hire workers</span>
+                          </div>
+                          {formData.userType === 'business' && (
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent animate-pulse"></div>
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          className={`group relative p-5 rounded-xl border-2 text-sm font-semibold transition-all duration-300 overflow-hidden ${
+                            formData.userType === 'worker'
+                              ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-300 shadow-lg shadow-purple-500/25'
+                              : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
+                          }`}
+                          onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
+                        >
+                          <div className="flex flex-col items-center gap-3 relative z-10">
+                            <div className={`p-3 rounded-xl ${formData.userType === 'worker' ? 'bg-purple-500/20' : 'bg-gray-700/20'}`}>
+                              <User className="w-6 h-6" />
+                            </div>
+                            <span>👤 Worker</span>
+                            <span className="text-xs opacity-75">Find work</span>
+                          </div>
+                          {formData.userType === 'worker' && (
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent animate-pulse"></div>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-400" />
+                        <Input
+                          label="Email Address"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                          error={errors.email}
+                          placeholder="Enter your email"
+                          className="pl-12"
+                        />
+                      </div>
+
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-400" />
+                        <Input
+                          label="Password"
+                          type="password"
+                          value={formData.password}
+                          onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                          error={errors.password}
+                          placeholder="Enter your password"
+                          className="pl-12"
+                        />
+                      </div>
+                    </div>
+
+                    <Button type="submit" className="w-full h-14 text-lg font-bold relative overflow-hidden group" loading={loading}>
+                      <span className="relative z-10 flex items-center justify-center gap-2">
+                        {loading ? (
+                          <>
+                            <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                            Signing In...
+                          </>
+                        ) : (
+                          <>
+                            ✨ Sign In
+                          </>
+                        )}
+                      </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </Button>
+                  </form>
+
+                  <div className="mt-8 text-center">
+                    <button
+                      onClick={onToggleMode}
+                      className="text-purple-400 hover:text-purple-300 text-sm transition-colors font-medium group"
+                    >
+                      Don't have an account? <span className="underline group-hover:no-underline">✨ Sign up here</span>
+                    </button>
+                  </div>
+
+                  <div className="mt-6 p-5 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl border border-purple-500/30 backdrop-blur-sm relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-purple-600/5 to-pink-600/5 animate-pulse"></div>
+                    <div className="relative z-10">
+                      <p className="text-sm text-purple-300 text-center mb-4 font-bold flex items-center justify-center gap-2">
+                        🎯 Try Demo Accounts
+                        <span className="px-2 py-1 bg-purple-500/20 rounded-full text-xs">FREE</span>
+                      </p>
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 p-3 rounded-xl border border-purple-500/30">
+                          <p className="text-purple-300 font-bold flex items-center gap-1">
+                            🏢 Business
+                          </p>
+                          <p className="text-text-muted mt-1">business@demo.com</p>
+                        </div>
+                        <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-3 rounded-xl border border-purple-500/30">
+                          <p className="text-purple-300 font-bold flex items-center gap-1">
+                            👤 Worker
+                          </p>
+                          <p className="text-text-muted mt-1">worker@demo.com</p>
+                        </div>
+                      </div>
+                      <div className="text-center mt-4 p-2 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg border border-yellow-500/20">
+                        <p className="text-yellow-300 text-xs font-mono">
+                          🔑 Password: <span className="font-bold">demo123</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>

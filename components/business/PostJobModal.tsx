@@ -97,7 +97,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
       <div className="glass-effect border border-border-color rounded-xl w-full max-w-4xl max-h-[85vh] overflow-hidden shadow-2xl">
         <div className="p-4 border-b border-border-color/50">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Post a New Gig</h2>
+            <h2 className="text-lg font-semibold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">✨ Post a New Gig</h2>
             <button
               onClick={onClose}
               className="p-2 hover:bg-bg-tertiary rounded-lg transition-all duration-200 hover:scale-110"
@@ -231,7 +231,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
 
           <div className="lg:col-span-2 flex gap-3 mt-6 pt-4 border-t border-border-color/50">
             <Button type="submit" loading={loading} className="flex-1 h-12">
-              {loading ? 'Posting...' : 'Post Job'}
+              {loading ? '🚀 Posting...' : '🎯 Post Job'}
             </Button>
             <Button type="button" variant="secondary" onClick={onClose} className="px-8">
               Cancel

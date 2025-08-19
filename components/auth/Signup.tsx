@@ -81,7 +81,7 @@ export function Signup({ onToggleMode }: SignupProps) {
 
               <div className="space-y-4">
                 <h1 className="text-5xl font-bold">
-                  <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-blue-500 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
                     Join Worksta Today
                   </span>
                 </h1>
@@ -143,7 +143,7 @@ export function Signup({ onToggleMode }: SignupProps) {
                   </div>
                 </div>
                 <CardTitle className="text-2xl mb-2">
-                  <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
                     Create Account
                   </span>
                 </CardTitle>
@@ -165,8 +165,8 @@ export function Signup({ onToggleMode }: SignupProps) {
                         type="button"
                         className={`group relative p-4 rounded-xl border text-sm font-medium transition-all duration-300 overflow-hidden ${
                           formData.userType === 'business'
-                            ? 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-blue-400 text-blue-400 shadow-lg'
-                            : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-blue-400/50 hover:bg-bg-card'
+                            ? 'bg-gradient-to-r from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-400 shadow-lg'
+                            : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
                         }`}
                         onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
                       >
@@ -179,8 +179,8 @@ export function Signup({ onToggleMode }: SignupProps) {
                         type="button"
                         className={`group relative p-4 rounded-xl border text-sm font-medium transition-all duration-300 overflow-hidden ${
                           formData.userType === 'worker'
-                            ? 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-blue-400 text-blue-400 shadow-lg'
-                            : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-blue-400/50 hover:bg-bg-card'
+                            ? 'bg-gradient-to-r from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-400 shadow-lg'
+                            : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
                         }`}
                         onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
                       >
@@ -292,7 +292,7 @@ export function Signup({ onToggleMode }: SignupProps) {
                 <div className="mt-8 text-center">
                   <button
                     onClick={onToggleMode}
-                    className="text-blue-400 hover:text-blue-300 text-sm transition-colors font-medium"
+                    className="text-purple-400 hover:text-purple-300 text-sm transition-colors font-medium"
                   >
                     Already have an account? <span className="underline">Sign in here</span>
                   </button>

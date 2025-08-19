@@ -13,18 +13,19 @@ import {
   FileCheck,
   Info,
   HelpCircle,
-  ExternalLink
+  ExternalLink,
+  TrendingUp
 } from 'lucide-react'
 import clsx from 'clsx'
 
-type TabType = 'jobs' | 'applications' | 'profile' | 'search'
+type TabType = 'dashboard' | 'jobs' | 'applications' | 'profile' | 'search'
 
 interface SidebarProps {
   activeTab?: TabType
   onTabChange?: (tab: TabType) => void
 }
 
-export function Sidebar({ activeTab = 'jobs', onTabChange }: SidebarProps) {
+export function Sidebar({ activeTab = 'dashboard', onTabChange }: SidebarProps) {
   const { user } = useAuth()
   const [currentTab, setCurrentTab] = useState(activeTab)
 
@@ -34,12 +35,14 @@ export function Sidebar({ activeTab = 'jobs', onTabChange }: SidebarProps) {
   }
 
   const businessNavItems = [
+    { id: 'dashboard' as TabType, label: 'Dashboard', icon: TrendingUp },
     { id: 'jobs' as TabType, label: 'My Jobs', icon: Briefcase },
     { id: 'applications' as TabType, label: 'Applications', icon: Users },
     { id: 'profile' as TabType, label: 'Profile', icon: User }
   ]
 
   const workerNavItems = [
+    { id: 'dashboard' as TabType, label: 'Dashboard', icon: TrendingUp },
     { id: 'search' as TabType, label: 'Find Jobs', icon: Search },
     { id: 'applications' as TabType, label: 'My Applications', icon: FileText },
     { id: 'profile' as TabType, label: 'Profile', icon: User }
@@ -58,11 +61,11 @@ export function Sidebar({ activeTab = 'jobs', onTabChange }: SidebarProps) {
     <aside className="w-64 bg-bg-secondary border-r border-border-color flex flex-col h-screen glass-effect">
       <div className="p-4 border-b border-border-color">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-lg">
             <span className="text-white font-bold text-lg">W</span>
           </div>
           <div>
-            <h2 className="font-bold text-lg bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+            <h2 className="font-bold text-lg bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
               Worksta
             </h2>
             <p className="text-xs text-text-muted capitalize">{user?.type} Dashboard</p>
@@ -114,10 +117,10 @@ export function Sidebar({ activeTab = 'jobs', onTabChange }: SidebarProps) {
           <div>
             <h3 className="text-sm font-semibold text-text-primary mb-3 px-3">Quick Stats</h3>
             <div className="space-y-2">
-              <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 p-3 rounded-lg border border-blue-500/20">
+              <div className="bg-gradient-to-r from-purple-500/10 to-purple-600/10 p-3 rounded-lg border border-purple-500/20">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-text-muted">This Month</span>
-                  <span className="text-lg font-bold text-blue-400">
+                  <span className="text-lg font-bold text-purple-400">
                     {user?.type === 'business' ? '12' : '8'}
                   </span>
                 </div>
@@ -158,10 +161,10 @@ export function Sidebar({ activeTab = 'jobs', onTabChange }: SidebarProps) {
           })}
         </div>
 
-        <div className="mt-4 p-3 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-lg border border-purple-500/20">
+        <div className="mt-4 p-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg border border-purple-500/20">
           <p className="text-xs text-purple-300 font-medium">Need Help?</p>
           <p className="text-xs text-text-muted mt-1">Contact our 24/7 support team</p>
-          <button className="text-xs text-blue-400 hover:text-blue-300 mt-2 font-medium">
+          <button className="text-xs text-purple-400 hover:text-purple-300 mt-2 font-medium">
             Get Support →
           </button>
         </div>

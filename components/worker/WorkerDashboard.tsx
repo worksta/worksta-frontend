@@ -8,15 +8,18 @@ import { AnimatedBackground } from '@/components/ui/AnimatedBackground'
 import { JobSearch } from './JobSearch'
 import { MyApplications } from './MyApplications'
 import { ProfilePage } from './ProfilePage'
+import { WorkerDashboardPage } from './WorkerDashboardPage'
 
-type TabType = 'search' | 'applications' | 'profile'
+type TabType = 'dashboard' | 'search' | 'applications' | 'profile'
 
 export function WorkerDashboard() {
   const { user } = useAuth()
-  const [activeTab, setActiveTab] = useState<TabType>('search')
+  const [activeTab, setActiveTab] = useState<TabType>('dashboard')
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'dashboard':
+        return <WorkerDashboardPage />
       case 'search':
         return <JobSearch />
       case 'applications':
@@ -24,7 +27,7 @@ export function WorkerDashboard() {
       case 'profile':
         return <ProfilePage />
       default:
-        return <JobSearch />
+        return <WorkerDashboardPage />
     }
   }
 

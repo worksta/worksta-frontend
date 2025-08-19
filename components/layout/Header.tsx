@@ -24,10 +24,10 @@ export function Header() {
     <header className="h-18 bg-bg-secondary border-b border-border-color flex items-center justify-between px-6 backdrop-blur-20 relative">
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-accent-primary flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-lg">
             <span className="text-white font-bold text-lg">W</span>
           </div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
             Worksta
           </h1>
         </div>
