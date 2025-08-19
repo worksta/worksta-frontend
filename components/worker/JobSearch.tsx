@@ -29,10 +29,8 @@ export function JobSearch() {
   const myApplications = getApplicationsByWorker(user?.id || '')
   const appliedJobIds = myApplications.map(app => app.jobId)
 
-  // Filter active jobs only
   const availableJobs = jobs.filter(job => job.status === 'active')
 
-  // Apply filters
   const filteredJobs = availableJobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          job.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -144,12 +142,12 @@ export function JobSearch() {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {filteredJobs.map((job) => {
+          {filteredJobs.map((job, index) => {
             const applied = isJobApplied(job.id)
             
             return (
-              <Card key={job.id} className="hover:border-accent-primary/50">
-                <CardContent className="p-6">
+              <Card key={job.id} className={`hover-lift group relative overflow-hidden glass-card animate-fadeInUp stagger-${Math.min(index + 1, 4)}`}>
+                <CardContent className="p-6 relative z-10">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">

@@ -22,7 +22,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Demo users
 const demoUsers: User[] = [
   {
     id: '1',

@@ -53,7 +53,6 @@ interface Notification {
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
-// Demo jobs
 const demoJobs: Job[] = [
   {
     id: '1',
@@ -121,7 +120,6 @@ const demoJobs: Job[] = [
   }
 ]
 
-// Demo applications
 const demoApplications: Application[] = [
   {
     id: '1',
@@ -156,9 +154,28 @@ const demoApplications: Application[] = [
 ]
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [jobs, setJobs] = useState<Job[]>(demoJobs)
-  const [applications, setApplications] = useState<Application[]>(demoApplications)
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [applications, setApplications] = useState<Application[]>([])
   const [notifications, setNotifications] = useState<Notification[]>([])
+
+  useEffect(() => {
+    const storedJobs = localStorage.getItem('worksta_jobs')
+    const storedApplications = localStorage.getItem('worksta_applications')
+
+    if (storedJobs) {
+      setJobs(JSON.parse(storedJobs))
+    } else {
+      setJobs(demoJobs)
+      localStorage.setItem('worksta_jobs', JSON.stringify(demoJobs))
+    }
+
+    if (storedApplications) {
+      setApplications(JSON.parse(storedApplications))
+    } else {
+      setApplications(demoApplications)
+      localStorage.setItem('worksta_applications', JSON.stringify(demoApplications))
+    }
+  }, [])
 
   const addJob = (job: Omit<Job, 'id' | 'createdAt'>) => {
     const newJob: Job = {
@@ -166,7 +183,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       id: Date.now().toString(),
       createdAt: new Date().toISOString()
     }
-    setJobs(prev => [newJob, ...prev])
+    const updatedJobs = [newJob, ...jobs]
+    setJobs(updatedJobs)
+    localStorage.setItem('worksta_jobs', JSON.stringify(updatedJobs))
   }
 
   const applyToJob = (jobId: string, workerId: string, workerName: string, workerAvatar: string, message?: string) => {
@@ -180,16 +199,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       appliedAt: new Date().toISOString(),
       message
     }
-    setApplications(prev => [...prev, newApplication])
+    const updatedApplications = [...applications, newApplication]
+    setApplications(updatedApplications)
+    localStorage.setItem('worksta_applications', JSON.stringify(updatedApplications))
     addNotification('Application submitted successfully!', 'success')
   }
 
   const updateApplicationStatus = (applicationId: string, status: 'accepted' | 'rejected') => {
-    setApplications(prev => 
-      prev.map(app => 
-        app.id === applicationId ? { ...app, status } : app
-      )
+    const updatedApplications = applications.map(app =>
+      app.id === applicationId ? { ...app, status } : app
     )
+    setApplications(updatedApplications)
+    localStorage.setItem('worksta_applications', JSON.stringify(updatedApplications))
     addNotification(`Application ${status}!`, status === 'accepted' ? 'success' : 'info')
   }
 
@@ -214,7 +235,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     setNotifications(prev => [notification, ...prev])
 
-    // Auto remove after 5 seconds
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== notification.id))
     }, 5000)

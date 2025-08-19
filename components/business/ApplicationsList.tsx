@@ -93,8 +93,8 @@ export function ApplicationsList() {
             if (!job) return null
 
             return (
-              <Card key={application.id} className="hover:border-accent-primary/50">
-                <CardContent className="p-6">
+              <Card key={application.id} className="hover-lift group glass-effect border-border-color/30">
+                <CardContent className="p-6 relative z-10">
                   <div className="flex items-start justify-between">
                     <div className="flex gap-4 flex-1">
                       <div className="text-3xl">{application.workerAvatar}</div>

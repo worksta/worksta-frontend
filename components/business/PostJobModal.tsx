@@ -93,141 +93,147 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-bg-card border border-border-color rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden">
-        <div className="p-6 border-b border-border-color">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="glass-effect border border-border-color rounded-xl w-full max-w-4xl max-h-[85vh] overflow-hidden shadow-2xl">
+        <div className="p-4 border-b border-border-color/50">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Post a New Gig</h2>
+            <h2 className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Post a New Gig</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-bg-tertiary rounded-lg transition-colors"
+              className="p-2 hover:bg-bg-tertiary rounded-lg transition-all duration-200 hover:scale-110"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
-        
-        <form onSubmit={handleSubmit} className="p-6 overflow-auto max-h-[calc(90vh-80px)]">
-          <div className="space-y-4">
-            <Input
-              label="Job Title"
-              value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              error={errors.title}
-              placeholder="e.g., Evening Server Needed"
-            />
 
-            <div className="form-group">
-              <label className="form-label">Description</label>
-              <textarea
-                className="form-input form-textarea"
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Describe the job, requirements, and expectations..."
-                rows={4}
+        <form onSubmit={handleSubmit} className="p-4 overflow-auto max-h-[calc(85vh-60px)]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="lg:col-span-2">
+              <Input
+                label="Job Title"
+                value={formData.title}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                error={errors.title}
+                placeholder="e.g., Evening Server Needed"
               />
-              {errors.description && (
-                <p className="text-sm text-red-400 mt-1">{errors.description}</p>
-              )}
             </div>
 
-            <Input
-              label="Location"
-              value={formData.location}
-              onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-              error={errors.location}
-              placeholder="e.g., Orchard Road, Singapore"
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="Pay Amount"
-                type="number"
-                value={formData.pay}
-                onChange={(e) => setFormData(prev => ({ ...prev, pay: e.target.value }))}
-                error={errors.pay}
-                placeholder="0"
-              />
-              
+            <div className="lg:col-span-2">
               <div className="form-group">
-                <label className="form-label">Pay Type</label>
-                <select
-                  className="form-input form-select"
-                  value={formData.payType}
-                  onChange={(e) => setFormData(prev => ({ ...prev, payType: e.target.value as 'hourly' | 'fixed' }))}
-                >
-                  <option value="hourly">Per Hour</option>
-                  <option value="fixed">Fixed Amount</option>
-                </select>
+                <label className="form-label">Description</label>
+                <textarea
+                  className="form-input form-textarea"
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder="Describe the job, requirements, and expectations..."
+                  rows={3}
+                />
+                {errors.description && (
+                  <p className="text-sm text-red-400 mt-1">{errors.description}</p>
+                )}
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="lg:col-span-2">
               <Input
-                label="Date"
-                type="date"
-                value={formData.date}
-                onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                error={errors.date}
-              />
-              
-              <Input
-                label="Start Time"
-                type="time"
-                value={formData.time}
-                onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-                error={errors.time}
-              />
-              
-              <Input
-                label="Duration"
-                value={formData.duration}
-                onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
-                error={errors.duration}
-                placeholder="e.g., 5 hours"
+                label="Location"
+                value={formData.location}
+                onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                error={errors.location}
+                placeholder="e.g., Orchard Road, Singapore"
               />
             </div>
 
+            <Input
+              label="Pay Amount"
+              type="number"
+              value={formData.pay}
+              onChange={(e) => setFormData(prev => ({ ...prev, pay: e.target.value }))}
+              error={errors.pay}
+              placeholder="0"
+            />
+
             <div className="form-group">
-              <label className="form-label">Requirements</label>
-              <div className="space-y-2">
-                {formData.requirements.map((requirement, index) => (
-                  <div key={index} className="flex gap-2">
-                    <input
-                      className="form-input flex-1"
-                      value={requirement}
-                      onChange={(e) => updateRequirement(index, e.target.value)}
-                      placeholder={`Requirement ${index + 1}`}
-                    />
-                    {formData.requirements.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="danger"
-                        size="sm"
-                        onClick={() => removeRequirement(index)}
-                      >
-                        Remove
-                      </Button>
-                    )}
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={addRequirement}
-                >
-                  Add Requirement
-                </Button>
+              <label className="form-label">Pay Type</label>
+              <select
+                className="form-input form-select"
+                value={formData.payType}
+                onChange={(e) => setFormData(prev => ({ ...prev, payType: e.target.value as 'hourly' | 'fixed' }))}
+              >
+                <option value="hourly">Per Hour</option>
+                <option value="fixed">Fixed Amount</option>
+              </select>
+            </div>
+
+            <Input
+              label="Date"
+              type="date"
+              value={formData.date}
+              onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+              error={errors.date}
+            />
+
+            <Input
+              label="Start Time"
+              type="time"
+              value={formData.time}
+              onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
+              error={errors.time}
+            />
+
+            <Input
+              label="Duration"
+              value={formData.duration}
+              onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+              error={errors.duration}
+              placeholder="e.g., 5 hours"
+            />
+
+            <div></div>
+
+            <div className="lg:col-span-2">
+              <div className="form-group">
+                <label className="form-label">Requirements</label>
+                <div className="space-y-2">
+                  {formData.requirements.map((requirement, index) => (
+                    <div key={index} className="flex gap-2">
+                      <input
+                        className="form-input flex-1"
+                        value={requirement}
+                        onChange={(e) => updateRequirement(index, e.target.value)}
+                        placeholder={`Requirement ${index + 1}`}
+                      />
+                      {formData.requirements.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="danger"
+                          size="sm"
+                          onClick={() => removeRequirement(index)}
+                        >
+                          Remove
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={addRequirement}
+                  >
+                    Add Requirement
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex gap-3 mt-8 pt-6 border-t border-border-color">
-            <Button type="submit" loading={loading} className="flex-1">
-              Post Job
+          <div className="lg:col-span-2 flex gap-3 mt-6 pt-4 border-t border-border-color/50">
+            <Button type="submit" loading={loading} className="flex-1 h-12">
+              {loading ? 'Posting...' : 'Post Job'}
             </Button>
-            <Button type="button" variant="secondary" onClick={onClose}>
+            <Button type="button" variant="secondary" onClick={onClose} className="px-8">
               Cancel
             </Button>
           </div>
