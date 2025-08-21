@@ -159,21 +159,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([])
 
   useEffect(() => {
-    const storedJobs = localStorage.getItem('worksta_jobs')
-    const storedApplications = localStorage.getItem('worksta_applications')
+    if (typeof window !== 'undefined') {
+      const storedJobs = localStorage.getItem('worksta_jobs')
+      const storedApplications = localStorage.getItem('worksta_applications')
 
-    if (storedJobs) {
-      setJobs(JSON.parse(storedJobs))
+      if (storedJobs) {
+        setJobs(JSON.parse(storedJobs))
+      } else {
+        setJobs(demoJobs)
+        localStorage.setItem('worksta_jobs', JSON.stringify(demoJobs))
+      }
+
+      if (storedApplications) {
+        setApplications(JSON.parse(storedApplications))
+      } else {
+        setApplications(demoApplications)
+        localStorage.setItem('worksta_applications', JSON.stringify(demoApplications))
+      }
     } else {
+      // Set default data for server-side rendering
       setJobs(demoJobs)
-      localStorage.setItem('worksta_jobs', JSON.stringify(demoJobs))
-    }
-
-    if (storedApplications) {
-      setApplications(JSON.parse(storedApplications))
-    } else {
       setApplications(demoApplications)
-      localStorage.setItem('worksta_applications', JSON.stringify(demoApplications))
     }
   }, [])
 
@@ -185,7 +191,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     const updatedJobs = [newJob, ...jobs]
     setJobs(updatedJobs)
-    localStorage.setItem('worksta_jobs', JSON.stringify(updatedJobs))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('worksta_jobs', JSON.stringify(updatedJobs))
+    }
   }
 
   const applyToJob = (jobId: string, workerId: string, workerName: string, workerAvatar: string, message?: string) => {
@@ -201,7 +209,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     const updatedApplications = [...applications, newApplication]
     setApplications(updatedApplications)
-    localStorage.setItem('worksta_applications', JSON.stringify(updatedApplications))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('worksta_applications', JSON.stringify(updatedApplications))
+    }
     addNotification('Application submitted successfully!', 'success')
   }
 
@@ -210,7 +220,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       app.id === applicationId ? { ...app, status } : app
     )
     setApplications(updatedApplications)
-    localStorage.setItem('worksta_applications', JSON.stringify(updatedApplications))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('worksta_applications', JSON.stringify(updatedApplications))
+    }
     addNotification(`Application ${status}!`, status === 'accepted' ? 'success' : 'info')
   }
 

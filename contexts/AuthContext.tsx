@@ -58,10 +58,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check for stored auth
-    const storedUser = localStorage.getItem('worksta_user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+    // Check for stored auth only on client-side
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('worksta_user')
+      if (storedUser) {
+        setUser(JSON.parse(storedUser))
+      }
     }
     setLoading(false)
   }, [])
@@ -76,7 +78,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (foundUser && password === 'demo123') {
       setUser(foundUser)
-      localStorage.setItem('worksta_user', JSON.stringify(foundUser))
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('worksta_user', JSON.stringify(foundUser))
+      }
       setLoading(false)
       return true
     }
@@ -100,14 +104,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     setUser(newUser)
-    localStorage.setItem('worksta_user', JSON.stringify(newUser))
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('worksta_user', JSON.stringify(newUser))
+    }
     setLoading(false)
     return true
   }
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem('worksta_user')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('worksta_user')
+    }
   }
 
   return (
