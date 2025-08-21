@@ -5,7 +5,8 @@ import { useAuth, UserType } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Building2, User, Star, Mail, Lock } from 'lucide-react'
+import { ScrollReveal, ScrollRevealGroup } from '@/components/ui/ScrollReveal'
+import { Building2, User, Star, Mail, Lock, ArrowRight } from 'lucide-react'
 
 interface LoginProps {
   onToggleMode: () => void
@@ -72,100 +73,110 @@ export function Login({ onToggleMode }: LoginProps) {
           <div className={`transform transition-all duration-1000 ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-purple-600/10 to-pink-500/20 blur-2xl rounded-3xl"></div>
-              <Card className="relative glass-card border-purple-500/30 shadow-2xl rounded-3xl overflow-hidden">
+              <Card variant="glass" className="relative shadow-2xl rounded-3xl overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600"></div>
                 
                 <CardHeader className="text-center pb-6 pt-8">
-                  <div className="flex items-center justify-center mb-6">
-                    <div className="relative">
-                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-2xl animate-glow">
-                        <span className="text-white font-bold text-3xl">W</span>
+                  <ScrollReveal variant="fadeInDown" duration={0.7}>
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="relative">
+                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-2xl animate-glow">
+                          <span className="text-white font-bold text-3xl">W</span>
+                        </div>
+                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full animate-bounce"></div>
+                        <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
                       </div>
-                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full animate-bounce"></div>
-                      <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
                     </div>
-                  </div>
+                  </ScrollReveal>
                   
-                  <CardTitle className="text-3xl mb-2 font-bold">
-                    <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent animate-gradient-shift">
-                      Welcome to Worksta
-                    </span>
-                  </CardTitle>
-                  <p className="text-text-muted text-sm">
-                    🚀 Southeast Asia's premier gig economy platform
-                  </p>
+                  <ScrollReveal variant="fadeIn" delay={0.3} duration={0.8}>
+                    <CardTitle className="text-3xl mb-2 font-bold">
+                      <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent animate-gradient-shift">
+                        Welcome to Worksta
+                      </span>
+                    </CardTitle>
+                    <p className="text-text-muted text-sm">
+                      🚀 Southeast Asia's premier gig economy platform
+                    </p>
+                  </ScrollReveal>
                   
-                  <div className="flex items-center justify-center gap-6 mt-4 text-xs text-text-muted">
-                    <span className="flex items-center gap-1">
-                      <Star className="w-3 h-3 text-yellow-400" />
-                      4.8/5
-                    </span>
-                    <span>500+ Businesses</span>
-                    <span>2.5K+ Workers</span>
-                  </div>
+                  <ScrollReveal variant="fadeInUp" delay={0.5} duration={0.6}>
+                    <div className="flex items-center justify-center gap-6 mt-4 text-xs text-text-muted">
+                      <span className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-yellow-400" />
+                        4.8/5
+                      </span>
+                      <span>500+ Businesses</span>
+                      <span>2.5K+ Workers</span>
+                    </div>
+                  </ScrollReveal>
                 </CardHeader>
                 
                 <CardContent className="px-8 pb-8">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {errors.general && (
-                      <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm backdrop-blur-sm">
-                        {errors.general}
-                      </div>
+                      <ScrollReveal variant="fadeIn" duration={0.5}>
+                        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm backdrop-blur-sm">
+                          {errors.general}
+                        </div>
+                      </ScrollReveal>
                     )}
 
-                    <div className="space-y-4">
-                      <p className="text-sm font-semibold text-text-primary flex items-center justify-center gap-2">
-                        <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-                        I am a:
-                        <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-                      </p>
-                      <div className="grid grid-cols-2 gap-4">
-                        <button
-                          type="button"
-                          className={`group relative p-5 rounded-xl border-2 text-sm font-semibold transition-all duration-300 overflow-hidden ${
-                            formData.userType === 'business'
-                              ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-300 shadow-lg shadow-purple-500/25'
-                              : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
-                          }`}
-                          onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
-                        >
-                          <div className="flex flex-col items-center gap-3 relative z-10">
-                            <div className={`p-3 rounded-xl ${formData.userType === 'business' ? 'bg-purple-500/20' : 'bg-gray-700/20'}`}>
-                              <Building2 className="w-6 h-6" />
+                    <ScrollReveal variant="fadeIn" delay={0.3} duration={0.6}>
+                      <div className="space-y-4">
+                        <p className="text-sm font-semibold text-text-primary flex items-center justify-center gap-2">
+                          <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+                          I am a:
+                          <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+                        </p>
+                        <div className="grid grid-cols-2 gap-4">
+                          <button
+                            type="button"
+                            className={`group relative p-5 rounded-xl border-2 text-sm font-semibold transition-all duration-300 overflow-hidden ${
+                              formData.userType === 'business'
+                                ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-300 shadow-lg shadow-purple-500/25'
+                                : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
+                            }`}
+                            onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
+                          >
+                            <div className="flex flex-col items-center gap-3 relative z-10">
+                              <div className={`p-3 rounded-xl ${formData.userType === 'business' ? 'bg-purple-500/20' : 'bg-gray-700/20'}`}>
+                                <Building2 className="w-6 h-6" />
+                              </div>
+                              <span>🏢 Business</span>
+                              <span className="text-xs opacity-75">Hire workers</span>
                             </div>
-                            <span>🏢 Business</span>
-                            <span className="text-xs opacity-75">Hire workers</span>
-                          </div>
-                          {formData.userType === 'business' && (
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent animate-pulse"></div>
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          className={`group relative p-5 rounded-xl border-2 text-sm font-semibold transition-all duration-300 overflow-hidden ${
-                            formData.userType === 'worker'
-                              ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-300 shadow-lg shadow-purple-500/25'
-                              : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
-                          }`}
-                          onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
-                        >
-                          <div className="flex flex-col items-center gap-3 relative z-10">
-                            <div className={`p-3 rounded-xl ${formData.userType === 'worker' ? 'bg-purple-500/20' : 'bg-gray-700/20'}`}>
-                              <User className="w-6 h-6" />
+                            {formData.userType === 'business' && (
+                              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent animate-pulse"></div>
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            className={`group relative p-5 rounded-xl border-2 text-sm font-semibold transition-all duration-300 overflow-hidden ${
+                              formData.userType === 'worker'
+                                ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-300 shadow-lg shadow-purple-500/25'
+                                : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
+                            }`}
+                            onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
+                          >
+                            <div className="flex flex-col items-center gap-3 relative z-10">
+                              <div className={`p-3 rounded-xl ${formData.userType === 'worker' ? 'bg-purple-500/20' : 'bg-gray-700/20'}`}>
+                                <User className="w-6 h-6" />
+                              </div>
+                              <span>👤 Worker</span>
+                              <span className="text-xs opacity-75">Find work</span>
                             </div>
-                            <span>👤 Worker</span>
-                            <span className="text-xs opacity-75">Find work</span>
-                          </div>
-                          {formData.userType === 'worker' && (
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent animate-pulse"></div>
-                          )}
-                        </button>
+                            {formData.userType === 'worker' && (
+                              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent animate-pulse"></div>
+                            )}
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    </ScrollReveal>
 
-                    <div className="space-y-4">
+                    <ScrollRevealGroup className="space-y-4" variant="fadeInUp" staggerDelay={0.1} delay={0.5}>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-400" />
+                        <Mail className="absolute left-3 top-[42px] transform -translate-y-1/2 w-5 h-5 text-purple-400 z-10" />
                         <Input
                           label="Email Address"
                           type="email"
@@ -174,11 +185,13 @@ export function Login({ onToggleMode }: LoginProps) {
                           error={errors.email}
                           placeholder="Enter your email"
                           className="pl-12"
+                          variant="filled"
+                          size="default"
                         />
                       </div>
 
                       <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-400" />
+                        <Lock className="absolute left-3 top-[42px] transform -translate-y-1/2 w-5 h-5 text-purple-400 z-10" />
                         <Input
                           label="Password"
                           type="password"
@@ -187,64 +200,71 @@ export function Login({ onToggleMode }: LoginProps) {
                           error={errors.password}
                           placeholder="Enter your password"
                           className="pl-12"
+                          variant="filled"
+                          size="default"
                         />
                       </div>
-                    </div>
+                    </ScrollRevealGroup>
 
-                    <Button type="submit" className="w-full h-14 text-lg font-bold relative overflow-hidden group" loading={loading}>
-                      <span className="relative z-10 flex items-center justify-center gap-2">
-                        {loading ? (
+                    <ScrollReveal variant="fadeInUp" delay={0.7} duration={0.6}>
+                      <Button 
+                        type="submit" 
+                        className="w-full relative overflow-hidden group" 
+                        loading={loading}
+                        size="lg"
+                        variant="primary"
+                      >
+                        {loading ? "Signing In..." : (
                           <>
-                            <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            Signing In...
-                          </>
-                        ) : (
-                          <>
-                            ✨ Sign In
+                            Sign In <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
                           </>
                         )}
-                      </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </Button>
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </Button>
+                    </ScrollReveal>
                   </form>
 
-                  <div className="mt-8 text-center">
-                    <button
-                      onClick={onToggleMode}
-                      className="text-purple-400 hover:text-purple-300 text-sm transition-colors font-medium group"
-                    >
-                      Don't have an account? <span className="underline group-hover:no-underline">✨ Sign up here</span>
-                    </button>
-                  </div>
+                  <ScrollReveal variant="fadeIn" delay={0.8} duration={0.5}>
+                    <div className="mt-8 text-center">
+                      <button
+                        onClick={onToggleMode}
+                        className="text-purple-400 hover:text-purple-300 text-sm transition-colors font-medium group"
+                      >
+                        Don't have an account? <span className="underline group-hover:no-underline">✨ Sign up here</span>
+                      </button>
+                    </div>
+                  </ScrollReveal>
 
-                  <div className="mt-6 p-5 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl border border-purple-500/30 backdrop-blur-sm relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-purple-600/5 to-pink-600/5 animate-pulse"></div>
-                    <div className="relative z-10">
-                      <p className="text-sm text-purple-300 text-center mb-4 font-bold flex items-center justify-center gap-2">
-                        🎯 Try Demo Accounts
-                        <span className="px-2 py-1 bg-purple-500/20 rounded-full text-xs">FREE</span>
-                      </p>
-                      <div className="grid grid-cols-2 gap-4 text-xs">
-                        <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 p-3 rounded-xl border border-purple-500/30">
-                          <p className="text-purple-300 font-bold flex items-center gap-1">
-                            🏢 Business
-                          </p>
-                          <p className="text-text-muted mt-1">business@demo.com</p>
-                        </div>
-                        <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-3 rounded-xl border border-purple-500/30">
-                          <p className="text-purple-300 font-bold flex items-center gap-1">
-                            👤 Worker
-                          </p>
-                          <p className="text-text-muted mt-1">worker@demo.com</p>
-                        </div>
-                      </div>
-                      <div className="text-center mt-4 p-2 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg border border-yellow-500/20">
-                        <p className="text-yellow-300 text-xs font-mono">
-                          🔑 Password: <span className="font-bold">demo123</span>
+                  <ScrollReveal variant="fadeInUp" delay={0.9} duration={0.7}>
+                    <div className="mt-6 p-5 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl border border-purple-500/30 backdrop-blur-sm relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-purple-600/5 to-pink-600/5 animate-pulse"></div>
+                      <div className="relative z-10">
+                        <p className="text-sm text-purple-300 text-center mb-4 font-bold flex items-center justify-center gap-2">
+                          🎯 Try Demo Accounts
+                          <span className="px-2 py-1 bg-purple-500/20 rounded-full text-xs">FREE</span>
                         </p>
+                        <div className="grid grid-cols-2 gap-4 text-xs">
+                          <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 p-3 rounded-xl border border-purple-500/30">
+                            <p className="text-purple-300 font-bold flex items-center gap-1">
+                              🏢 Business
+                            </p>
+                            <p className="text-text-muted mt-1">business@demo.com</p>
+                          </div>
+                          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-3 rounded-xl border border-purple-500/30">
+                            <p className="text-purple-300 font-bold flex items-center gap-1">
+                              👤 Worker
+                            </p>
+                            <p className="text-text-muted mt-1">worker@demo.com</p>
+                          </div>
+                        </div>
+                        <div className="text-center mt-4 p-2 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg border border-yellow-500/20">
+                          <p className="text-yellow-300 text-xs font-mono">
+                            🔑 Password: <span className="font-bold">demo123</span>
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </ScrollReveal>
                 </CardContent>
               </Card>
             </div>

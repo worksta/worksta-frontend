@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 * {
@@ -11,19 +11,19 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: 'Poppins', sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
   background: #000000;
   color: var(--text-primary);
   min-height: 100vh;
 }
 
 * {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
 }
 
 /* Dark theme variables */
 @theme {
-    --font-sans: 'Poppins', sans-serif !important;
+    --font-sans: 'Inter', sans-serif !important;
     --bg-primary: #000000;
     --bg-secondary: linear-gradient(145deg, #0a0a0a 0%, #111111 100%);
     --bg-tertiary: linear-gradient(145deg, #111111 0%, #1a1a1a 100%);
@@ -79,6 +79,94 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #444;
+}
+
+/* Animation classes */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes scan-line {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100%;
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite alternate;
+}
+
+.bg-radial-gradient {
+  background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+.bg-scan-line {
+  background-image: linear-gradient(to bottom, transparent 50%, rgba(107, 33, 168, 0.5) 50%);
+  background-size: 100% 4px;
+  animation: scan-line 10s linear infinite;
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+.animate-particle-float {
+  animation: particle-float 5s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
+  }
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
 }
 
 /* Base layout */
