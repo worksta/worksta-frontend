@@ -48,20 +48,20 @@ export function Login({ onToggleMode }: LoginProps) {
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0" style={{background: '#000000'}}></div>
       
-      <div className="absolute inset-0">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-purple-400 rounded-full animate-particle-float opacity-20"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 4}s`,
-              animationDuration: `${4 + Math.random() * 6}s`
-            }}
-          />
-        ))}
-      </div>
+      {/*<div className="absolute inset-0">*/}
+      {/*  {[...Array(15)].map((_, i) => (*/}
+      {/*    <div*/}
+      {/*      key={i}*/}
+      {/*      className="absolute w-1 h-1 bg-purple-400 rounded-full animate-particle-float opacity-20"*/}
+      {/*      style={{*/}
+      {/*        left: `${Math.random() * 100}%`,*/}
+      {/*        top: `${Math.random() * 100}%`,*/}
+      {/*        animationDelay: `${Math.random() * 4}s`,*/}
+      {/*        animationDuration: `${4 + Math.random() * 6}s`*/}
+      {/*      }}*/}
+      {/*    />*/}
+      {/*  ))}*/}
+      {/*</div>*/}
 
       <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 via-transparent to-pink-600/5"></div>
       <div className="absolute top-20 left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>

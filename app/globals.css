@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
 
 * {
   box-sizing: border-box;
@@ -21,44 +22,45 @@ body {
 }
 
 /* Dark theme variables */
-:root {
-  --bg-primary: #000000;
-  --bg-secondary: linear-gradient(145deg, #0a0a0a 0%, #111111 100%);
-  --bg-tertiary: linear-gradient(145deg, #111111 0%, #1a1a1a 100%);
-  --bg-card: linear-gradient(145deg, #0f0f0f 0%, #1a1a1a 100%);
-  --bg-solid-primary: #000000;
-  --bg-solid-secondary: #0a0a0a;
-  --bg-solid-tertiary: #111111;
-  --bg-solid-card: #0f0f0f;
-  --border-color: rgba(192, 132, 252, 0.15);
-  --border-hover: rgba(192, 132, 252, 0.3);
-  --text-primary: #ffffff;
-  --text-secondary: #e2e8f0;
-  --text-muted: #94a3b8;
-  --purple-50: #faf5ff;
-  --purple-100: #f3e8ff;
-  --purple-200: #e9d5ff;
-  --purple-300: #d8b4fe;
-  --purple-400: #c084fc;
-  --purple-500: #a855f7;
-  --purple-600: #9333ea;
-  --purple-700: #7c3aed;
-  --purple-800: #6b21a8;
-  --purple-900: #581c87;
-  --accent-primary: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #6b21a8 100%);
-  --accent-secondary: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
-  --accent-light: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);
-  --success: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  --error: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  --warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --radius: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --shadow-sm: 0 2px 8px rgba(107, 33, 168, 0.15);
-  --shadow: 0 4px 24px rgba(107, 33, 168, 0.2);
-  --shadow-lg: 0 8px 40px rgba(107, 33, 168, 0.25);
-  --shadow-xl: 0 12px 60px rgba(107, 33, 168, 0.3);
-  --glow: 0 0 30px rgba(168, 85, 247, 0.3);
+@theme {
+    --font-sans: 'Poppins', sans-serif !important;
+    --bg-primary: #000000;
+    --bg-secondary: linear-gradient(145deg, #0a0a0a 0%, #111111 100%);
+    --bg-tertiary: linear-gradient(145deg, #111111 0%, #1a1a1a 100%);
+    --bg-card: linear-gradient(145deg, #0f0f0f 0%, #1a1a1a 100%);
+    --bg-solid-primary: #000000;
+    --bg-solid-secondary: #0a0a0a;
+    --bg-solid-tertiary: #111111;
+    --bg-solid-card: #0f0f0f;
+    --border-color: rgba(192, 132, 252, 0.15);
+    --border-hover: rgba(192, 132, 252, 0.3);
+    --text-primary: #ffffff;
+    --text-secondary: #e2e8f0;
+    --text-muted: #94a3b8;
+    --purple-50: #faf5ff;
+    --purple-100: #f3e8ff;
+    --purple-200: #e9d5ff;
+    --purple-300: #d8b4fe;
+    --purple-400: #c084fc;
+    --purple-500: #a855f7;
+    --purple-600: #9333ea;
+    --purple-700: #7c3aed;
+    --purple-800: #6b21a8;
+    --purple-900: #581c87;
+    --accent-primary: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #6b21a8 100%);
+    --accent-secondary: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+    --accent-light: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);
+    --success: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    --error: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    --warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --radius: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --shadow-sm: 0 2px 8px rgba(107, 33, 168, 0.15);
+    --shadow: 0 4px 24px rgba(107, 33, 168, 0.2);
+    --shadow-lg: 0 8px 40px rgba(107, 33, 168, 0.25);
+    --shadow-xl: 0 12px 60px rgba(107, 33, 168, 0.3);
+    --glow: 0 0 30px rgba(168, 85, 247, 0.3);
 }
 
 /* Scrollbar styling */
