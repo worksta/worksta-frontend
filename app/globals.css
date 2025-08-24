@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 * {
@@ -11,32 +11,32 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: 'Inter', sans-serif !important;
-  background: #000000;
-  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif !important;
+  background: #0a0a0a;
+  color: #ffffff;
   min-height: 100vh;
 }
 
 * {
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'Poppins', sans-serif !important;
 }
 
-/* Dark theme variables */
+/* Dark theme variables - Devin-inspired */
 @theme {
-    --font-sans: 'Inter', sans-serif !important;
-    --bg-primary: #000000;
-    --bg-secondary: linear-gradient(145deg, #0a0a0a 0%, #111111 100%);
-    --bg-tertiary: linear-gradient(145deg, #111111 0%, #1a1a1a 100%);
-    --bg-card: linear-gradient(145deg, #0f0f0f 0%, #1a1a1a 100%);
-    --bg-solid-primary: #000000;
-    --bg-solid-secondary: #0a0a0a;
-    --bg-solid-tertiary: #111111;
-    --bg-solid-card: #0f0f0f;
-    --border-color: rgba(192, 132, 252, 0.15);
-    --border-hover: rgba(192, 132, 252, 0.3);
+    --font-sans: 'Poppins', sans-serif !important;
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111111;
+    --bg-tertiary: #1a1a1a;
+    --bg-card: #222222;
+    --bg-solid-primary: #0a0a0a;
+    --bg-solid-secondary: #111111;
+    --bg-solid-tertiary: #1a1a1a;
+    --bg-solid-card: #222222;
+    --border-color: rgba(68, 68, 68, 0.5);
+    --border-hover: rgba(102, 102, 102, 0.8);
     --text-primary: #ffffff;
-    --text-secondary: #e2e8f0;
-    --text-muted: #94a3b8;
+    --text-secondary: #cccccc;
+    --text-muted: #888888;
     --purple-50: #faf5ff;
     --purple-100: #f3e8ff;
     --purple-200: #e9d5ff;
@@ -54,13 +54,13 @@ body {
     --error: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     --warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     --radius: 12px;
-    --radius-lg: 20px;
-    --radius-xl: 28px;
-    --shadow-sm: 0 2px 8px rgba(107, 33, 168, 0.15);
-    --shadow: 0 4px 24px rgba(107, 33, 168, 0.2);
-    --shadow-lg: 0 8px 40px rgba(107, 33, 168, 0.25);
-    --shadow-xl: 0 12px 60px rgba(107, 33, 168, 0.3);
-    --glow: 0 0 30px rgba(168, 85, 247, 0.3);
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 12px 60px rgba(0, 0, 0, 0.6);
+    --glow: 0 0 30px rgba(168, 85, 247, 0.2);
 }
 
 /* Scrollbar styling */
@@ -73,12 +73,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: #444444;
   border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #444;
+  background: #555555;
 }
 
 /* Animation classes */
@@ -155,13 +155,13 @@ body {
 
 @keyframes glow {
   0% {
-    box-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
   }
   50% {
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
   }
   100% {
-    box-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
   }
 }
 
@@ -173,6 +173,7 @@ body {
 .app-container {
   min-height: 100vh;
   background: var(--bg-primary);
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Typography */
@@ -181,6 +182,7 @@ body {
   font-weight: 700;
   line-height: 1.2;
   color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
 }
 
 .heading-lg {
@@ -188,6 +190,7 @@ body {
   font-weight: 600;
   line-height: 1.3;
   color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
 }
 
 .heading-md {
@@ -195,6 +198,7 @@ body {
   font-weight: 600;
   line-height: 1.4;
   color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
 }
 
 .heading-sm {
@@ -202,24 +206,28 @@ body {
   font-weight: 500;
   line-height: 1.4;
   color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
 }
 
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.6;
   color: var(--text-secondary);
+  font-family: 'Poppins', sans-serif;
 }
 
 .text-base {
   font-size: 1rem;
   line-height: 1.6;
   color: var(--text-secondary);
+  font-family: 'Poppins', sans-serif;
 }
 
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.5;
   color: var(--text-muted);
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Buttons */
@@ -347,6 +355,7 @@ body {
   margin-bottom: 0.5rem;
   font-weight: 500;
   color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
 }
 
 .form-input {
@@ -434,10 +443,12 @@ body {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
 }
 
 .card-content {
   color: var(--text-secondary);
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Navigation */
@@ -451,6 +462,7 @@ body {
   text-decoration: none;
   transition: all 0.2s ease;
   cursor: pointer;
+  font-family: 'Poppins', sans-serif;
 }
 
 .nav-item:hover,
@@ -469,6 +481,7 @@ body {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .badge-success {

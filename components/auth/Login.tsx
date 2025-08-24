@@ -2,11 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useAuth, UserType } from '@/contexts/AuthContext'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { ScrollReveal, ScrollRevealGroup } from '@/components/ui/ScrollReveal'
-import { Building2, User, Star, Mail, Lock, ArrowRight } from 'lucide-react'
+import { Building2, User, Mail, Lock, Github } from 'lucide-react'
 
 interface LoginProps {
   onToggleMode: () => void
@@ -46,227 +42,169 @@ export function Login({ onToggleMode }: LoginProps) {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0" style={{background: '#000000'}}></div>
+    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 font-['Poppins']">
+      {/* Background with subtle gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#111111] to-[#0a0a0a]"></div>
       
-      {/*<div className="absolute inset-0">*/}
-      {/*  {[...Array(15)].map((_, i) => (*/}
-      {/*    <div*/}
-      {/*      key={i}*/}
-      {/*      className="absolute w-1 h-1 bg-purple-400 rounded-full animate-particle-float opacity-20"*/}
-      {/*      style={{*/}
-      {/*        left: `${Math.random() * 100}%`,*/}
-      {/*        top: `${Math.random() * 100}%`,*/}
-      {/*        animationDelay: `${Math.random() * 4}s`,*/}
-      {/*        animationDuration: `${4 + Math.random() * 6}s`*/}
-      {/*      }}*/}
-      {/*    />*/}
-      {/*  ))}*/}
-      {/*</div>*/}
+      {/* Animated background elements */}
+      <div className="absolute top-20 left-20 w-96 h-96 bg-purple-500/3 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-20 w-80 h-80 bg-blue-500/3 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+      
+      <div className="relative z-10 w-full max-w-md">
+        <div className={`transform transition-all duration-700 ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
+          {/* Main Login Card */}
+          <div className="bg-[#1a1a1a]/80 backdrop-blur-xl border border-[#333333]/50 rounded-2xl shadow-2xl overflow-hidden">
+            <div className="p-8">
+              {/* Logo and Welcome */}
+              <div className="text-center mb-8">
+                <div className="flex items-center justify-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span className="text-white font-bold text-2xl">W</span>
+                  </div>
+                </div>
+                
+                <h1 className="text-2xl font-semibold text-white mb-2">Welcome</h1>
+                <p className="text-[#888888] text-sm">Log in to Worksta to continue</p>
+              </div>
 
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 via-transparent to-pink-600/5"></div>
-      <div className="absolute top-20 left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-20 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-      
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-lg">
-          <div className={`transform transition-all duration-1000 ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-purple-600/10 to-pink-500/20 blur-2xl rounded-3xl"></div>
-              <Card variant="glass" className="relative shadow-2xl rounded-3xl overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600"></div>
-                
-                <CardHeader className="text-center pb-6 pt-8">
-                  <ScrollReveal variant="fadeInDown" duration={0.7}>
-                    <div className="flex items-center justify-center mb-6">
-                      <div className="relative">
-                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-2xl animate-glow">
-                          <span className="text-white font-bold text-3xl">W</span>
-                        </div>
-                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full animate-bounce"></div>
-                        <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
-                      </div>
+              {/* Error Message */}
+              {errors.general && (
+                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
+                  {errors.general}
+                </div>
+              )}
+
+              {/* User Type Selection */}
+              <div className="mb-6">
+                <p className="text-sm font-medium text-[#cccccc] mb-4 text-center">I am a:</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    className={`p-4 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
+                      formData.userType === 'business'
+                        ? 'bg-purple-500/15 border-purple-400/50 text-purple-300'
+                        : 'bg-[#222222] border-[#444444] text-[#888888] hover:border-[#555555] hover:bg-[#2a2a2a]'
+                    }`}
+                    onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <Building2 className="w-5 h-5" />
+                      <span>Business</span>
                     </div>
-                  </ScrollReveal>
-                  
-                  <ScrollReveal variant="fadeIn" delay={0.3} duration={0.8}>
-                    <CardTitle className="text-3xl mb-2 font-bold">
-                      <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent animate-gradient-shift">
-                        Welcome to Worksta
-                      </span>
-                    </CardTitle>
-                    <p className="text-text-muted text-sm">
-                      🚀 Southeast Asia's premier gig economy platform
-                    </p>
-                  </ScrollReveal>
-                  
-                  <ScrollReveal variant="fadeInUp" delay={0.5} duration={0.6}>
-                    <div className="flex items-center justify-center gap-6 mt-4 text-xs text-text-muted">
-                      <span className="flex items-center gap-1">
-                        <Star className="w-3 h-3 text-yellow-400" />
-                        4.8/5
-                      </span>
-                      <span>500+ Businesses</span>
-                      <span>2.5K+ Workers</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`p-4 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
+                      formData.userType === 'worker'
+                        ? 'bg-purple-500/15 border-purple-400/50 text-purple-300'
+                        : 'bg-[#222222] border-[#444444] text-[#888888] hover:border-[#555555] hover:bg-[#2a2a2a]'
+                    }`}
+                    onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <User className="w-5 h-5" />
+                      <span>Worker</span>
                     </div>
-                  </ScrollReveal>
-                </CardHeader>
-                
-                <CardContent className="px-8 pb-8">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {errors.general && (
-                      <ScrollReveal variant="fadeIn" duration={0.5}>
-                        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm backdrop-blur-sm">
-                          {errors.general}
-                        </div>
-                      </ScrollReveal>
+                  </button>
+                </div>
+              </div>
+
+              {/* Login Form */}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-4">
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#666666]" />
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      placeholder="Work Email address*"
+                      className="w-full pl-12 pr-4 py-3 bg-[#222222] border border-[#444444] rounded-xl text-white placeholder-[#666666] focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400/20 transition-all duration-200 font-['Poppins']"
+                    />
+                    {errors.email && (
+                      <p className="mt-1 text-sm text-red-400">{errors.email}</p>
                     )}
+                  </div>
 
-                    <ScrollReveal variant="fadeIn" delay={0.3} duration={0.6}>
-                      <div className="space-y-4">
-                        <p className="text-sm font-semibold text-text-primary flex items-center justify-center gap-2">
-                          <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-                          I am a:
-                          <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-                        </p>
-                        <div className="grid grid-cols-2 gap-4">
-                          <button
-                            type="button"
-                            className={`group relative p-5 rounded-xl border-2 text-sm font-semibold transition-all duration-300 overflow-hidden ${
-                              formData.userType === 'business'
-                                ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-300 shadow-lg shadow-purple-500/25'
-                                : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
-                            }`}
-                            onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
-                          >
-                            <div className="flex flex-col items-center gap-3 relative z-10">
-                              <div className={`p-3 rounded-xl ${formData.userType === 'business' ? 'bg-purple-500/20' : 'bg-gray-700/20'}`}>
-                                <Building2 className="w-6 h-6" />
-                              </div>
-                              <span>🏢 Business</span>
-                              <span className="text-xs opacity-75">Hire workers</span>
-                            </div>
-                            {formData.userType === 'business' && (
-                              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent animate-pulse"></div>
-                            )}
-                          </button>
-                          <button
-                            type="button"
-                            className={`group relative p-5 rounded-xl border-2 text-sm font-semibold transition-all duration-300 overflow-hidden ${
-                              formData.userType === 'worker'
-                                ? 'bg-gradient-to-br from-purple-500/20 to-purple-600/20 border-purple-400 text-purple-300 shadow-lg shadow-purple-500/25'
-                                : 'bg-bg-tertiary border-border-color text-text-secondary hover:border-purple-400/50 hover:bg-bg-card'
-                            }`}
-                            onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
-                          >
-                            <div className="flex flex-col items-center gap-3 relative z-10">
-                              <div className={`p-3 rounded-xl ${formData.userType === 'worker' ? 'bg-purple-500/20' : 'bg-gray-700/20'}`}>
-                                <User className="w-6 h-6" />
-                              </div>
-                              <span>👤 Worker</span>
-                              <span className="text-xs opacity-75">Find work</span>
-                            </div>
-                            {formData.userType === 'worker' && (
-                              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent animate-pulse"></div>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </ScrollReveal>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#666666]" />
+                    <input
+                      type="password"
+                      value={formData.password}
+                      onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                      placeholder="Password*"
+                      className="w-full pl-12 pr-4 py-3 bg-[#222222] border border-[#444444] rounded-xl text-white placeholder-[#666666] focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400/20 transition-all duration-200 font-['Poppins']"
+                    />
+                    {errors.password && (
+                      <p className="mt-1 text-sm text-red-400">{errors.password}</p>
+                    )}
+                  </div>
+                </div>
 
-                    <ScrollRevealGroup className="space-y-4" variant="fadeInUp" staggerDelay={0.1} delay={0.5}>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-[42px] transform -translate-y-1/2 w-5 h-5 text-purple-400 z-10" />
-                        <Input
-                          label="Email Address"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                          error={errors.email}
-                          placeholder="Enter your email"
-                          className="pl-12"
-                          variant="filled"
-                          size="default"
-                        />
-                      </div>
+                {/* Continue Button */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-white text-[#0a0a0a] font-semibold py-3 px-4 rounded-xl hover:bg-gray-100 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-['Poppins']"
+                >
+                  {loading ? "Signing In..." : "Continue"}
+                </button>
+              </form>
 
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-[42px] transform -translate-y-1/2 w-5 h-5 text-purple-400 z-10" />
-                        <Input
-                          label="Password"
-                          type="password"
-                          value={formData.password}
-                          onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                          error={errors.password}
-                          placeholder="Enter your password"
-                          className="pl-12"
-                          variant="filled"
-                          size="default"
-                        />
-                      </div>
-                    </ScrollRevealGroup>
+              {/* Sign Up Link */}
+              <div className="mt-6 text-center">
+                <button
+                  onClick={onToggleMode}
+                  className="text-[#888888] hover:text-white text-sm transition-colors font-['Poppins']"
+                >
+                  Don't have an account? <span className="text-purple-400 hover:text-purple-300">Sign up</span>
+                </button>
+              </div>
 
-                    <ScrollReveal variant="fadeInUp" delay={0.7} duration={0.6}>
-                      <Button 
-                        type="submit" 
-                        className="w-full relative overflow-hidden group" 
-                        loading={loading}
-                        size="lg"
-                        variant="primary"
-                      >
-                        {loading ? "Signing In..." : (
-                          <>
-                            Sign In <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
-                          </>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      </Button>
-                    </ScrollReveal>
-                  </form>
+              {/* Divider */}
+              <div className="mt-6 flex items-center">
+                <div className="flex-1 border-t border-[#444444]"></div>
+                <span className="px-4 text-[#666666] text-sm">OR</span>
+                <div className="flex-1 border-t border-[#444444]"></div>
+              </div>
 
-                  <ScrollReveal variant="fadeIn" delay={0.8} duration={0.5}>
-                    <div className="mt-8 text-center">
-                      <button
-                        onClick={onToggleMode}
-                        className="text-purple-400 hover:text-purple-300 text-sm transition-colors font-medium group"
-                      >
-                        Don't have an account? <span className="underline group-hover:no-underline">✨ Sign up here</span>
-                      </button>
-                    </div>
-                  </ScrollReveal>
+              {/* Social Login Buttons */}
+              <div className="mt-6 space-y-3">
+                <button className="w-full bg-white text-[#0a0a0a] font-medium py-3 px-4 rounded-xl hover:bg-gray-100 transition-all duration-200 flex items-center justify-center gap-3 font-['Poppins']">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  Continue with Google
+                </button>
+                
+                <button className="w-full bg-white text-[#0a0a0a] font-medium py-3 px-4 rounded-xl hover:bg-gray-100 transition-all duration-200 flex items-center justify-center gap-3 font-['Poppins']">
+                  <Github className="w-5 h-5" />
+                  Continue with GitHub
+                </button>
+              </div>
 
-                  <ScrollReveal variant="fadeInUp" delay={0.9} duration={0.7}>
-                    <div className="mt-6 p-5 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 rounded-2xl border border-purple-500/30 backdrop-blur-sm relative overflow-hidden">
-                      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-purple-600/5 to-pink-600/5 animate-pulse"></div>
-                      <div className="relative z-10">
-                        <p className="text-sm text-purple-300 text-center mb-4 font-bold flex items-center justify-center gap-2">
-                          🎯 Try Demo Accounts
-                          <span className="px-2 py-1 bg-purple-500/20 rounded-full text-xs">FREE</span>
-                        </p>
-                        <div className="grid grid-cols-2 gap-4 text-xs">
-                          <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 p-3 rounded-xl border border-purple-500/30">
-                            <p className="text-purple-300 font-bold flex items-center gap-1">
-                              🏢 Business
-                            </p>
-                            <p className="text-text-muted mt-1">business@demo.com</p>
-                          </div>
-                          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-3 rounded-xl border border-purple-500/30">
-                            <p className="text-purple-300 font-bold flex items-center gap-1">
-                              👤 Worker
-                            </p>
-                            <p className="text-text-muted mt-1">worker@demo.com</p>
-                          </div>
-                        </div>
-                        <div className="text-center mt-4 p-2 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg border border-yellow-500/20">
-                          <p className="text-yellow-300 text-xs font-mono">
-                            🔑 Password: <span className="font-bold">demo123</span>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </ScrollReveal>
-                </CardContent>
-              </Card>
+              {/* Demo Accounts */}
+              <div className="mt-8 p-4 bg-[#222222]/50 rounded-xl border border-[#444444]/50">
+                <p className="text-sm text-[#cccccc] text-center mb-3 font-medium">🎯 Try Demo Accounts</p>
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="bg-[#2a2a2a] p-3 rounded-lg">
+                    <p className="text-[#cccccc] font-medium">🏢 Business</p>
+                    <p className="text-[#888888]">business@demo.com</p>
+                  </div>
+                  <div className="bg-[#2a2a2a] p-3 rounded-lg">
+                    <p className="text-[#cccccc] font-medium">👤 Worker</p>
+                    <p className="text-[#888888]">worker@demo.com</p>
+                  </div>
+                </div>
+                <div className="text-center mt-3 p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+                  <p className="text-yellow-300 text-xs font-mono">
+                    🔑 Password: <span className="font-bold">demo123</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
