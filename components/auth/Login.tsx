@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useAuth, UserType } from '@/contexts/AuthContext'
-import { Building2, User, Mail, Lock, Github } from 'lucide-react'
+import { Building2, User } from 'lucide-react'
 
 interface LoginProps {
   onToggleMode: () => void
@@ -37,122 +37,97 @@ export function Login({ onToggleMode }: LoginProps) {
 
     const success = await login(formData.email, formData.password, formData.userType)
     if (!success) {
-      setErrors({ general: 'Invalid credentials. Try demo accounts with password "demo123"' })
+      setErrors({ general: 'Invalid credentials. Please try again.' })
     }
   }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 font-['Poppins']">
-      {/* Background with subtle gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#111111] to-[#0a0a0a]"></div>
-      
-      {/* Animated background elements */}
-      <div className="absolute top-20 left-20 w-96 h-96 bg-purple-500/3 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-20 w-80 h-80 bg-blue-500/3 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
       
       <div className="relative z-10 w-full max-w-md">
         <div className={`transform transition-all duration-700 ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
-          {/* Main Login Card */}
-          <div className="bg-[#1a1a1a]/80 backdrop-blur-xl border border-[#333333]/50 rounded-2xl shadow-2xl overflow-hidden">
-            <div className="p-8">
-              {/* Logo and Welcome */}
+          <div className="bg-[#13131a] border border-[#25252c] rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.35)] overflow-hidden">
+            <div className="p-10">
               <div className="text-center mb-8">
-                <div className="flex items-center justify-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-2xl">W</span>
-                  </div>
-                </div>
-                
                 <h1 className="text-2xl font-semibold text-white mb-2">Welcome</h1>
-                <p className="text-[#888888] text-sm">Log in to Worksta to continue</p>
+                <p className="text-[#888888] text-sm">Log in to continue</p>
               </div>
 
-              {/* Error Message */}
               {errors.general && (
                 <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
                   {errors.general}
                 </div>
               )}
 
-              {/* User Type Selection */}
-              <div className="mb-6">
-                <p className="text-sm font-medium text-[#cccccc] mb-4 text-center">I am a:</p>
-                <div className="grid grid-cols-2 gap-3">
+              <div className="mb-8 px-3 sm:px-4">
+                <div className="flex items-center justify-center gap-2">
                   <button
                     type="button"
-                    className={`p-4 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
+                    className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors border ${
                       formData.userType === 'business'
-                        ? 'bg-purple-500/15 border-purple-400/50 text-purple-300'
-                        : 'bg-[#222222] border-[#444444] text-[#888888] hover:border-[#555555] hover:bg-[#2a2a2a]'
+                        ? 'bg-[#1f1f27] text-white border-[#3a3a44]'
+                        : 'bg-transparent text-[#a7a7b4] border-[#2b2b33] hover:bg-[#1a1a22]'
                     }`}
                     onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
                   >
-                    <div className="flex flex-col items-center gap-2">
-                      <Building2 className="w-5 h-5" />
-                      <span>Business</span>
-                    </div>
+                    <span className="inline-flex items-center gap-1.5"><Building2 className="w-4 h-4" /> Business</span>
                   </button>
                   <button
                     type="button"
-                    className={`p-4 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
+                    className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors border ${
                       formData.userType === 'worker'
-                        ? 'bg-purple-500/15 border-purple-400/50 text-purple-300'
-                        : 'bg-[#222222] border-[#444444] text-[#888888] hover:border-[#555555] hover:bg-[#2a2a2a]'
+                        ? 'bg-[#1f1f27] text-white border-[#3a3a44]'
+                        : 'bg-transparent text-[#a7a7b4] border-[#2b2b33] hover:bg-[#1a1a22]'
                     }`}
                     onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
                   >
-                    <div className="flex flex-col items-center gap-2">
-                      <User className="w-5 h-5" />
-                      <span>Worker</span>
-                    </div>
+                    <span className="inline-flex items-center gap-1.5"><User className="w-4 h-4" /> Worker</span>
                   </button>
                 </div>
               </div>
 
-              {/* Login Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-4">
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#666666]" />
+              <form onSubmit={handleSubmit} className="space-y-5 px-3 sm:px-4">
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-xs text-[#9aa0a6] mb-1.5">Work Email address</label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder="Work Email address*"
-                      className="w-full pl-12 pr-4 py-3 bg-[#222222] border border-[#444444] rounded-xl text-white placeholder-[#666666] focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400/20 transition-all duration-200 font-['Poppins']"
+                      placeholder="you@company.com"
+                      className="w-full px-3.5 py-3 bg-[#18181f] border border-[#2b2b33] rounded-lg text-white placeholder-[#6b6f76] focus:outline-none focus:border-[#6d5efc] focus:ring-2 focus:ring-[#6d5efc]/15 transition-all"
                     />
                     {errors.email && (
-                      <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+                      <p className="mt-1 text-xs text-red-400">{errors.email}</p>
                     )}
                   </div>
 
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#666666]" />
+                  <div>
+                    <label className="block text-xs text-[#9aa0a6] mb-1.5">Password</label>
                     <input
                       type="password"
                       value={formData.password}
                       onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                      placeholder="Password*"
-                      className="w-full pl-12 pr-4 py-3 bg-[#222222] border border-[#444444] rounded-xl text-white placeholder-[#666666] focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400/20 transition-all duration-200 font-['Poppins']"
+                      placeholder="••••••••"
+                      className="w-full px-3.5 py-3 bg-[#18181f] border border-[#2b2b33] rounded-lg text-white placeholder-[#6b6f76] focus:outline-none focus:border-[#6d5efc] focus:ring-2 focus:ring-[#6d5efc]/15 transition-all"
                     />
                     {errors.password && (
-                      <p className="mt-1 text-sm text-red-400">{errors.password}</p>
+                      <p className="mt-1 text-xs text-red-400">{errors.password}</p>
                     )}
                   </div>
                 </div>
 
-                {/* Continue Button */}
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-white text-[#0a0a0a] font-semibold py-3 px-4 rounded-xl hover:bg-gray-100 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-['Poppins']"
+                  className="w-full bg-[#6d5efc] text-white font-semibold py-3 rounded-lg hover:bg-[#7a6cff] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_6px_18px_rgba(109,94,252,0.25)]"
                 >
-                  {loading ? "Signing In..." : "Continue"}
+                  {loading ? 'Signing In...' : 'Continue'}
                 </button>
               </form>
 
-              {/* Sign Up Link */}
-              <div className="mt-6 text-center">
+              <div className="mt-6 text-center px-3 sm:px-4">
                 <button
                   onClick={onToggleMode}
                   className="text-[#888888] hover:text-white text-sm transition-colors font-['Poppins']"
@@ -161,16 +136,14 @@ export function Login({ onToggleMode }: LoginProps) {
                 </button>
               </div>
 
-              {/* Divider */}
-              <div className="mt-6 flex items-center">
-                <div className="flex-1 border-t border-[#444444]"></div>
-                <span className="px-4 text-[#666666] text-sm">OR</span>
-                <div className="flex-1 border-t border-[#444444]"></div>
+              <div className="mt-8 flex items-center px-3 sm:px-4">
+                <div className="flex-1 border-t border-[#24242c]"></div>
+                <span className="px-4 text-[#6f7782] text-xs">OR</span>
+                <div className="flex-1 border-t border-[#24242c]"></div>
               </div>
 
-              {/* Social Login Buttons */}
-              <div className="mt-6 space-y-3">
-                <button className="w-full bg-white text-[#0a0a0a] font-medium py-3 px-4 rounded-xl hover:bg-gray-100 transition-all duration-200 flex items-center justify-center gap-3 font-['Poppins']">
+              <div className="mt-6 px-3 sm:px-4 pb-2">
+                <button className="w-full bg-[#1b1b22] text-white font-medium py-3 rounded-lg hover:bg-[#20202a] transition-colors border border-[#2b2b33] flex items-center justify-center gap-3 shadow-sm">
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -179,31 +152,6 @@ export function Login({ onToggleMode }: LoginProps) {
                   </svg>
                   Continue with Google
                 </button>
-                
-                <button className="w-full bg-white text-[#0a0a0a] font-medium py-3 px-4 rounded-xl hover:bg-gray-100 transition-all duration-200 flex items-center justify-center gap-3 font-['Poppins']">
-                  <Github className="w-5 h-5" />
-                  Continue with GitHub
-                </button>
-              </div>
-
-              {/* Demo Accounts */}
-              <div className="mt-8 p-4 bg-[#222222]/50 rounded-xl border border-[#444444]/50">
-                <p className="text-sm text-[#cccccc] text-center mb-3 font-medium">🎯 Try Demo Accounts</p>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="bg-[#2a2a2a] p-3 rounded-lg">
-                    <p className="text-[#cccccc] font-medium">🏢 Business</p>
-                    <p className="text-[#888888]">business@demo.com</p>
-                  </div>
-                  <div className="bg-[#2a2a2a] p-3 rounded-lg">
-                    <p className="text-[#cccccc] font-medium">👤 Worker</p>
-                    <p className="text-[#888888]">worker@demo.com</p>
-                  </div>
-                </div>
-                <div className="text-center mt-3 p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
-                  <p className="text-yellow-300 text-xs font-mono">
-                    🔑 Password: <span className="font-bold">demo123</span>
-                  </p>
-                </div>
               </div>
             </div>
           </div>
