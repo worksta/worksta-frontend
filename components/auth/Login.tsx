@@ -1,36 +1,43 @@
 'use client'
 
-import React, { useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import Link from 'next/link'
+import React, { useState, useEffect } from 'react'
+import { useAuth, UserType } from '@/contexts/AuthContext'
+import { Building2, User } from 'lucide-react'
 
-export function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [userType, setUserType] = useState<'business' | 'worker'>('business')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+interface LoginProps {
+  onToggleMode: () => void
+}
+
+export function Login({ onToggleMode }: LoginProps) {
+  const { login, loading } = useAuth()
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    userType: 'business' as UserType
+  })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    setIsLoading(true)
+    setErrors({})
 
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // For demo purposes, accept any email/password
-      if (email && password) {
-        // Login successful
-        console.log('Login successful:', { email, userType })
-      } else {
-        setError('Please enter both email and password')
-      }
-    } catch (err) {
-      setError('Please try again')
-    } finally {
-      setIsLoading(false)
+    const newErrors: Record<string, string> = {}
+    if (!formData.email) newErrors.email = 'Email is required'
+    if (!formData.password) newErrors.password = 'Password is required'
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+
+    const success = await login(formData.email, formData.password, formData.userType)
+    if (!success) {
+      setErrors({ general: 'Invalid credentials. Please try again.' })
     }
   }
 
@@ -67,34 +74,39 @@ export function Login() {
               <div className="relative bg-gray-800/50 rounded-2xl p-1 border border-gray-700/50">
                 <div className="flex">
                   <button
-                    onClick={() => setUserType('business')}
-                                         className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-semibold text-[16px] transition-all duration-300 ${
-                       userType === 'business'
-                         ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25 border border-purple-400/30'
-                         : 'text-gray-400 hover:text-gray-300'
-                     }`}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
+                    className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-semibold text-[16px] transition-all duration-300 ${
+                      formData.userType === 'business'
+                        ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25 border border-purple-400/30'
+                        : 'text-gray-400 hover:text-gray-300'
+                    }`}
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
+                    <Building2 className="w-5 h-5" />
                     Business Account
                   </button>
                   <button
-                    onClick={() => setUserType('worker')}
-                                         className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-semibold text-[16px] transition-all duration-300 ${
-                       userType === 'worker'
-                         ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25 border border-purple-400/30'
-                         : 'text-gray-400 hover:text-gray-300'
-                     }`}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
+                    className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-semibold text-[16px] transition-all duration-300 ${
+                      formData.userType === 'worker'
+                        ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25 border border-purple-400/30'
+                        : 'text-gray-400 hover:text-gray-300'
+                    }`}
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
+                    <User className="w-5 h-5" />
                     Worker Account
                   </button>
                 </div>
               </div>
             </div>
+
+            {/* Error Message */}
+            {errors.general && (
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-300 text-sm text-center">
+                {errors.general}
+              </div>
+            )}
 
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -107,14 +119,17 @@ export function Login() {
                   <input
                     id="email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                     className="w-full h-[60px] px-6 bg-gray-800/80 border border-gray-700/50 rounded-[20px] text-white placeholder-gray-400 font-medium text-[16px] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400/50 focus:bg-gray-800/90 focus:shadow-lg focus:shadow-purple-500/20"
                     placeholder="Enter your email"
                     required
                   />
                   <div className="absolute inset-0 rounded-[20px] bg-gradient-to-r from-purple-500/5 to-blue-500/5 opacity-0 transition-opacity duration-300 focus-within:opacity-100 pointer-events-none"></div>
                 </div>
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+                )}
               </div>
 
               {/* Password Field */}
@@ -126,30 +141,26 @@ export function Login() {
                   <input
                     id="password"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={formData.password}
+                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                     className="w-full h-[60px] px-6 bg-gray-800/80 border border-gray-700/50 rounded-[20px] text-white placeholder-gray-400 font-medium text-[16px] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400/50 focus:bg-gray-800/90 focus:shadow-lg focus:shadow-purple-500/20"
                     placeholder="Enter your password"
                     required
                   />
                   <div className="absolute inset-0 rounded-[20px] bg-gradient-to-r from-purple-500/5 to-blue-500/5 opacity-0 transition-opacity duration-300 focus-within:opacity-100 pointer-events-none"></div>
                 </div>
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-400">{errors.password}</p>
+                )}
               </div>
 
-              {/* Error Message */}
-              {error && (
-                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-300 text-sm text-center">
-                  {error}
-                </div>
-              )}
-
               {/* Continue Button */}
-                             <button
-                 type="submit"
-                 disabled={isLoading}
-                 className="w-full h-[62px] bg-purple-600 hover:bg-purple-700 text-white font-bold text-[22px] rounded-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/30 focus:outline-none focus:ring-4 focus:ring-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-               >
-                {isLoading ? (
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full h-[62px] bg-purple-600 hover:bg-purple-700 text-white font-bold text-[22px] rounded-[28px] transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/30 focus:outline-none focus:ring-4 focus:ring-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {loading ? (
                   <div className="flex items-center justify-center gap-3">
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                     Signing in...
@@ -162,15 +173,15 @@ export function Login() {
 
             {/* Sign Up Link */}
             <div className="text-center mt-8">
-              <p className="text-gray-400 text-[16px]">
+              <button
+                onClick={onToggleMode}
+                className="text-gray-400 text-[16px] hover:text-white transition-colors duration-300"
+              >
                 Don't have an account?{' '}
-                <Link 
-                  href="/signup" 
-                  className="text-[#A259FF] font-semibold hover:underline transition-all duration-300 hover:text-purple-300"
-                >
+                <span className="text-[#A259FF] font-semibold hover:underline">
                   Sign up
-                </Link>
-              </p>
+                </span>
+              </button>
             </div>
 
             {/* Divider */}
@@ -186,7 +197,7 @@ export function Login() {
             </div>
 
             {/* Google Login Button */}
-            <button className="w-full h-[62px] bg-gray-800/80 hover:bg-gray-700/80 border border-gray-700/50 hover:border-gray-600/50 text-white font-semibold text-[18px] rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-gray-500/20 focus:outline-none focus:ring-2 focus:ring-gray-500/30">
+            <button className="w-full h-[62px] bg-gray-800/80 hover:bg-gray-700/80 border border-gray-700/50 hover:border-gray-600/50 text-white font-semibold text-[18px] rounded-[28px] transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-gray-500/20 focus:outline-none focus:ring-2 focus:ring-gray-500/30">
               <svg className="w-6 h-6" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
