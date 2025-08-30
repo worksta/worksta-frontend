@@ -6,7 +6,11 @@ import { useApp } from '@/contexts/AppContext'
 import { LogOut, Bell, Settings, HelpCircle, User, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 
-export function Header() {
+interface HeaderProps {
+  onNavigate?: (tab: string) => void
+}
+
+export function Header({ onNavigate }: HeaderProps) {
   const { user, logout } = useAuth()
   const { notifications } = useApp()
   const [showUserMenu, setShowUserMenu] = useState(false)
@@ -17,6 +21,27 @@ export function Header() {
   const handleLogout = () => {
     if (confirm('Are you sure you want to logout?')) {
       logout()
+    }
+  }
+
+  const handleProfileSettings = () => {
+    setShowUserMenu(false)
+    if (onNavigate) {
+      onNavigate('profile')
+    }
+  }
+
+  const handlePreferences = () => {
+    setShowUserMenu(false)
+    if (onNavigate) {
+      onNavigate('preferences')
+    }
+  }
+
+  const handleHelpSupport = () => {
+    setShowUserMenu(false)
+    if (onNavigate) {
+      onNavigate('help')
     }
   }
 
@@ -112,17 +137,26 @@ export function Header() {
               </div>
 
               <div className="p-2">
-                <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-bg-tertiary rounded-lg transition-colors">
-                  <User className="w-4 h-4 text-text-muted" />
-                  <span className="text-text-secondary">Profile Settings</span>
+                <button
+                  onClick={handleProfileSettings}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-bg-tertiary rounded-lg transition-colors group"
+                >
+                  <User className="w-4 h-4 text-text-muted group-hover:text-purple-400 transition-colors" />
+                  <span className="text-text-secondary group-hover:text-text-primary transition-colors">Profile Settings</span>
                 </button>
-                <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-bg-tertiary rounded-lg transition-colors">
-                  <Settings className="w-4 h-4 text-text-muted" />
-                  <span className="text-text-secondary">Preferences</span>
+                <button
+                  onClick={handlePreferences}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-bg-tertiary rounded-lg transition-colors group"
+                >
+                  <Settings className="w-4 h-4 text-text-muted group-hover:text-blue-400 transition-colors" />
+                  <span className="text-text-secondary group-hover:text-text-primary transition-colors">Preferences</span>
                 </button>
-                <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-bg-tertiary rounded-lg transition-colors">
-                  <HelpCircle className="w-4 h-4 text-text-muted" />
-                  <span className="text-text-secondary">Help & Support</span>
+                <button
+                  onClick={handleHelpSupport}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-bg-tertiary rounded-lg transition-colors group"
+                >
+                  <HelpCircle className="w-4 h-4 text-text-muted group-hover:text-green-400 transition-colors" />
+                  <span className="text-text-secondary group-hover:text-text-primary transition-colors">Help & Support</span>
                 </button>
                 <hr className="my-2 border-border-color" />
                 <button

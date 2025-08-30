@@ -1,6 +1,37 @@
 {
   "pages": {
-    "/_app": []
+    "/_app": [
+      "static/chunks/4369d_next_dist_compiled_next-devtools_index_d3e80316.js",
+      "static/chunks/4369d_next_dist_compiled_87623acc._.js",
+      "static/chunks/4369d_next_dist_shared_lib_04da86b2._.js",
+      "static/chunks/4369d_next_dist_client_dbe6de9e._.js",
+      "static/chunks/4369d_next_dist_0919a84a._.js",
+      "static/chunks/4369d_next_app_0fadebe8.js",
+      "static/chunks/[next]_entry_page-loader_ts_e2fe9939._.js",
+      "static/chunks/4369d_react_3f9e5e69._.js",
+      "static/chunks/4369d_react-dom_cjs_react-dom_development_03a7372e.js",
+      "static/chunks/4369d_react-dom_b10ee564._.js",
+      "static/chunks/4369d_26969689._.js",
+      "static/chunks/[root-of-the-server]__4a92605f._.js",
+      "static/chunks/worksta-frontend_pages__app_2da965e7._.js",
+      "static/chunks/turbopack-worksta-frontend_pages__app_741738df._.js"
+    ],
+    "/_error": [
+      "static/chunks/4369d_next_dist_compiled_next-devtools_index_d3e80316.js",
+      "static/chunks/4369d_next_dist_compiled_87623acc._.js",
+      "static/chunks/4369d_next_dist_shared_lib_e5457c4e._.js",
+      "static/chunks/4369d_next_dist_client_dbe6de9e._.js",
+      "static/chunks/4369d_next_dist_390657f2._.js",
+      "static/chunks/4369d_next_error_f7d39fae.js",
+      "static/chunks/[next]_entry_page-loader_ts_65e139f4._.js",
+      "static/chunks/4369d_react_3f9e5e69._.js",
+      "static/chunks/4369d_react-dom_cjs_react-dom_development_03a7372e.js",
+      "static/chunks/4369d_react-dom_b10ee564._.js",
+      "static/chunks/4369d_26969689._.js",
+      "static/chunks/[root-of-the-server]__2c921632._.js",
+      "static/chunks/worksta-frontend_pages__error_2da965e7._.js",
+      "static/chunks/turbopack-worksta-frontend_pages__error_a3c62be8._.js"
+    ]
   },
   "devFiles": [],
   "ampDevFiles": [],

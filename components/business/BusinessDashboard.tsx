@@ -12,8 +12,10 @@ import { ApplicationsList } from './ApplicationsList'
 import { ProfilePage } from './ProfilePage'
 import { PostJobModal } from './PostJobModal'
 import { AnalyticsPage } from './AnalyticsPage'
+import { PreferencesPage } from '../worker/PreferencesPage'
+import { HelpSupportPage } from '../worker/HelpSupportPage'
 
-type TabType = 'dashboard' | 'jobs' | 'applications' | 'analytics' | 'profile'
+type TabType = 'dashboard' | 'jobs' | 'applications' | 'analytics' | 'profile' | 'preferences' | 'help'
 
 export function BusinessDashboard() {
   const { user } = useAuth()
@@ -41,6 +43,10 @@ export function BusinessDashboard() {
         return <AnalyticsPage />
       case 'profile':
         return <ProfilePage />
+      case 'preferences':
+        return <PreferencesPage />
+      case 'help':
+        return <HelpSupportPage />
       default:
         return <AnalyticsPage />
     }
@@ -53,7 +59,7 @@ export function BusinessDashboard() {
       <div className="relative z-10 flex w-full">
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
         <div className="flex-1 flex flex-col">
-          <Header />
+          <Header onNavigate={(tab) => setActiveTab(tab as TabType)} />
 
           <main className="flex-1 overflow-auto p-6">
             {renderContent()}

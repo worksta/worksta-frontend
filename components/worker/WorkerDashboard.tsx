@@ -7,10 +7,12 @@ import { Header } from '@/components/layout/Header'
 import { AnimatedBackground } from '@/components/ui/AnimatedBackground'
 import { JobSearch } from './JobSearch'
 import { MyApplications } from './MyApplications'
-import { ProfilePage } from './ProfilePage'
+import { PremiumProfilePage } from './PremiumProfilePage'
+import { PreferencesPage } from './PreferencesPage'
+import { HelpSupportPage } from './HelpSupportPage'
 import { WorkerDashboardPage } from './WorkerDashboardPage'
 
-type TabType = 'dashboard' | 'search' | 'applications' | 'profile'
+type TabType = 'dashboard' | 'search' | 'applications' | 'profile' | 'preferences' | 'help'
 
 export function WorkerDashboard() {
   const { user } = useAuth()
@@ -25,7 +27,11 @@ export function WorkerDashboard() {
       case 'applications':
         return <MyApplications />
       case 'profile':
-        return <ProfilePage />
+        return <PremiumProfilePage />
+      case 'preferences':
+        return <PreferencesPage />
+      case 'help':
+        return <HelpSupportPage />
       default:
         return <WorkerDashboardPage />
     }
@@ -41,7 +47,7 @@ export function WorkerDashboard() {
           onTabChange={(tab) => setActiveTab(tab as TabType)}
         />
         <div className="flex-1 flex flex-col">
-          <Header />
+          <Header onNavigate={(tab) => setActiveTab(tab as TabType)} />
 
           <main className="flex-1 overflow-auto p-6">
             {renderContent()}
