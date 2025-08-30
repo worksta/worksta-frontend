@@ -730,6 +730,52 @@ body {
 .stagger-3 { animation-delay: 0.3s; }
 .stagger-4 { animation-delay: 0.4s; }
 
+/* Enhanced login page animations */
+@keyframes scale-102 {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.02); }
+}
+
+@keyframes scale-105 {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
+.hover\:scale-102:hover {
+  animation: scale-102 0.3s ease forwards;
+}
+
+.hover\:scale-105:hover {
+  animation: scale-105 0.3s ease forwards;
+}
+
+/* Improved focus states for inputs */
+.focus-glow:focus {
+  box-shadow:
+    0 0 0 3px rgba(168, 85, 247, 0.1),
+    0 0 20px rgba(168, 85, 247, 0.2),
+    0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Gradient text animation */
+@keyframes gradient-text {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-text {
+  background: linear-gradient(-45deg, #ffffff, #e5e7eb, #d1d5db, #ffffff);
+  background-size: 400% 400%;
+  animation: gradient-text 3s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .glass-card {
   backdrop-filter: blur(20px) saturate(150%);
   background: rgba(15, 15, 15, 0.9);
