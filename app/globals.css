@@ -1061,6 +1061,20 @@ body {
   padding: 1.5rem;
 }
 
+/* 5px padding utilities for fine-grained adjustments */
+.p-5px { padding: 5px; }
+.px-5px { padding-left: 5px; padding-right: 5px; }
+.py-5px { padding-top: 5px; padding-bottom: 5px; }
+
+/* Position utilities for sticky footer in modal */
+.sticky {
+  position: sticky;
+}
+
+.bottom-0 {
+  bottom: 0;
+}
+
 .px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
