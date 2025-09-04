@@ -1066,6 +1066,11 @@ body {
 .px-5px { padding-left: 5px; padding-right: 5px; }
 .py-5px { padding-top: 5px; padding-bottom: 5px; }
 
+/* 3px padding utilities */
+.p-3px { padding: 3px; }
+.px-3px { padding-left: 3px; padding-right: 3px; }
+.py-3px { padding-top: 3px; padding-bottom: 3px; }
+
 /* Position utilities for sticky footer in modal */
 .sticky {
   position: sticky;

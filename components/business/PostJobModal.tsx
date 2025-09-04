@@ -170,7 +170,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 error={errors.title}
                 placeholder="e.g., Evening Server Needed"
-                className="px-5px"
+                className="px-3px"
               />
             </div>
 
@@ -179,7 +179,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
                 <label className="form-label" htmlFor="job-description">Description</label>
                 <textarea
                   id="job-description"
-                  className="form-input form-textarea px-5px py-5px"
+                  className="form-input form-textarea px-3px py-3px"
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Describe the job, requirements, and expectations..."
@@ -199,7 +199,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
                 onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                 error={errors.location}
                 placeholder="e.g., Orchard Road, Singapore"
-                className="px-5px"
+                className="px-3px"
               />
             </div>
 
@@ -210,13 +210,13 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
               onChange={(e) => setFormData(prev => ({ ...prev, pay: e.target.value }))}
               error={errors.pay}
               placeholder="0"
-              className="px-5px"
+              className="px-3px"
             />
 
             <div className="form-group">
               <label className="form-label">Pay Type</label>
               <select
-                className="form-input form-select px-5px py-5px"
+                className="form-input form-select px-3px py-3px"
                 value={formData.payType}
                 onChange={(e) => setFormData(prev => ({ ...prev, payType: e.target.value as 'hourly' | 'fixed' }))}
               >
@@ -231,7 +231,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
               value={formData.date}
               onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
               error={errors.date}
-              className="px-5px"
+              className="px-3px"
             />
 
             <Input
@@ -240,7 +240,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
               value={formData.time}
               onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
               error={errors.time}
-              className="px-5px"
+              className="px-3px"
             />
 
             <Input
@@ -249,7 +249,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
               onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
               error={errors.duration}
               placeholder="e.g., 5 hours"
-              className="px-5px"
+              className="px-3px"
             />
 
             <div></div>
@@ -261,7 +261,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
                   {formData.requirements.map((requirement, index) => (
                     <div key={index} className="flex gap-2">
                       <input
-                        className="form-input flex-1 px-5px py-5px"
+                        className="form-input flex-1 px-3px py-3px"
                         value={requirement}
                         onChange={(e) => updateRequirement(index, e.target.value)}
                         placeholder={`Requirement ${index + 1}`}

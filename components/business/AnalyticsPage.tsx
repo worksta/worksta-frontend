@@ -196,7 +196,7 @@ export function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="glass-card" onClick={() => console.debug('Open monthly stats')}>
-          <CardHeader>
+          <CardHeader className="mt-2 flex items-center justify-center">
             <CardTitle className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-purple-400" />
               This Month
@@ -207,6 +207,17 @@ export function AnalyticsPage() {
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-400 mb-1">12</div>
                 <div className="text-sm text-text-muted">Jobs Posted</div>
+              </div>
+              <div className="h-20 w-full overflow-hidden rounded-xl bg-bg-tertiary/60 border border-border-color">
+                <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
+                  <polyline fill="none" stroke="#a855f7" strokeWidth="2" points="0,22 10,20 20,18 30,24 40,16 50,14 60,12 70,18 80,10 90,8 100,6" />
+                  <linearGradient id="monthFill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(168,85,247,0.3)" />
+                    <stop offset="100%" stopColor="rgba(168,85,247,0.0)" />
+                  </linearGradient>
+                  <polygon points="0,30 0,22 10,20 20,18 30,24 40,16 50,14 60,12 70,18 80,10 90,8 100,6 100,30" fill="url(#monthFill)" />
+                  <circle cx="100" cy="6" r="1.8" fill="#a855f7" stroke="#ffffff" strokeWidth="0.6" />
+                </svg>
               </div>
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div>
@@ -222,9 +233,8 @@ export function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="glass-card" onClick={() => console.debug('Open spend analysis')}
-          >
-          <CardHeader>
+        <Card className="glass-card" onClick={() => console.debug('Open spend analysis')}>
+          <CardHeader className="mt-2 flex items-center justify-center">
             <CardTitle className="flex items-center gap-2">
               <DollarSign className="w-5 h-5 text-green-400" />
               Spend Analysis
@@ -235,6 +245,17 @@ export function AnalyticsPage() {
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-400 mb-1">$2,840</div>
                 <div className="text-sm text-text-muted" title="All costs including platform fees">Total Spent</div>
+              </div>
+              <div className="h-20 w-full overflow-hidden rounded-xl bg-bg-tertiary/60 border border-border-color">
+                <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
+                  <polyline fill="none" stroke="#22c55e" strokeWidth="2" points="0,25 10,22 20,24 30,18 40,20 50,14 60,16 70,10 80,12 90,8 100,12" />
+                  <linearGradient id="spendFill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(34,197,94,0.3)" />
+                    <stop offset="100%" stopColor="rgba(34,197,94,0.0)" />
+                  </linearGradient>
+                  <polygon points="0,30 0,25 10,22 20,24 30,18 40,20 50,14 60,16 70,10 80,12 90,8 100,12 100,30" fill="url(#spendFill)" />
+                  <circle cx="100" cy="12" r="1.8" fill="#22c55e" stroke="#ffffff" strokeWidth="0.6" />
+                </svg>
               </div>
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div>
@@ -251,36 +272,41 @@ export function AnalyticsPage() {
         </Card>
 
         <Card className="glass-card" onClick={() => console.debug('Open top performer profile')}>
-          <CardHeader>
+          <CardHeader className="mt-2 flex items-center justify-center">
             <CardTitle className="flex items-center gap-2">
               <Award className="w-5 h-5 text-yellow-400" />
               Top Performer
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-center space-y-4">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center mx-auto text-2xl shadow-lg">
-                🏆
-              </div>
-              <div>
-                <div className="font-bold text-text-primary text-lg">Alex Chen</div>
-                <div className="text-sm text-text-muted">Bartender • 5.0 rating • 3 jobs completed</div>
-              </div>
-              <div className="flex justify-center">
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                  ))}
+            <div className="relative overflow-hidden rounded-xl">
+              <div className="absolute inset-0 opacity-[0.35]" style={{
+                background: 'radial-gradient(1200px 300px at 50% -10%, rgba(250,204,21,0.25), transparent 60%)'
+              }} />
+              <div className="text-center space-y-4 relative z-10 p-4">
+                <div className="mx-auto w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-3xl shadow-lg ring-4 ring-yellow-400/10">
+                  🏆
                 </div>
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Mixology</span>
-                <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Customer Service</span>
-                <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Night Shift</span>
-              </div>
-              <div className="flex justify-center gap-3 mt-2">
-                <button className="btn btn-secondary btn-sm">View Profile</button>
-                <button className="btn btn-primary btn-sm">Message</button>
+                <div>
+                  <div className="font-bold text-text-primary text-xl">Alex Chen</div>
+                  <div className="text-sm text-text-muted">Bartender • 5.0 rating • 3 jobs completed</div>
+                </div>
+                <div className="flex justify-center">
+                  <div className="flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current drop-shadow" />
+                    ))}
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Mixology</span>
+                  <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Customer Service</span>
+                  <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Night Shift</span>
+                </div>
+                <div className="flex justify-center gap-3 mt-2">
+                  <button className="btn btn-secondary btn-sm">View Profile</button>
+                  <button className="btn btn-primary btn-sm">Message</button>
+                </div>
               </div>
             </div>
           </CardContent>
