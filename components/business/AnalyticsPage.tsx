@@ -16,6 +16,10 @@ import {
 } from 'lucide-react'
 
 export function AnalyticsPage() {
+  const reportingPeriod = new Date().toLocaleString(undefined, {
+    month: 'long',
+    year: 'numeric'
+  })
   const stats = [
     {
       title: 'Total Job Posts',
@@ -61,20 +65,31 @@ export function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-6 rounded-2xl border border-purple-500/20">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-          📊 Business Analytics
-        </h1>
-        <p className="text-text-secondary text-lg">
-          Track your hiring performance and optimize your recruitment strategy
-        </p>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1">
+              📊 Business Analytics
+            </h1>
+            <p className="text-text-secondary text-lg">
+              Track your hiring performance and optimize your recruitment strategy
+            </p>
+          </div>
+          <div aria-label="Reporting period" className="px-3 py-1 rounded-lg bg-bg-tertiary border border-border-color text-text-secondary text-sm">
+            This Month • {reportingPeriod}
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon
           return (
-            <Card key={index} className={`glass-card hover-lift animate-fadeInUp stagger-${index + 1}`}>
-              <CardContent className="p-6">
+            <Card
+              key={index}
+              className={`glass-card hover-lift animate-fadeInUp stagger-${index + 1}`}
+              onClick={() => console.debug('Open detailed view for', stat.title)}
+            >
+              <CardContent className="p-6" aria-label={`${stat.title} summary`}>
                 <div className="flex items-center justify-between mb-4">
                   <div className={`p-3 rounded-xl bg-${stat.color}-500/20`}>
                     <Icon className={`w-6 h-6 text-${stat.color}-400`} />
@@ -98,7 +113,7 @@ export function AnalyticsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="glass-card">
+        <Card className="glass-card" onClick={() => console.debug('Open hiring trends breakdown')}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-purple-400" />
@@ -107,43 +122,52 @@ export function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-500/10 to-purple-600/10 rounded-lg">
-                <div>
-                  <div className="font-semibold text-text-primary">Server Positions</div>
-                  <div className="text-sm text-text-muted">Most in-demand role</div>
+              {/* Row 1 */}
+              <div className="p-4 rounded-lg bg-gradient-to-r from-purple-500/10 to-purple-600/10 border border-purple-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <div className="font-semibold text-text-primary">Server Positions</div>
+                    <div className="text-sm text-text-muted">Most in-demand role</div>
+                  </div>
+                  <span className="text-lg font-bold text-purple-400">68%</span>
                 </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-purple-400">68%</div>
-                  <div className="text-xs text-text-muted">of total posts</div>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-lg">
-                <div>
-                  <div className="font-semibold text-text-primary">Kitchen Staff</div>
-                  <div className="text-sm text-text-muted">High demand</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-blue-400">24%</div>
-                  <div className="text-xs text-text-muted">of total posts</div>
+                <div className="w-full h-2 rounded bg-bg-tertiary overflow-hidden" aria-hidden="true">
+                  <div className="h-full bg-purple-500" style={{ width: '68%' }} />
                 </div>
               </div>
-              
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-500/10 to-green-600/10 rounded-lg">
-                <div>
-                  <div className="font-semibold text-text-primary">Bartenders</div>
-                  <div className="text-sm text-text-muted">Specialty roles</div>
+
+              {/* Row 2 */}
+              <div className="p-4 rounded-lg bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <div className="font-semibold text-text-primary">Kitchen Staff</div>
+                    <div className="text-sm text-text-muted">High demand</div>
+                  </div>
+                  <span className="text-lg font-bold text-blue-400">24%</span>
                 </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-green-400">8%</div>
-                  <div className="text-xs text-text-muted">of total posts</div>
+                <div className="w-full h-2 rounded bg-bg-tertiary overflow-hidden" aria-hidden="true">
+                  <div className="h-full bg-blue-500" style={{ width: '24%' }} />
+                </div>
+              </div>
+
+              {/* Row 3 */}
+              <div className="p-4 rounded-lg bg-gradient-to-r from-green-500/10 to-green-600/10 border border-green-500/20">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <div className="font-semibold text-text-primary">Bartenders</div>
+                    <div className="text-sm text-text-muted">Specialty roles</div>
+                  </div>
+                  <span className="text-lg font-bold text-green-400">8%</span>
+                </div>
+                <div className="w-full h-2 rounded bg-bg-tertiary overflow-hidden" aria-hidden="true">
+                  <div className="h-full bg-green-500" style={{ width: '8%' }} />
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="glass-card">
+        <Card className="glass-card" onClick={() => console.debug('Open performance metrics')}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Star className="w-5 h-5 text-yellow-400" />
@@ -151,11 +175,18 @@ export function AnalyticsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {recentMetrics.map((metric, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-bg-tertiary rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between px-4 py-3 bg-bg-tertiary rounded-lg border border-border-color"
+                  title={metric.label}
+                  aria-label={`${metric.label} value`}
+                >
                   <span className="text-text-secondary">{metric.label}</span>
-                  <span className={`font-bold text-${metric.color}-400`}>{metric.value}</span>
+                  <span className={`px-2 py-1 rounded-md text-sm font-bold bg-${metric.color}-500/10 border border-${metric.color}-500/20 text-${metric.color}-400`}>
+                    {metric.value}
+                  </span>
                 </div>
               ))}
             </div>
@@ -164,7 +195,7 @@ export function AnalyticsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="glass-card">
+        <Card className="glass-card" onClick={() => console.debug('Open monthly stats')}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-purple-400" />
@@ -191,7 +222,8 @@ export function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="glass-card">
+        <Card className="glass-card" onClick={() => console.debug('Open spend analysis')}
+          >
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <DollarSign className="w-5 h-5 text-green-400" />
@@ -202,23 +234,23 @@ export function AnalyticsPage() {
             <div className="space-y-4">
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-400 mb-1">$2,840</div>
-                <div className="text-sm text-text-muted">Total Spent</div>
+                <div className="text-sm text-text-muted" title="All costs including platform fees">Total Spent</div>
               </div>
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div>
                   <div className="text-xl font-bold text-purple-400">$237</div>
-                  <div className="text-xs text-text-muted">Avg per hire</div>
+                  <div className="text-xs text-text-muted" title="Average spend per successful hire">Avg per hire</div>
                 </div>
                 <div>
                   <div className="text-xl font-bold text-blue-400">5%</div>
-                  <div className="text-xs text-text-muted">Platform fee</div>
+                  <div className="text-xs text-text-muted" title="Fee charged by Worksta for transactions">Platform fee</div>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="glass-card">
+        <Card className="glass-card" onClick={() => console.debug('Open top performer profile')}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Award className="w-5 h-5 text-yellow-400" />
@@ -227,12 +259,12 @@ export function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center mx-auto text-2xl">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center mx-auto text-2xl shadow-lg">
                 🏆
               </div>
               <div>
-                <div className="font-bold text-text-primary">Alex Chen</div>
-                <div className="text-sm text-text-muted">5.0 rating • 3 jobs completed</div>
+                <div className="font-bold text-text-primary text-lg">Alex Chen</div>
+                <div className="text-sm text-text-muted">Bartender • 5.0 rating • 3 jobs completed</div>
               </div>
               <div className="flex justify-center">
                 <div className="flex gap-1">
@@ -241,12 +273,22 @@ export function AnalyticsPage() {
                   ))}
                 </div>
               </div>
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Mixology</span>
+                <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Customer Service</span>
+                <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Night Shift</span>
+              </div>
+              <div className="flex justify-center gap-3 mt-2">
+                <button className="btn btn-secondary btn-sm">View Profile</button>
+                <button className="btn btn-primary btn-sm">Message</button>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="glass-card">
+      <Card className="glass-card" onClick={() => console.debug('Open quick insights')}
+        >
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <PieChart className="w-5 h-5 text-purple-400" />

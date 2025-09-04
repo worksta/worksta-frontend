@@ -58,7 +58,7 @@ export function Sidebar({ activeTab = 'dashboard', onTabChange }: SidebarProps) 
   ]
 
   return (
-    <aside className="w-64 bg-bg-secondary border-r border-border-color flex flex-col h-screen glass-effect">
+    <aside className="w-64 bg-bg-secondary border-r border-border-color flex flex-col h-screen glass-effect" aria-label="Main navigation">
       <div className="p-4 border-b border-border-color">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-lg">
@@ -74,7 +74,7 @@ export function Sidebar({ activeTab = 'dashboard', onTabChange }: SidebarProps) 
       </div>
 
       <div className="flex-1 p-4">
-        <nav className="space-y-2 mb-8">
+        <nav className="space-y-2 mb-8" aria-label="Primary">
           {navItems.map((item) => {
             const Icon = item.icon
             return (
@@ -82,16 +82,20 @@ export function Sidebar({ activeTab = 'dashboard', onTabChange }: SidebarProps) 
                 key={item.id}
                 onClick={() => handleTabChange(item.id)}
                 className={clsx(
-                  'nav-item w-full text-left group relative overflow-hidden',
+                  'nav-item w-full text-left group relative overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/40',
                   currentTab === item.id && 'active'
                 )}
+                aria-current={currentTab === item.id ? 'page' : undefined}
               >
                 <div className="flex items-center gap-3 relative z-10">
                   <Icon className="w-5 h-5" />
                   <span>{item.label}</span>
                 </div>
                 {currentTab === item.id && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent rounded-lg"></div>
+                  <>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent rounded-lg"></div>
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-full bg-purple-500" aria-hidden="true" />
+                  </>
                 )}
               </button>
             )
@@ -151,6 +155,8 @@ export function Sidebar({ activeTab = 'dashboard', onTabChange }: SidebarProps) 
               <a
                 key={link.label}
                 href={link.href}
+                target={link.href.startsWith('http') ? '_blank' : undefined}
+                rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
                 className="flex items-center gap-3 px-3 py-2 text-sm text-text-muted hover:text-text-primary hover:bg-bg-tertiary rounded-lg transition-all duration-200 group"
               >
                 <Icon className="w-4 h-4" />
@@ -164,7 +170,7 @@ export function Sidebar({ activeTab = 'dashboard', onTabChange }: SidebarProps) 
         <div className="mt-4 p-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg border border-purple-500/20">
           <p className="text-xs text-purple-300 font-medium">Need Help?</p>
           <p className="text-xs text-text-muted mt-1">Contact our 24/7 support team</p>
-          <button className="text-xs text-purple-400 hover:text-purple-300 mt-2 font-medium">
+          <button className="text-xs text-purple-400 hover:text-purple-300 mt-2 font-medium" aria-label="Open support">
             Get Support →
           </button>
         </div>

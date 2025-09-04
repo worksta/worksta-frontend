@@ -51,18 +51,18 @@ export function Login({ onToggleMode }: LoginProps) {
       </div>
 
       {/* Main Card Container */}
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-md mx-6">
         <div className="relative bg-white/5 backdrop-blur-2xl rounded-[28px] border border-white/10 shadow-2xl shadow-black/20">
           {/* Glassmorphism overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 rounded-[28px]"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-[28px]"></div>
-          
+
           {/* Card Content */}
-          <div className="relative z-10 p-10">
+          <div className="relative z-10 px-16 py-10">
             {/* Header & Subtitle */}
             <div className="text-center mb-8">
               <h1 className="text-[40px] font-black tracking-wide text-white mb-3 leading-tight">
-                Welcome Back
+               Worksta
               </h1>
               <p className="text-[20px] font-normal text-gray-300 leading-relaxed">
                 Sign in to your account to continue
