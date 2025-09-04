@@ -35,8 +35,9 @@ body {
     --border-color: rgba(68, 68, 68, 0.5);
     --border-hover: rgba(102, 102, 102, 0.8);
     --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --text-muted: #888888;
+    /* Unified text color system */
+    --text-secondary: #cfcfcf;
+    --text-muted: #a3a3a3;
     --purple-50: #faf5ff;
     --purple-100: #f3e8ff;
     --purple-200: #e9d5ff;

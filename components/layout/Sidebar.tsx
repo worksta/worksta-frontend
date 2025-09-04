@@ -89,7 +89,7 @@ export function Sidebar({ activeTab = 'dashboard', onTabChange }: SidebarProps) 
               >
                 <div className="flex items-center gap-3 relative z-10">
                   <Icon className="w-5 h-5" />
-                  <span>{item.label}</span>
+                  <span className="text-text-primary">{item.label}</span>
                 </div>
                 {currentTab === item.id && (
                   <>

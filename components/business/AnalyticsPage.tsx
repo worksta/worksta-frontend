@@ -80,7 +80,7 @@ export function AnalyticsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {stats.map((stat, index) => {
           const Icon = stat.icon
           return (
@@ -112,7 +112,7 @@ export function AnalyticsPage() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="glass-card" onClick={() => console.debug('Open hiring trends breakdown')}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -194,7 +194,7 @@ export function AnalyticsPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <Card className="glass-card" onClick={() => console.debug('Open monthly stats')}>
           <CardHeader className="mt-2 flex items-center justify-center">
             <CardTitle className="flex items-center gap-2">

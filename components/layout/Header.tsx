@@ -46,7 +46,7 @@ export function Header({ onNavigate }: HeaderProps) {
   }
 
   return (
-    <header className="h-18 bg-bg-secondary border-b border-border-color flex items-center justify-between px-6 backdrop-blur-20 relative">
+    <header className="h-18 bg-bg-secondary/90 border-b border-border-color flex items-center justify-between px-6 backdrop-blur-20 relative sticky top-0 z-50 glass-effect">
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center shadow-lg">
@@ -58,7 +58,13 @@ export function Header({ onNavigate }: HeaderProps) {
         </div>
 
         <nav className="hidden md:flex items-center gap-4">
-          <Button variant="secondary" size="sm" className="gap-2 text-sm">
+          <Button
+            variant="secondary"
+            size="sm"
+            className="gap-2 text-sm"
+            onClick={() => onNavigate && onNavigate('help')}
+            aria-label="Open help and support"
+          >
             <HelpCircle className="w-4 h-4" />
             Help
           </Button>
