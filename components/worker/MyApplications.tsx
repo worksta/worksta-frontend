@@ -175,13 +175,13 @@ export function MyApplications() {
                     </div>
                     <div className="text-sm">
                       {application.status === 'pending' && (
-                        <span className="text-yellow-400">⏳ Waiting for response</span>
+                        <span className="text-violet-400">⏳ Waiting for response</span>
                       )}
                       {application.status === 'accepted' && (
-                        <span className="text-green-400">🎉 Congratulations! You got the job</span>
+                        <span className="text-violet-400">🎉 Congratulations! You got the job</span>
                       )}
                       {application.status === 'rejected' && (
-                        <span className="text-red-400">😔 Not selected this time</span>
+                        <span className="text-purple-400">😔 Not selected this time</span>
                       )}
                     </div>
                   </div>

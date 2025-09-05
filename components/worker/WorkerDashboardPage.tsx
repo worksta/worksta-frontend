@@ -49,9 +49,9 @@ export function WorkerDashboardPage() {
       title: 'Jobs Completed',
       value: acceptedJobs.length.toString(),
       icon: CheckCircle,
-      color: 'from-emerald-500 to-green-600',
-      bgColor: 'from-emerald-500/10 to-green-600/10',
-      borderColor: 'border-emerald-500/20',
+      color: 'from-violet-600 to-purple-700',
+      bgColor: 'from-violet-600/10 to-purple-700/10',
+      borderColor: 'border-violet-600/20',
       description: 'Successfully finished',
       trend: '+8%',
       trendUp: true
@@ -60,9 +60,9 @@ export function WorkerDashboardPage() {
       title: 'Success Rate',
       value: myApplications.length > 0 ? `${Math.round((acceptedJobs.length / myApplications.length) * 100)}%` : '0%',
       icon: Target,
-      color: 'from-blue-500 to-cyan-600',
-      bgColor: 'from-blue-500/10 to-cyan-600/10',
-      borderColor: 'border-blue-500/20',
+      color: 'from-violet-700 to-purple-800',
+      bgColor: 'from-violet-700/10 to-purple-800/10',
+      borderColor: 'border-violet-700/20',
       description: 'Application to hire ratio',
       trend: '+5%',
       trendUp: true
@@ -119,7 +119,7 @@ export function WorkerDashboardPage() {
   const availableJobs = jobs.filter(job => job.status === 'active').slice(0, 3)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
       {/* Background decorative elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl"></div>
@@ -127,77 +127,61 @@ export function WorkerDashboardPage() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-500/5 to-blue-500/5 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto space-y-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-8 space-y-8">
         {/* Hero Welcome Section */}
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-purple-500/15 to-pink-500/20 rounded-3xl"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-purple-600/10 rounded-3xl"></div>
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-400/30 to-purple-400/30 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-pink-400/30 to-rose-400/30 rounded-full blur-2xl"></div>
-          
-          <div className="relative z-10 p-8 rounded-3xl border border-white/10 backdrop-blur-xl">
-            <div className="flex items-center justify-between">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
-                    <Sparkles className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-4xl font-black bg-gradient-to-r from-white via-violet-100 to-purple-100 bg-clip-text text-transparent">
-                      Welcome back, {user?.name}! 👋
-                    </h1>
-                    <p className="text-white/80 text-lg font-medium">
-                      Ready to discover your next amazing opportunity?
-                    </p>
-                  </div>
+        <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-8 rounded-2xl border border-purple-500/20 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
+                  <Sparkles className="w-6 h-6 text-white" />
                 </div>
-                
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/30 rounded-full backdrop-blur-sm">
-                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                    <span className="text-emerald-300 font-medium">{pendingApplications.length} Pending</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-violet-500/20 border border-violet-500/30 rounded-full backdrop-blur-sm">
-                    <span className="w-2 h-2 bg-violet-400 rounded-full animate-pulse"></span>
-                    <span className="text-violet-300 font-medium">{availableJobs.length} New Jobs</span>
-                  </div>
+                <div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                    Welcome back, {user?.name}! 👋
+                  </h1>
+                  <p className="text-white/80 text-lg mb-4">
+                    Ready to discover your next amazing opportunity?
+                  </p>
                 </div>
               </div>
-              
-              <div className="text-center">
-                <div className="relative">
-                  <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-violet-500 via-purple-500 to-pink-500 flex items-center justify-center text-4xl mb-3 shadow-xl shadow-violet-500/25">
-                    {user?.avatar || '👨‍🍳'}
-                  </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
-                    <Star className="w-4 h-4 text-white fill-current" />
-                  </div>
-                </div>
-                <div className="flex items-center justify-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-amber-400 fill-current" />
-                  ))}
-                </div>
+              <div className="flex items-center gap-6 text-sm text-white/60">
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                  {pendingApplications.length} Pending
+                </span>
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+                  {availableJobs.length} New Jobs
+                </span>
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                  Real-time Updates
+                </span>
               </div>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-purple-400">{availableJobs.length}</div>
+              <div className="text-sm text-white/60">Available Jobs</div>
             </div>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => {
             const Icon = stat.icon
             return (
               <Card key={index} className="group relative overflow-hidden border-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl hover:scale-105 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20">
                 <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-xl"></div>
-                <CardContent className="relative z-10 p-6">
+                <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className={`p-3 rounded-2xl bg-gradient-to-br ${stat.color} shadow-lg`}>
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-semibold ${stat.trendUp ? 'text-emerald-400' : 'text-red-400'}`}>
+                      <span className={`text-xs font-semibold ${stat.trendUp ? 'text-violet-400' : 'text-purple-400'}`}>
                         {stat.trend}
                       </span>
                       <ArrowUpRight className="w-4 h-4 text-white/40 group-hover:text-white/60 transition-colors duration-300" />
@@ -219,11 +203,10 @@ export function WorkerDashboardPage() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Recent Activity */}
-          <Card className="border-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-purple-500/5"></div>
-            <CardHeader className="relative z-10 border-b border-white/10">
+          <Card className="glass-card border-purple-500/20">
+            <CardHeader className="border-b border-white/10">
               <CardTitle className="flex items-center gap-3 text-xl">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                   <Clock className="w-5 h-5 text-white" />
@@ -231,7 +214,7 @@ export function WorkerDashboardPage() {
                 Recent Activity
               </CardTitle>
             </CardHeader>
-            <CardContent className="relative z-10 p-6">
+            <CardContent className="p-6">
               <div className="space-y-4">
                 {recentActivity.map((activity, index) => (
                   <div key={index} className={`group p-4 rounded-2xl bg-gradient-to-r ${activity.color} border ${activity.borderColor} hover:scale-105 transition-all duration-300 cursor-pointer`}>
@@ -259,11 +242,10 @@ export function WorkerDashboardPage() {
           </Card>
 
           {/* Performance Overview */}
-          <Card className="border-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-green-500/5"></div>
-            <CardHeader className="relative z-10 border-b border-white/10">
+          <Card className="glass-card border-purple-500/20">
+            <CardHeader className="border-b border-white/10">
               <CardTitle className="flex items-center gap-3 text-xl">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-white" />
                 </div>
                 Performance Overview
@@ -281,23 +263,23 @@ export function WorkerDashboardPage() {
                   </div>
                 </div>
                 
-                <div className="p-4 bg-gradient-to-r from-emerald-500/10 to-green-600/10 rounded-2xl border border-emerald-500/20 hover:border-emerald-400/40 transition-all duration-300">
+                <div className="p-4 bg-gradient-to-r from-violet-500/10 to-purple-600/10 rounded-2xl border border-violet-500/20 hover:border-violet-400/40 transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-semibold text-white">Earnings</div>
                       <div className="text-sm text-white/60">This month</div>
                     </div>
-                    <div className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">$1,240</div>
+                    <div className="text-3xl font-black bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">$1,240</div>
                   </div>
                 </div>
                 
-                <div className="p-4 bg-gradient-to-r from-blue-500/10 to-cyan-600/10 rounded-2xl border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300">
+                <div className="p-4 bg-gradient-to-r from-violet-500/10 to-purple-600/10 rounded-2xl border border-violet-500/20 hover:border-violet-400/40 transition-all duration-300">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-semibold text-white">Hours Worked</div>
                       <div className="text-sm text-white/60">This month</div>
                     </div>
-                    <div className="text-3xl font-black bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">64</div>
+                    <div className="text-3xl font-black bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">64</div>
                   </div>
                 </div>
               </div>
@@ -306,9 +288,8 @@ export function WorkerDashboardPage() {
         </div>
 
         {/* Recommended Jobs */}
-        <Card className="border-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-purple-500/5"></div>
-          <CardHeader className="relative z-10 border-b border-white/10">
+        <Card className="glass-card border-purple-500/20">
+          <CardHeader className="border-b border-white/10">
             <CardTitle className="flex items-center justify-between">
               <span className="flex items-center gap-3 text-xl">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
@@ -321,7 +302,7 @@ export function WorkerDashboardPage() {
               </Badge>
             </CardTitle>
           </CardHeader>
-          <CardContent className="relative z-10 p-6">
+          <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {availableJobs.map((job, index) => (
                 <div key={job.id} className="group relative overflow-hidden p-6 bg-gradient-to-br from-white/5 to-white/10 rounded-2xl border border-white/10 hover:border-violet-400/40 hover:scale-105 transition-all duration-500 cursor-pointer backdrop-blur-sm">
@@ -336,7 +317,7 @@ export function WorkerDashboardPage() {
                     <h4 className="font-bold text-white text-lg mb-3 group-hover:text-violet-200 transition-colors duration-300">{job.title}</h4>
                     <p className="text-sm text-white/70 mb-4 line-clamp-2 leading-relaxed">{job.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
+                      <span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
                         ${job.pay}{job.payType === 'hourly' ? '/hr' : ''}
                       </span>
                       <span className="text-xs text-white/50 bg-white/10 px-2 py-1 rounded-full">{job.location}</span>
@@ -348,20 +329,64 @@ export function WorkerDashboardPage() {
           </CardContent>
         </Card>
 
+        {/* Quick Actions */}
+        <Card className="glass-card border-purple-500/20 mb-8">
+          <CardHeader className="border-b border-white/10">
+            <CardTitle className="flex items-center gap-3 text-xl">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                <Zap className="w-5 h-5 text-white" />
+              </div>
+              Quick Actions
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="group cursor-pointer">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-violet-500/10 to-purple-500/10 rounded-xl border border-violet-500/20 hover:border-violet-400/40 transition-all duration-300">
+                  <span className="text-xl">🔍</span>
+                  <div>
+                    <div className="text-sm font-semibold text-white">Browse Jobs</div>
+                    <div className="text-xs text-white/60">Find new opportunities</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="group cursor-pointer">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-violet-500/10 to-purple-500/10 rounded-xl border border-violet-500/20 hover:border-violet-400/40 transition-all duration-300">
+                  <span className="text-xl">📝</span>
+                  <div>
+                    <div className="text-sm font-semibold text-white">My Applications</div>
+                    <div className="text-xs text-white/60">Track your progress</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="group cursor-pointer">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-violet-500/10 to-purple-500/10 rounded-xl border border-violet-500/20 hover:border-violet-400/40 transition-all duration-300">
+                  <span className="text-xl">👤</span>
+                  <div>
+                    <div className="text-sm font-semibold text-white">Profile</div>
+                    <div className="text-xs text-white/60">Update your info</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Bottom Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Next Steps */}
-          <Card className="border-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5"></div>
-            <CardHeader className="relative z-10 border-b border-white/10">
+          <Card className="glass-card border-purple-500/20">
+            <CardHeader className="border-b border-white/10">
               <CardTitle className="flex items-center gap-3 text-lg">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                   <Calendar className="w-4 h-4 text-white" />
                 </div>
                 Next Steps
               </CardTitle>
             </CardHeader>
-            <CardContent className="relative z-10 p-4">
+            <CardContent className="p-4">
               <div className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-violet-500/10 to-purple-500/10 rounded-xl border border-violet-500/20 hover:border-violet-400/40 transition-all duration-300">
                   <span className="text-xl">📝</span>
@@ -370,7 +395,7 @@ export function WorkerDashboardPage() {
                     <div className="text-xs text-white/60">Add skills & experience</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-xl border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300">
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-violet-500/10 to-purple-500/10 rounded-xl border border-violet-500/20 hover:border-violet-400/40 transition-all duration-300">
                   <span className="text-xl">🔍</span>
                   <div>
                     <div className="text-sm font-semibold text-white">Browse Jobs</div>
@@ -382,26 +407,25 @@ export function WorkerDashboardPage() {
           </Card>
 
           {/* Achievements */}
-          <Card className="border-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-yellow-500/5"></div>
-            <CardHeader className="relative z-10 border-b border-white/10">
+          <Card className="glass-card border-purple-500/20">
+            <CardHeader className="border-b border-white/10">
               <CardTitle className="flex items-center gap-3 text-lg">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                   <Award className="w-4 h-4 text-white" />
                 </div>
                 Achievements
               </CardTitle>
             </CardHeader>
-            <CardContent className="relative z-10 p-4">
+            <CardContent className="p-4">
               <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 rounded-xl border border-amber-500/20 hover:border-amber-400/40 transition-all duration-300">
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-violet-500/10 to-purple-500/10 rounded-xl border border-violet-500/20 hover:border-violet-400/40 transition-all duration-300">
                   <span className="text-xl">🏆</span>
                   <div>
                     <div className="text-sm font-semibold text-white">Top Performer</div>
                     <div className="text-xs text-white/60">5.0 star rating</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-xl border border-emerald-500/20 hover:border-emerald-400/40 transition-all duration-300">
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-violet-500/10 to-purple-500/10 rounded-xl border border-violet-500/20 hover:border-violet-400/40 transition-all duration-300">
                   <span className="text-xl">💯</span>
                   <div>
                     <div className="text-sm font-semibold text-white">Reliable Worker</div>
@@ -413,20 +437,19 @@ export function WorkerDashboardPage() {
           </Card>
 
           {/* Earnings */}
-          <Card className="border-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-green-500/5"></div>
-            <CardHeader className="relative z-10 border-b border-white/10">
+          <Card className="glass-card border-purple-500/20">
+            <CardHeader className="border-b border-white/10">
               <CardTitle className="flex items-center gap-3 text-lg">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                   <DollarSign className="w-4 h-4 text-white" />
                 </div>
                 Earnings
               </CardTitle>
             </CardHeader>
-            <CardContent className="relative z-10 p-4">
+            <CardContent className="p-4">
               <div className="text-center space-y-4">
                 <div>
-                  <div className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">$1,240</div>
+                  <div className="text-3xl font-black bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">$1,240</div>
                   <div className="text-sm text-white/60">This month</div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-center">
@@ -434,8 +457,8 @@ export function WorkerDashboardPage() {
                     <div className="text-lg font-bold text-violet-300">$18.5</div>
                     <div className="text-xs text-white/60">Avg/hour</div>
                   </div>
-                  <div className="p-3 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-xl border border-blue-500/20">
-                    <div className="text-lg font-bold text-blue-300">64h</div>
+                  <div className="p-3 bg-gradient-to-r from-violet-500/10 to-purple-500/10 rounded-xl border border-violet-500/20">
+                    <div className="text-lg font-bold text-violet-300">64h</div>
                     <div className="text-xs text-white/60">Total hours</div>
                   </div>
                 </div>

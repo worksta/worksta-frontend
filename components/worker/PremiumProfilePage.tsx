@@ -122,7 +122,7 @@ export function PremiumProfilePage() {
                   </div>
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                      <Star key={i} className="w-4 h-4 text-violet-400 fill-current" />
                     ))}
                     <span className="text-white/80 text-sm ml-1">4.8</span>
                   </div>
