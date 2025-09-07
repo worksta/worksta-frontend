@@ -74,28 +74,28 @@ export function ProfilePage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <Card key={index} hover={false}>
-            <CardContent className="p-4 text-center">
-              <div className="text-2xl mb-2">{stat.icon}</div>
-              <div className="text-2xl font-bold text-accent-primary mb-1">{stat.value}</div>
+          <Card key={index} hover={false} className="h-fit">
+            <CardContent className="p-6 text-center">
+              <div className="text-2xl mb-3">{stat.icon}</div>
+              <div className="text-2xl font-bold text-accent-primary mb-2">{stat.value}</div>
               <div className="text-sm text-text-muted">{stat.label}</div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-8">
         {/* Business Information */}
-        <Card>
+        <Card className="h-fit">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-3">
               <Building2 className="w-5 h-5" />
               Business Information
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5">
             {isEditing ? (
               <>
                 <Input
@@ -127,7 +127,7 @@ export function ProfilePage() {
               </>
             ) : (
               <>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <div className="text-2xl">{user?.avatar}</div>
                   <div>
                     <h3 className="font-semibold text-lg">{formData.name}</h3>
@@ -135,20 +135,20 @@ export function ProfilePage() {
                   </div>
                 </div>
                 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
                     <Mail className="w-4 h-4 text-text-muted" />
                     <span>{formData.email}</span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <Phone className="w-4 h-4 text-text-muted" />
                     <span>{formData.phone}</span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <MapPin className="w-4 h-4 text-text-muted" />
                     <span>{formData.location}</span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <Globe className="w-4 h-4 text-text-muted" />
                     <a href={formData.website} className="text-accent-primary hover:underline">
                       {formData.website}
@@ -161,11 +161,11 @@ export function ProfilePage() {
         </Card>
 
         {/* Business Description */}
-        <Card>
+        <Card className="h-fit">
           <CardHeader>
             <CardTitle>About Your Business</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5">
             {isEditing ? (
               <>
                 <div className="form-group">
@@ -193,13 +193,13 @@ export function ProfilePage() {
               <>
                 <p className="text-text-secondary leading-relaxed">{formData.description}</p>
                 
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border-color">
+                <div className="grid grid-cols-2 gap-5 pt-5 border-t border-border-color">
                   <div>
-                    <p className="text-sm text-text-muted">Industry</p>
+                    <p className="text-sm text-text-muted mb-1">Industry</p>
                     <p className="font-medium">{formData.industry}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-text-muted">Established</p>
+                    <p className="text-sm text-text-muted mb-1">Established</p>
                     <p className="font-medium">{formData.establishedYear}</p>
                   </div>
                 </div>
@@ -210,15 +210,15 @@ export function ProfilePage() {
       </div>
 
       {/* Settings */}
-      <Card>
+      <Card className="h-fit">
         <CardHeader>
           <CardTitle>Account Settings</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-bg-tertiary rounded-lg">
+          <div className="space-y-5">
+            <div className="flex items-center justify-between p-5 bg-bg-tertiary rounded-lg">
               <div>
-                <h4 className="font-medium">Email Notifications</h4>
+                <h4 className="font-medium mb-1">Email Notifications</h4>
                 <p className="text-sm text-text-muted">Receive notifications about applications and messages</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
@@ -227,9 +227,9 @@ export function ProfilePage() {
               </label>
             </div>
             
-            <div className="flex items-center justify-between p-4 bg-bg-tertiary rounded-lg">
+            <div className="flex items-center justify-between p-5 bg-bg-tertiary rounded-lg">
               <div>
-                <h4 className="font-medium">SMS Notifications</h4>
+                <h4 className="font-medium mb-1">SMS Notifications</h4>
                 <p className="text-sm text-text-muted">Get text messages for urgent notifications</p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">

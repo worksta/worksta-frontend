@@ -87,11 +87,11 @@ export function JobsList() {
       </div>
 
       {filteredJobs.length === 0 ? (
-        <Card className="text-center py-12">
-          <CardContent>
-            <div className="text-6xl mb-4">📋</div>
-            <h3 className="text-lg font-medium mb-2">No jobs found</h3>
-            <p className="text-secondary mb-4">
+        <Card className="text-center py-16">
+          <CardContent className="p-8">
+            <div className="text-6xl mb-6">📋</div>
+            <h3 className="text-lg font-medium mb-3">No jobs found</h3>
+            <p className="text-secondary mb-6">
               {filter === 'all' 
                 ? "You haven't posted any jobs yet. Click 'Post a Gig' to get started!"
                 : `No ${filter} jobs found. Try changing the filter.`
@@ -108,17 +108,17 @@ export function JobsList() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-6">
           {filteredJobs.map((job, index) => {
             const applications = getApplicationsByJob(job.id)
             const pendingCount = applications.filter(app => app.status === 'pending').length
             
             return (
-              <Card key={job.id} className={`hover-lift group relative overflow-hidden glass-card animate-fadeInUp stagger-${Math.min(index + 1, 4)}`}>
-                <CardContent className="p-6 relative z-10">
-                  <div className="flex items-start justify-between mb-4">
+              <Card key={job.id} className={`hover-lift group relative overflow-hidden glass-card animate-fadeInUp stagger-${Math.min(index + 1, 4)} h-fit`}>
+                <CardContent className="p-7 relative z-10">
+                  <div className="flex items-start justify-between mb-5">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-center gap-4 mb-3">
                         <h3 className="text-lg font-semibold text-text-primary">{job.title}</h3>
                         <Badge variant={job.status === 'active' ? 'success' : 'error'}>
                           {job.status}
@@ -129,34 +129,34 @@ export function JobsList() {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-secondary text-sm mb-3 line-clamp-2">{job.description}</p>
+                      <p className="text-secondary text-sm mb-4 line-clamp-2">{job.description}</p>
                       
-                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                        <div className="flex items-center gap-2 text-text-secondary">
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 text-sm">
+                        <div className="flex items-center gap-3 text-text-secondary">
                           <MapPin className="w-4 h-4" />
                           <span>{job.location}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-text-secondary">
+                        <div className="flex items-center gap-3 text-text-secondary">
                           <DollarSign className="w-4 h-4" />
                           <span>${job.pay}{job.payType === 'hourly' ? '/hr' : ''}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-text-secondary">
+                        <div className="flex items-center gap-3 text-text-secondary">
                           <Calendar className="w-4 h-4" />
                           <span>{formatDate(job.date)} at {formatTime(job.time)}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-text-secondary">
+                        <div className="flex items-center gap-3 text-text-secondary">
                           <Clock className="w-4 h-4" />
                           <span>{job.duration}</span>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 ml-4">
+                    <div className="flex items-center gap-3 ml-6">
                       <Button 
                         variant="secondary" 
                         size="sm"
                         onClick={() => setSelectedJob(job)}
-                        className="gap-2"
+                        className="gap-3"
                       >
                         <Users className="w-4 h-4" />
                         Applications ({applications.length})
@@ -164,12 +164,12 @@ export function JobsList() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-4 pt-4 border-t border-border-color">
-                    <div className="flex items-center gap-2 text-sm text-text-muted">
+                  <div className="flex items-center gap-5 pt-5 border-t border-border-color">
+                    <div className="flex items-center gap-3 text-sm text-text-muted">
                       <Eye className="w-4 h-4" />
                       <span>Posted {formatDate(job.createdAt)}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-text-secondary">
+                    <div className="flex items-center gap-3 text-sm text-text-secondary">
                       <Users className="w-4 h-4" />
                       <span>{applications.length} total applications</span>
                     </div>

@@ -97,7 +97,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="glass-effect border border-border-color rounded-xl w-full max-w-4xl max-h-[85vh] overflow-hidden shadow-2xl">
-        <div className="p-4 border-b border-border-color/50">
+        <div className="p-6 border-b border-border-color/50">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">✨ Post a New Gig</h2>
             <button
@@ -107,23 +107,23 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
               <X className="w-5 h-5" />
             </button>
           </div>
-          <div className="mt-3">
+          <div className="mt-4">
             <button
               type="button"
               onClick={() => setShowGuide(!showGuide)}
-              className="w-full flex items-center justify-between px-4 py-3 bg-bg-tertiary border border-border-color rounded-lg text-left hover:bg-bg-card transition-colors"
+              className="w-full flex items-center justify-between px-5 py-4 bg-bg-tertiary border border-border-color rounded-lg text-left hover:bg-bg-card transition-colors"
               aria-expanded={showGuide}
               aria-controls={helperId}
             >
-              <span className="flex items-center gap-2 text-text-secondary"><Info className="w-4 h-4 text-purple-400" /> How to write a great gig</span>
+              <span className="flex items-center gap-3 text-text-secondary"><Info className="w-4 h-4 text-purple-400" /> How to write a great gig</span>
               <ChevronDown className={`w-4 h-4 transition-transform ${showGuide ? 'rotate-180' : ''}`} />
             </button>
             {showGuide && (
-              <div id={helperId} className="mt-3 p-4 rounded-lg bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 text-sm text-text-secondary space-y-2">
+              <div id={helperId} className="mt-4 p-5 rounded-lg bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 text-sm text-text-secondary space-y-3">
                 <p className="text-text-secondary">
                   Please fill out the details below to create a clear and comprehensive gig posting that attracts the right candidates for your F&B role. Be as specific as possible to set expectations and help candidates self-assess fit:
                 </p>
-                <ul className="list-disc ml-6 space-y-1">
+                <ul className="list-disc ml-6 space-y-2">
                   <li><span className="text-text-primary font-medium">Job Title</span>: The name of the role you want to fill (e.g., Barista, Kitchen Helper).</li>
                   <li><span className="text-text-primary font-medium">Description & Responsibilities</span>: Outline main tasks and duties involved.</li>
                   <li><span className="text-text-primary font-medium">Location</span>: Where the job will take place (address or region).</li>
@@ -134,7 +134,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
                   <li><span className="text-text-primary font-medium">Additional Info</span>: Benefits offered, cancellation policy, contact details, and application deadline.</li>
                   <li><span className="text-text-primary font-medium">Attachments</span>: Upload any supporting documents or flyers to provide more context.</li>
                 </ul>
-                <div className="flex gap-2 pt-1">
+                <div className="flex gap-3 pt-2">
                   <button
                     type="button"
                     className="btn btn-secondary btn-sm"
@@ -161,8 +161,8 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 overflow-auto max-h-[calc(85vh-60px)]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="p-6 overflow-auto max-h-[calc(85vh-60px)]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="lg:col-span-2">
               <Input
                 label="Job Title"
@@ -257,9 +257,9 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
             <div className="lg:col-span-2">
               <div className="form-group">
                 <label className="form-label">Requirements</label>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {formData.requirements.map((requirement, index) => (
-                    <div key={index} className="flex gap-2">
+                    <div key={index} className="flex gap-3">
                       <input
                         className="form-input flex-1 px-3px py-3px"
                         value={requirement}
@@ -291,7 +291,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
             </div>
           </div>
 
-          <div className="lg:col-span-2 flex gap-3 mt-6 pt-4 border-t border-border-color/50 sticky bottom-0 bg-bg-secondary/80 backdrop-blur-sm p-4 rounded-b-xl">
+          <div className="lg:col-span-2 flex gap-4 mt-8 pt-5 border-t border-border-color/50 sticky bottom-0 bg-bg-secondary/80 backdrop-blur-sm p-5 rounded-b-xl">
             <Button type="submit" loading={loading} className="flex-1 h-12">
               {loading ? '🚀 Posting...' : '🎯 Post Job'}
             </Button>
