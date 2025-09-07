@@ -74,11 +74,11 @@ export function ApplicationsList() {
       </div>
 
       {filteredApplications.length === 0 ? (
-        <Card className="text-center py-12">
-          <CardContent>
-            <div className="text-6xl mb-4">📋</div>
-            <h3 className="text-lg font-medium mb-2">No applications found</h3>
-            <p className="text-secondary">
+        <Card className="text-center py-16">
+          <CardContent className="p-8">
+            <div className="text-6xl mb-6">📋</div>
+            <h3 className="text-lg font-medium mb-3">No applications found</h3>
+            <p className="text-secondary mb-4">
               {filter === 'all' 
                 ? "No one has applied to your jobs yet. Make sure your job postings are attractive and detailed!"
                 : `No ${filter} applications found.`
@@ -87,20 +87,20 @@ export function ApplicationsList() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-6">
           {filteredApplications.map((application) => {
             const job = getJobForApplication(application.jobId)
             if (!job) return null
 
             return (
-              <Card key={application.id} className="hover-lift group glass-effect border-border-color/30">
-                <CardContent className="p-6 relative z-10">
+              <Card key={application.id} className="hover-lift group glass-effect border-border-color/30 h-fit">
+                <CardContent className="p-7 relative z-10">
                   <div className="flex items-start justify-between">
-                    <div className="flex gap-4 flex-1">
+                    <div className="flex gap-5 flex-1">
                       <div className="text-3xl">{application.workerAvatar}</div>
                       
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
+                        <div className="flex items-center gap-4 mb-3">
                           <h3 className="text-lg font-semibold">{application.workerName}</h3>
                           <Badge 
                             variant={
@@ -112,28 +112,28 @@ export function ApplicationsList() {
                           </Badge>
                         </div>
                         
-                        <p className="text-secondary text-sm mb-3">
+                        <p className="text-secondary text-sm mb-4">
                           Applied for: <strong>{job.title}</strong>
                         </p>
                         
                         {application.message && (
-                          <div className="bg-bg-tertiary p-3 rounded-lg mb-4">
+                          <div className="bg-bg-tertiary p-4 rounded-lg mb-5">
                             <p className="text-sm text-text-secondary">
                               "{application.message}"
                             </p>
                           </div>
                         )}
                         
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                          <div className="flex items-center gap-2 text-text-secondary">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-sm">
+                          <div className="flex items-center gap-3 text-text-secondary">
                             <MapPin className="w-4 h-4" />
                             <span>{job.location}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-text-secondary">
+                          <div className="flex items-center gap-3 text-text-secondary">
                             <DollarSign className="w-4 h-4" />
                             <span>${job.pay}{job.payType === 'hourly' ? '/hr' : ''}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-text-secondary">
+                          <div className="flex items-center gap-3 text-text-secondary">
                             <Calendar className="w-4 h-4" />
                             <span>Applied {formatDate(application.appliedAt)}</span>
                           </div>
@@ -142,7 +142,7 @@ export function ApplicationsList() {
                     </div>
                     
                     {application.status === 'pending' && (
-                      <div className="flex gap-2 ml-4">
+                      <div className="flex gap-3 ml-6">
                         <Button 
                           size="sm" 
                           variant="success"
@@ -161,8 +161,8 @@ export function ApplicationsList() {
                     )}
                   </div>
                   
-                  <div className="mt-4 pt-4 border-t border-border-color">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="mt-5 pt-5 border-t border-border-color">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
                       <div>
                         <span className="text-text-muted">Job Date: </span>
                         <span className="text-text-secondary">
