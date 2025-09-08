@@ -42,136 +42,227 @@ export function JobsList() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="heading-lg">My Jobs</h1>
-          <p className="text-secondary">Manage your job postings and applications</p>
-        </div>
-        
-        <div className="flex gap-2">
-          <button
-            onClick={() => setFilter('all')}
-            className={clsx(
-              'px-4 py-2 rounded-lg text-sm font-medium transition-all',
-              filter === 'all'
-                ? 'bg-accent-primary text-bg-primary'
-                : 'bg-bg-tertiary text-text-secondary hover:bg-bg-card'
-            )}
-          >
-            All ({jobs.length})
-          </button>
-          <button
-            onClick={() => setFilter('active')}
-            className={clsx(
-              'px-4 py-2 rounded-lg text-sm font-medium transition-all',
-              filter === 'active'
-                ? 'bg-accent-primary text-bg-primary'
-                : 'bg-bg-tertiary text-text-secondary hover:bg-bg-card'
-            )}
-          >
-            Active ({jobs.filter(j => j.status === 'active').length})
-          </button>
-          <button
-            onClick={() => setFilter('closed')}
-            className={clsx(
-              'px-4 py-2 rounded-lg text-sm font-medium transition-all',
-              filter === 'closed'
-                ? 'bg-accent-primary text-bg-primary'
-                : 'bg-bg-tertiary text-text-secondary hover:bg-bg-card'
-            )}
-          >
-            Closed ({jobs.filter(j => j.status === 'closed').length})
-          </button>
+    <div className="space-y-8">
+      {/* Enhanced Header Section */}
+      <div className="glass-card p-8 rounded-2xl border border-border-color/50">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-3">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+              🎯 My Job Postings
+            </h1>
+            <p className="text-text-secondary text-lg">Manage your job postings and track applications with ease</p>
+            <div className="flex items-center gap-6 text-sm text-text-muted">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span>{jobs.filter(j => j.status === 'active').length} Active Jobs</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <span>{jobs.reduce((acc, job) => acc + getApplicationsByJob(job.id).length, 0)} Total Applications</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => setFilter('all')}
+              className={clsx(
+                'px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105',
+                filter === 'all'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
+                  : 'bg-bg-tertiary/50 text-text-secondary hover:bg-bg-card border border-border-color/30'
+              )}
+            >
+              All Jobs ({jobs.length})
+            </button>
+            <button
+              onClick={() => setFilter('active')}
+              className={clsx(
+                'px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105',
+                filter === 'active'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25'
+                  : 'bg-bg-tertiary/50 text-text-secondary hover:bg-bg-card border border-border-color/30'
+              )}
+            >
+              Active ({jobs.filter(j => j.status === 'active').length})
+            </button>
+            <button
+              onClick={() => setFilter('closed')}
+              className={clsx(
+                'px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105',
+                filter === 'closed'
+                  ? 'bg-gradient-to-r from-gray-500 to-slate-500 text-white shadow-lg shadow-gray-500/25'
+                  : 'bg-bg-tertiary/50 text-text-secondary hover:bg-bg-card border border-border-color/30'
+              )}
+            >
+              Closed ({jobs.filter(j => j.status === 'closed').length})
+            </button>
+          </div>
         </div>
       </div>
 
       {filteredJobs.length === 0 ? (
-        <Card className="text-center py-16">
-          <CardContent className="p-8">
-            <div className="text-6xl mb-6">📋</div>
-            <h3 className="text-lg font-medium mb-3">No jobs found</h3>
-            <p className="text-secondary mb-6">
+        <Card className="glass-card border border-border-color/50 hover:shadow-2xl transition-all duration-500">
+          <CardContent className="p-12 text-center">
+            <div className="relative mb-8">
+              <div className="text-8xl mb-4 animate-bounce">📋</div>
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-ping"></div>
+            </div>
+            <h3 className="text-2xl font-bold text-text-primary mb-4">
+              {filter === 'all' ? 'Ready to Start Hiring?' : `No ${filter} jobs found`}
+            </h3>
+            <p className="text-text-secondary text-lg mb-8 max-w-md mx-auto leading-relaxed">
               {filter === 'all' 
-                ? "You haven't posted any jobs yet. Click 'Post a Gig' to get started!"
-                : `No ${filter} jobs found. Try changing the filter.`
+                ? "Create your first job posting and connect with talented workers in your area. It only takes a few minutes!"
+                : `No ${filter} jobs found. Try changing the filter or create a new job posting.`
               }
             </p>
             {filter === 'all' && (
-              <Button onClick={() => {
-                const event = new CustomEvent('openPostJobModal')
-                window.dispatchEvent(event)
-              }}>
-                Post Your First Job
-              </Button>
+              <div className="space-y-4">
+                <Button 
+                  onClick={() => {
+                    const event = new CustomEvent('openPostJobModal')
+                    window.dispatchEvent(event)
+                  }}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                >
+                  🚀 Post Your First Job
+                </Button>
+                <div className="flex items-center justify-center gap-6 text-sm text-text-muted mt-6">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span>Free to post</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span>Instant applications</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span>Quality workers</span>
+                  </div>
+                </div>
+              </div>
             )}
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-6">
+        <div className="grid gap-8">
           {filteredJobs.map((job, index) => {
             const applications = getApplicationsByJob(job.id)
             const pendingCount = applications.filter(app => app.status === 'pending').length
+            const acceptedCount = applications.filter(app => app.status === 'accepted').length
             
             return (
-              <Card key={job.id} className={`hover-lift group relative overflow-hidden glass-card animate-fadeInUp stagger-${Math.min(index + 1, 4)} h-fit`}>
-                <CardContent className="p-7 relative z-10">
-                  <div className="flex items-start justify-between mb-5">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-3">
-                        <h3 className="text-lg font-semibold text-text-primary">{job.title}</h3>
-                        <Badge variant={job.status === 'active' ? 'success' : 'error'}>
-                          {job.status}
-                        </Badge>
-                        {pendingCount > 0 && (
-                          <Badge variant="warning">
-                            {pendingCount} new application{pendingCount > 1 ? 's' : ''}
+              <Card key={job.id} className={`group relative overflow-hidden glass-card hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] animate-fadeInUp stagger-${Math.min(index + 1, 4)} border border-border-color/50`}>
+                {/* Gradient Background Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <CardContent className="p-8 relative z-10">
+                  <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+                    <div className="flex-1 space-y-5">
+                      {/* Job Header */}
+                      <div className="space-y-4">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <h3 className="text-xl font-bold text-text-primary group-hover:text-purple-400 transition-colors duration-300">{job.title}</h3>
+                          <Badge 
+                            variant={job.status === 'active' ? 'success' : 'error'}
+                            className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                              job.status === 'active' 
+                                ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                                : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                            }`}
+                          >
+                            {job.status === 'active' ? '🟢 Active' : '🔴 Closed'}
                           </Badge>
-                        )}
+                          {pendingCount > 0 && (
+                            <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-3 py-1 text-xs font-semibold rounded-full animate-pulse">
+                              🔔 {pendingCount} new application{pendingCount > 1 ? 's' : ''}
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-text-secondary leading-relaxed line-clamp-2">{job.description}</p>
                       </div>
-                      <p className="text-secondary text-sm mb-4 line-clamp-2">{job.description}</p>
                       
-                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 text-sm">
-                        <div className="flex items-center gap-3 text-text-secondary">
-                          <MapPin className="w-4 h-4" />
-                          <span>{job.location}</span>
+                      {/* Job Details Grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                        <div className="flex items-center gap-3 p-3 rounded-lg bg-bg-tertiary/30 border border-border-color/30 hover:bg-bg-tertiary/50 transition-colors">
+                          <div className="p-2 rounded-lg bg-blue-500/20">
+                            <MapPin className="w-4 h-4 text-blue-400" />
+                          </div>
+                          <div>
+                            <div className="text-xs text-text-muted font-medium">Location</div>
+                            <div className="text-sm font-semibold text-text-primary">{job.location}</div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-3 text-text-secondary">
-                          <DollarSign className="w-4 h-4" />
-                          <span>${job.pay}{job.payType === 'hourly' ? '/hr' : ''}</span>
+                        <div className="flex items-center gap-3 p-3 rounded-lg bg-bg-tertiary/30 border border-border-color/30 hover:bg-bg-tertiary/50 transition-colors">
+                          <div className="p-2 rounded-lg bg-green-500/20">
+                            <DollarSign className="w-4 h-4 text-green-400" />
+                          </div>
+                          <div>
+                            <div className="text-xs text-text-muted font-medium">Pay Rate</div>
+                            <div className="text-sm font-semibold text-text-primary">${job.pay}{job.payType === 'hourly' ? '/hr' : ''}</div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-3 text-text-secondary">
-                          <Calendar className="w-4 h-4" />
-                          <span>{formatDate(job.date)} at {formatTime(job.time)}</span>
+                        <div className="flex items-center gap-3 p-3 rounded-lg bg-bg-tertiary/30 border border-border-color/30 hover:bg-bg-tertiary/50 transition-colors">
+                          <div className="p-2 rounded-lg bg-purple-500/20">
+                            <Calendar className="w-4 h-4 text-purple-400" />
+                          </div>
+                          <div>
+                            <div className="text-xs text-text-muted font-medium">Schedule</div>
+                            <div className="text-sm font-semibold text-text-primary">{formatDate(job.date)} at {formatTime(job.time)}</div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-3 text-text-secondary">
-                          <Clock className="w-4 h-4" />
-                          <span>{job.duration}</span>
+                        <div className="flex items-center gap-3 p-3 rounded-lg bg-bg-tertiary/30 border border-border-color/30 hover:bg-bg-tertiary/50 transition-colors">
+                          <div className="p-2 rounded-lg bg-orange-500/20">
+                            <Clock className="w-4 h-4 text-orange-400" />
+                          </div>
+                          <div>
+                            <div className="text-xs text-text-muted font-medium">Duration</div>
+                            <div className="text-sm font-semibold text-text-primary">{job.duration}</div>
+                          </div>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-3 ml-6">
+                    {/* Action Buttons */}
+                    <div className="flex flex-col gap-3 lg:min-w-[200px]">
                       <Button 
-                        variant="secondary" 
-                        size="sm"
                         onClick={() => setSelectedJob(job)}
-                        className="gap-3"
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-3"
                       >
-                        <Users className="w-4 h-4" />
-                        Applications ({applications.length})
+                        <Users className="w-5 h-5" />
+                        View Applications ({applications.length})
                       </Button>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="text-center p-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                          <div className="font-bold text-yellow-400">{pendingCount}</div>
+                          <div className="text-text-muted">Pending</div>
+                        </div>
+                        <div className="text-center p-2 rounded-lg bg-green-500/10 border border-green-500/20">
+                          <div className="font-bold text-green-400">{acceptedCount}</div>
+                          <div className="text-text-muted">Hired</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-5 pt-5 border-t border-border-color">
-                    <div className="flex items-center gap-3 text-sm text-text-muted">
-                      <Eye className="w-4 h-4" />
-                      <span>Posted {formatDate(job.createdAt)}</span>
+                  {/* Footer Stats */}
+                  <div className="flex flex-wrap items-center justify-between gap-4 pt-6 mt-6 border-t border-border-color/50">
+                    <div className="flex items-center gap-6 text-sm">
+                      <div className="flex items-center gap-2 text-text-muted">
+                        <Eye className="w-4 h-4" />
+                        <span>Posted {formatDate(job.createdAt)}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-text-secondary">
+                        <Users className="w-4 h-4" />
+                        <span>{applications.length} total applications</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-text-secondary">
-                      <Users className="w-4 h-4" />
-                      <span>{applications.length} total applications</span>
+                    <div className="flex items-center gap-2">
+                      <button className="p-2 rounded-lg bg-bg-tertiary/50 hover:bg-bg-tertiary border border-border-color/30 transition-colors group/btn">
+                        <MoreVertical className="w-4 h-4 text-text-muted group-hover/btn:text-text-primary transition-colors" />
+                      </button>
                     </div>
                   </div>
                 </CardContent>
