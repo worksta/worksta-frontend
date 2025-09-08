@@ -114,17 +114,17 @@ export function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="glass-card" onClick={() => console.debug('Open hiring trends breakdown')}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="px-6 py-5">
+            <CardTitle className="flex items-center gap-3">
               <TrendingUp className="w-5 h-5 text-purple-400" />
               Hiring Trends
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-6 py-5 pt-0">
             <div className="space-y-4">
               {/* Row 1 */}
-              <div className="p-4 rounded-lg bg-gradient-to-r from-purple-500/10 to-purple-600/10 border border-purple-500/20">
-                <div className="flex items-center justify-between mb-2">
+              <div className="p-5 rounded-lg bg-gradient-to-r from-purple-500/10 to-purple-600/10 border border-purple-500/20 mx-1">
+                <div className="flex items-center justify-between mb-3">
                   <div>
                     <div className="font-semibold text-text-primary">Server Positions</div>
                     <div className="text-sm text-text-muted">Most in-demand role</div>
@@ -137,8 +137,8 @@ export function AnalyticsPage() {
               </div>
 
               {/* Row 2 */}
-              <div className="p-4 rounded-lg bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-500/20">
-                <div className="flex items-center justify-between mb-2">
+              <div className="p-5 rounded-lg bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-500/20 mx-1">
+                <div className="flex items-center justify-between mb-3">
                   <div>
                     <div className="font-semibold text-text-primary">Kitchen Staff</div>
                     <div className="text-sm text-text-muted">High demand</div>
@@ -151,8 +151,8 @@ export function AnalyticsPage() {
               </div>
 
               {/* Row 3 */}
-              <div className="p-4 rounded-lg bg-gradient-to-r from-green-500/10 to-green-600/10 border border-green-500/20">
-                <div className="flex items-center justify-between mb-2">
+              <div className="p-5 rounded-lg bg-gradient-to-r from-green-500/10 to-green-600/10 border border-green-500/20 mx-1">
+                <div className="flex items-center justify-between mb-3">
                   <div>
                     <div className="font-semibold text-text-primary">Bartenders</div>
                     <div className="text-sm text-text-muted">Specialty roles</div>
@@ -167,24 +167,24 @@ export function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="glass-card" onClick={() => console.debug('Open performance metrics')}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+        <Card className="glass-card hover:shadow-xl transition-all duration-300" onClick={() => console.debug('Open performance metrics')}>
+          <CardHeader className="px-6 py-5">
+            <CardTitle className="flex items-center gap-3">
               <Star className="w-5 h-5 text-yellow-400" />
               Performance Metrics
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
+          <CardContent className="px-6 py-5 pt-0">
+            <div className="space-y-4">
               {recentMetrics.map((metric, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between px-4 py-3 bg-bg-tertiary rounded-lg border border-border-color"
+                  className="flex items-center justify-between px-5 py-4 bg-bg-tertiary rounded-xl border border-border-color hover:bg-bg-secondary transition-all duration-200 hover:shadow-md mx-1"
                   title={metric.label}
                   aria-label={`${metric.label} value`}
                 >
-                  <span className="text-text-secondary">{metric.label}</span>
-                  <span className={`px-2 py-1 rounded-md text-sm font-bold bg-${metric.color}-500/10 border border-${metric.color}-500/20 text-${metric.color}-400`}>
+                  <span className="text-text-secondary font-medium">{metric.label}</span>
+                  <span className={`px-3 py-2 rounded-lg text-sm font-bold bg-${metric.color}-500/10 border border-${metric.color}-500/20 text-${metric.color}-400 hover:scale-105 transition-transform`}>
                     {metric.value}
                   </span>
                 </div>
@@ -194,118 +194,140 @@ export function AnalyticsPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <Card className="glass-card" onClick={() => console.debug('Open monthly stats')}>
-          <CardHeader className="mt-2 flex items-center justify-center">
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-purple-400" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <Card className="glass-card hover:shadow-xl transition-all duration-300" onClick={() => console.debug('Open monthly stats')}>
+          <CardHeader className="pb-4 pt-6 px-7">
+            <CardTitle className="flex items-center justify-center gap-3 text-lg">
+              <Calendar className="w-6 h-6 text-purple-400" />
               This Month
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400 mb-1">12</div>
-                <div className="text-sm text-text-muted">Jobs Posted</div>
+          <CardContent className="px-7 pb-7">
+            <div className="space-y-6">
+              <div className="text-center py-2">
+                <div className="text-4xl font-bold text-purple-400 mb-2">12</div>
+                <div className="text-sm text-text-muted font-medium">Jobs Posted</div>
               </div>
-              <div className="h-20 w-full overflow-hidden rounded-xl bg-bg-tertiary/60 border border-border-color">
-                <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
-                  <polyline fill="none" stroke="#a855f7" strokeWidth="2" points="0,22 10,20 20,18 30,24 40,16 50,14 60,12 70,18 80,10 90,8 100,6" />
-                  <linearGradient id="monthFill" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(168,85,247,0.3)" />
-                    <stop offset="100%" stopColor="rgba(168,85,247,0.0)" />
-                  </linearGradient>
-                  <polygon points="0,30 0,22 10,20 20,18 30,24 40,16 50,14 60,12 70,18 80,10 90,8 100,6 100,30" fill="url(#monthFill)" />
-                  <circle cx="100" cy="6" r="1.8" fill="#a855f7" stroke="#ffffff" strokeWidth="0.6" />
-                </svg>
-              </div>
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div>
-                  <div className="text-xl font-bold text-green-400">8</div>
-                  <div className="text-xs text-text-muted">Successful</div>
+              <div className="h-24 w-full rounded-xl bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/20 p-4 flex items-center justify-center">
+                <div className="w-full flex items-end justify-between h-16 gap-1">
+                  {[3, 5, 4, 7, 6, 8, 9, 6, 10, 8, 12, 11].map((height, i) => (
+                    <div
+                      key={i}
+                      className="bg-gradient-to-t from-purple-500 to-purple-400 rounded-sm flex-1 transition-all duration-500 hover:scale-110 animate-pulse"
+                      style={{ 
+                        height: `${height * 4}px`,
+                        animationDelay: `${i * 100}ms`,
+                        minWidth: '6px'
+                      }}
+                    />
+                  ))}
                 </div>
-                <div>
-                  <div className="text-xl font-bold text-yellow-400">4</div>
-                  <div className="text-xs text-text-muted">Pending</div>
+              </div>
+              <div className="grid grid-cols-2 gap-6 text-center pt-2">
+                <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                  <div className="text-2xl font-bold text-green-400 mb-1">8</div>
+                  <div className="text-xs text-text-muted font-medium">Successful</div>
+                </div>
+                <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                  <div className="text-2xl font-bold text-yellow-400 mb-1">4</div>
+                  <div className="text-xs text-text-muted font-medium">Pending</div>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="glass-card" onClick={() => console.debug('Open spend analysis')}>
-          <CardHeader className="mt-2 flex items-center justify-center">
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-green-400" />
+        <Card className="glass-card hover:shadow-xl transition-all duration-300" onClick={() => console.debug('Open spend analysis')}>
+          <CardHeader className="pb-4 pt-6 px-7">
+            <CardTitle className="flex items-center justify-center gap-3 text-lg">
+              <DollarSign className="w-6 h-6 text-green-400" />
               Spend Analysis
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-400 mb-1">$2,840</div>
-                <div className="text-sm text-text-muted" title="All costs including platform fees">Total Spent</div>
+          <CardContent className="px-7 pb-7">
+            <div className="space-y-6">
+              <div className="text-center py-2">
+                <div className="text-4xl font-bold text-green-400 mb-2">$2,840</div>
+                <div className="text-sm text-text-muted font-medium" title="All costs including platform fees">Total Spent</div>
               </div>
-              <div className="h-20 w-full overflow-hidden rounded-xl bg-bg-tertiary/60 border border-border-color">
-                <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
-                  <polyline fill="none" stroke="#22c55e" strokeWidth="2" points="0,25 10,22 20,24 30,18 40,20 50,14 60,16 70,10 80,12 90,8 100,12" />
-                  <linearGradient id="spendFill" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(34,197,94,0.3)" />
-                    <stop offset="100%" stopColor="rgba(34,197,94,0.0)" />
-                  </linearGradient>
-                  <polygon points="0,30 0,25 10,22 20,24 30,18 40,20 50,14 60,16 70,10 80,12 90,8 100,12 100,30" fill="url(#spendFill)" />
-                  <circle cx="100" cy="12" r="1.8" fill="#22c55e" stroke="#ffffff" strokeWidth="0.6" />
-                </svg>
-              </div>
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div>
-                  <div className="text-xl font-bold text-purple-400">$237</div>
-                  <div className="text-xs text-text-muted" title="Average spend per successful hire">Avg per hire</div>
+              <div className="h-24 w-full rounded-xl bg-gradient-to-br from-green-500/10 to-green-600/10 border border-green-500/20 p-4">
+                <div className="w-full h-16 relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full h-8 bg-gradient-to-r from-green-500/20 to-green-400/20 rounded-full relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-400 rounded-full animate-pulse" style={{ width: '73%' }}></div>
+                      <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs font-bold text-green-400">$2,840</div>
+                    </div>
+                  </div>
+                  <div className="absolute top-0 left-0 w-full flex justify-between text-xs text-text-muted">
+                    <span>Jan</span>
+                    <span>Feb</span>
+                    <span>Mar</span>
+                    <span>Apr</span>
+                    <span>May</span>
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-full flex justify-between">
+                    {[2, 4, 3, 6, 5, 8, 7, 9].map((height, i) => (
+                      <div
+                        key={i}
+                        className="w-1 bg-green-400 rounded-full animate-pulse"
+                        style={{ 
+                          height: `${height * 2}px`,
+                          animationDelay: `${i * 150}ms`
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <div className="text-xl font-bold text-blue-400">5%</div>
-                  <div className="text-xs text-text-muted" title="Fee charged by Worksta for transactions">Platform fee</div>
+              </div>
+              <div className="grid grid-cols-2 gap-6 text-center pt-2">
+                <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                  <div className="text-2xl font-bold text-purple-400 mb-1">$237</div>
+                  <div className="text-xs text-text-muted font-medium" title="Average spend per successful hire">Avg per hire</div>
+                </div>
+                <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                  <div className="text-2xl font-bold text-blue-400 mb-1">5%</div>
+                  <div className="text-xs text-text-muted font-medium" title="Fee charged by Worksta for transactions">Platform fee</div>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="glass-card" onClick={() => console.debug('Open top performer profile')}>
-          <CardHeader className="mt-2 flex items-center justify-center">
-            <CardTitle className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-yellow-400" />
+        <Card className="glass-card hover:shadow-xl transition-all duration-300" onClick={() => console.debug('Open top performer profile')}>
+          <CardHeader className="pb-4 pt-6 px-7">
+            <CardTitle className="flex items-center justify-center gap-3 text-lg">
+              <Award className="w-6 h-6 text-yellow-400" />
               Top Performer
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-7 pb-7">
             <div className="relative overflow-hidden rounded-xl">
               <div className="absolute inset-0 opacity-[0.35]" style={{
                 background: 'radial-gradient(1200px 300px at 50% -10%, rgba(250,204,21,0.25), transparent 60%)'
               }} />
-              <div className="text-center space-y-4 relative z-10 p-4">
-                <div className="mx-auto w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-3xl shadow-lg ring-4 ring-yellow-400/10">
+              <div className="text-center space-y-5 relative z-10 p-6">
+                <div className="mx-auto w-28 h-28 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-4xl shadow-xl ring-4 ring-yellow-400/20 hover:scale-105 transition-transform duration-300">
                   🏆
                 </div>
-                <div>
+                <div className="space-y-2">
                   <div className="font-bold text-text-primary text-xl">Alex Chen</div>
-                  <div className="text-sm text-text-muted">Bartender • 5.0 rating • 3 jobs completed</div>
+                  <div className="text-sm text-text-muted font-medium">Bartender • 5.0 rating • 3 jobs completed</div>
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center py-1">
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current drop-shadow" />
+                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current drop-shadow-lg" />
                     ))}
                   </div>
                 </div>
-                <div className="flex flex-wrap items-center justify-center gap-2">
-                  <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Mixology</span>
-                  <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Customer Service</span>
-                  <span className="text-xs px-2 py-1 rounded bg-bg-tertiary border border-border-color text-text-secondary">Night Shift</span>
+                <div className="flex flex-wrap items-center justify-center gap-3 py-2">
+                  <span className="text-xs px-3 py-2 rounded-lg bg-bg-tertiary border border-border-color text-text-secondary font-medium hover:bg-bg-secondary transition-colors">Mixology</span>
+                  <span className="text-xs px-3 py-2 rounded-lg bg-bg-tertiary border border-border-color text-text-secondary font-medium hover:bg-bg-secondary transition-colors">Customer Service</span>
+                  <span className="text-xs px-3 py-2 rounded-lg bg-bg-tertiary border border-border-color text-text-secondary font-medium hover:bg-bg-secondary transition-colors">Night Shift</span>
                 </div>
-                <div className="flex justify-center gap-3 mt-2">
-                  <button className="btn btn-secondary btn-sm">View Profile</button>
-                  <button className="btn btn-primary btn-sm">Message</button>
+                <div className="flex justify-center gap-4 pt-3">
+                  <button className="btn btn-secondary btn-sm px-4 py-2 hover:scale-105 transition-transform">View Profile</button>
+                  <button className="btn btn-primary btn-sm px-4 py-2 hover:scale-105 transition-transform">Message</button>
                 </div>
               </div>
             </div>
@@ -313,30 +335,30 @@ export function AnalyticsPage() {
         </Card>
       </div>
 
-      <Card className="glass-card" onClick={() => console.debug('Open quick insights')}
+      <Card className="glass-card hover:shadow-xl transition-all duration-300" onClick={() => console.debug('Open quick insights')}
         >
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <PieChart className="w-5 h-5 text-purple-400" />
+        <CardHeader className="pb-5 pt-6 px-7">
+          <CardTitle className="flex items-center gap-3 text-lg">
+            <PieChart className="w-6 h-6 text-purple-400" />
             Quick Insights
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center p-4 bg-gradient-to-br from-purple-500/10 to-purple-600/10 rounded-xl">
-              <div className="text-2xl mb-2">⚡</div>
-              <div className="font-semibold text-text-primary mb-1">Fast Hiring</div>
-              <div className="text-sm text-text-muted">Average 2.4 hours response time</div>
+        <CardContent className="px-7 pb-7">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center p-6 bg-gradient-to-br from-purple-500/10 to-purple-600/10 rounded-xl border border-purple-500/20 hover:scale-105 transition-all duration-300 hover:shadow-lg">
+              <div className="text-3xl mb-3">⚡</div>
+              <div className="font-semibold text-text-primary mb-2 text-lg">Fast Hiring</div>
+              <div className="text-sm text-text-muted font-medium">Average 2.4 hours response time</div>
             </div>
-            <div className="text-center p-4 bg-gradient-to-br from-green-500/10 to-green-600/10 rounded-xl">
-              <div className="text-2xl mb-2">💯</div>
-              <div className="font-semibold text-text-primary mb-1">High Success</div>
-              <div className="text-sm text-text-muted">87% of applications result in hires</div>
+            <div className="text-center p-6 bg-gradient-to-br from-green-500/10 to-green-600/10 rounded-xl border border-green-500/20 hover:scale-105 transition-all duration-300 hover:shadow-lg">
+              <div className="text-3xl mb-3">💯</div>
+              <div className="font-semibold text-text-primary mb-2 text-lg">High Success</div>
+              <div className="text-sm text-text-muted font-medium">87% of applications result in hires</div>
             </div>
-            <div className="text-center p-4 bg-gradient-to-br from-blue-500/10 to-blue-600/10 rounded-xl">
-              <div className="text-2xl mb-2">🎯</div>
-              <div className="font-semibold text-text-primary mb-1">Quality Workers</div>
-              <div className="text-sm text-text-muted">4.8/5 average worker rating</div>
+            <div className="text-center p-6 bg-gradient-to-br from-blue-500/10 to-blue-600/10 rounded-xl border border-blue-500/20 hover:scale-105 transition-all duration-300 hover:shadow-lg">
+              <div className="text-3xl mb-3">🎯</div>
+              <div className="font-semibold text-text-primary mb-2 text-lg">Quality Workers</div>
+              <div className="text-sm text-text-muted font-medium">4.8/5 average worker rating</div>
             </div>
           </div>
         </CardContent>
