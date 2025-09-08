@@ -65,7 +65,7 @@ export function Login({ onToggleMode }: LoginProps) {
                Worksta
               </h1>
               <p className="text-[20px] font-normal text-gray-300 leading-relaxed">
-                Sign in to your account to continue..
+                Sign in to your account to continue.
               </p>
             </div>
 
