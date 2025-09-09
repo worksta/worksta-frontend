@@ -114,53 +114,53 @@ export function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card className="glass-card" onClick={() => console.debug('Open hiring trends breakdown')}>
-          <CardHeader className="px-6 py-5">
-            <CardTitle className="flex items-center gap-3">
-              <TrendingUp className="w-5 h-5 text-purple-400" />
+          <CardHeader className="px-8 py-6">
+            <CardTitle className="flex items-center gap-4 text-xl font-semibold text-text-primary">
+              <TrendingUp className="w-6 h-6 text-purple-400" />
               Hiring Trends
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-6 py-5 pt-0">
-            <div className="space-y-4">
+          <CardContent className="px-8 py-6 pt-0">
+            <div className="space-y-6">
               {/* Row 1 */}
-              <div className="p-5 rounded-lg bg-gradient-to-r from-purple-500/10 to-purple-600/10 border border-purple-500/20 mx-1">
-                <div className="flex items-center justify-between mb-3">
+              <div className="p-6 rounded-xl bg-gradient-to-r from-purple-500/15 to-purple-600/15 border border-purple-500/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="font-semibold text-text-primary">Server Positions</div>
-                    <div className="text-sm text-text-muted">Most in-demand role</div>
+                    <div className="font-bold text-text-primary text-lg">Server Positions</div>
+                    <div className="text-sm text-text-muted mt-1">Most in-demand role</div>
                   </div>
-                  <span className="text-lg font-bold text-purple-400">68%</span>
+                  <span className="text-2xl font-bold text-purple-400 bg-purple-500/10 px-4 py-2 rounded-lg">68%</span>
                 </div>
-                <div className="w-full h-2 rounded bg-bg-tertiary overflow-hidden" aria-hidden="true">
-                  <div className="h-full bg-purple-500" style={{ width: '68%' }} />
+                <div className="w-full h-3 rounded-full bg-bg-tertiary overflow-hidden shadow-inner" aria-hidden="true">
+                  <div className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full shadow-sm" style={{ width: '68%' }} />
                 </div>
               </div>
 
               {/* Row 2 */}
-              <div className="p-5 rounded-lg bg-gradient-to-r from-blue-500/10 to-blue-600/10 border border-blue-500/20 mx-1">
-                <div className="flex items-center justify-between mb-3">
+              <div className="p-6 rounded-xl bg-gradient-to-r from-blue-500/15 to-blue-600/15 border border-blue-500/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="font-semibold text-text-primary">Kitchen Staff</div>
-                    <div className="text-sm text-text-muted">High demand</div>
+                    <div className="font-bold text-text-primary text-lg">Kitchen Staff</div>
+                    <div className="text-sm text-text-muted mt-1">High demand</div>
                   </div>
-                  <span className="text-lg font-bold text-blue-400">24%</span>
+                  <span className="text-2xl font-bold text-blue-400 bg-blue-500/10 px-4 py-2 rounded-lg">24%</span>
                 </div>
-                <div className="w-full h-2 rounded bg-bg-tertiary overflow-hidden" aria-hidden="true">
-                  <div className="h-full bg-blue-500" style={{ width: '24%' }} />
+                <div className="w-full h-3 rounded-full bg-bg-tertiary overflow-hidden shadow-inner" aria-hidden="true">
+                  <div className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full shadow-sm" style={{ width: '24%' }} />
                 </div>
               </div>
 
               {/* Row 3 */}
-              <div className="p-5 rounded-lg bg-gradient-to-r from-green-500/10 to-green-600/10 border border-green-500/20 mx-1">
-                <div className="flex items-center justify-between mb-3">
+              <div className="p-6 rounded-xl bg-gradient-to-r from-green-500/15 to-green-600/15 border border-green-500/30 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="font-semibold text-text-primary">Bartenders</div>
-                    <div className="text-sm text-text-muted">Specialty roles</div>
+                    <div className="font-bold text-text-primary text-lg">Bartenders</div>
+                    <div className="text-sm text-text-muted mt-1">Specialty roles</div>
                   </div>
-                  <span className="text-lg font-bold text-green-400">8%</span>
+                  <span className="text-2xl font-bold text-green-400 bg-green-500/10 px-4 py-2 rounded-lg">8%</span>
                 </div>
-                <div className="w-full h-2 rounded bg-bg-tertiary overflow-hidden" aria-hidden="true">
-                  <div className="h-full bg-green-500" style={{ width: '8%' }} />
+                <div className="w-full h-3 rounded-full bg-bg-tertiary overflow-hidden shadow-inner" aria-hidden="true">
+                  <div className="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full shadow-sm" style={{ width: '8%' }} />
                 </div>
               </div>
             </div>
@@ -168,23 +168,23 @@ export function AnalyticsPage() {
         </Card>
 
         <Card className="glass-card hover:shadow-xl transition-all duration-300" onClick={() => console.debug('Open performance metrics')}>
-          <CardHeader className="px-6 py-5">
-            <CardTitle className="flex items-center gap-3">
-              <Star className="w-5 h-5 text-yellow-400" />
+          <CardHeader className="px-8 py-6">
+            <CardTitle className="flex items-center gap-4 text-xl font-semibold text-text-primary">
+              <Star className="w-6 h-6 text-yellow-400" />
               Performance Metrics
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-6 py-5 pt-0">
-            <div className="space-y-4">
+          <CardContent className="px-8 py-6 pt-0">
+            <div className="space-y-5">
               {recentMetrics.map((metric, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between px-5 py-4 bg-bg-tertiary rounded-xl border border-border-color hover:bg-bg-secondary transition-all duration-200 hover:shadow-md mx-1"
+                  className="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-bg-tertiary/50 to-bg-secondary/30 rounded-xl border border-border-color/50 hover:bg-gradient-to-r hover:from-bg-secondary/60 hover:to-bg-tertiary/40 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] shadow-sm"
                   title={metric.label}
                   aria-label={`${metric.label} value`}
                 >
-                  <span className="text-text-secondary font-medium">{metric.label}</span>
-                  <span className={`px-3 py-2 rounded-lg text-sm font-bold bg-${metric.color}-500/10 border border-${metric.color}-500/20 text-${metric.color}-400 hover:scale-105 transition-transform`}>
+                  <span className="text-text-secondary font-semibold text-lg">{metric.label}</span>
+                  <span className={`px-4 py-3 rounded-xl text-base font-bold bg-${metric.color}-500/15 border border-${metric.color}-500/30 text-${metric.color}-400 hover:scale-110 transition-all duration-200 shadow-md`}>
                     {metric.value}
                   </span>
                 </div>
