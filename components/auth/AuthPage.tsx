@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { Login } from './Login'
-import { Signup } from './Signup'
+import Signup from './Signup'
 
 export function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -12,7 +12,7 @@ export function AuthPage() {
       {isLogin ? (
         <Login onToggleMode={() => setIsLogin(false)} />
       ) : (
-        <Signup onToggleMode={() => setIsLogin(true)} />
+        <Signup onSwitchToLogin={() => setIsLogin(true)} />
       )}
     </div>
   )
