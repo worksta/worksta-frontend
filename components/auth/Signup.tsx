@@ -28,6 +28,12 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
     password: false,
     confirmPassword: false,
   });
+  const [focused, setFocused] = useState({
+    name: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
 
   const nameId = useId();
   const emailId = useId();
@@ -193,15 +199,23 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
                   autoComplete="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+                  onFocus={() => setFocused((f) => ({ ...f, name: true }))}
+                  onBlur={() => {
+                    setFocused((f) => ({ ...f, name: false }));
+                    setTouched((t) => ({ ...t, name: true }));
+                  }}
                   aria-invalid={!!nameError}
                   aria-describedby={nameError ? `${nameId}-error` : undefined}
                   className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
-                  placeholder="Full Name"
+                  placeholder=""
                 />
                 <label
                   htmlFor={nameId}
-                  className="pointer-events-none absolute left-4 top-2 bg-transparent px-1 text-xs text-muted-foreground transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-xs peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:text-xs"
+                  className={`pointer-events-none absolute left-4 z-10 text-muted-foreground transition-all duration-200 ${
+                    name || focused.name
+                      ? 'top-2 text-xs bg-white/10 px-1 rounded'
+                      : 'top-1/2 -translate-y-1/2 text-base bg-transparent px-0'
+                  }`}
                 >
                   Full Name
                 </label>
@@ -222,15 +236,23 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                  onFocus={() => setFocused((f) => ({ ...f, email: true }))}
+                  onBlur={() => {
+                    setFocused((f) => ({ ...f, email: false }));
+                    setTouched((t) => ({ ...t, email: true }));
+                  }}
                   aria-invalid={!!emailError}
                   aria-describedby={emailError ? `${emailId}-error` : undefined}
                   className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
-                  placeholder="Email"
+                  placeholder=""
                 />
                 <label
                   htmlFor={emailId}
-                  className="pointer-events-none absolute left-4 top-2 bg-transparent px-1 text-xs text-muted-foreground transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-xs peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:text-xs"
+                  className={`pointer-events-none absolute left-4 z-10 text-muted-foreground transition-all duration-200 ${
+                    email || focused.email
+                      ? 'top-2 text-xs bg-white/10 px-1 rounded'
+                      : 'top-1/2 -translate-y-1/2 text-base bg-transparent px-0'
+                  }`}
                 >
                   Email
                 </label>
@@ -250,22 +272,30 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
                   autoComplete="new-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                  onFocus={() => setFocused((f) => ({ ...f, password: true }))}
+                  onBlur={() => {
+                    setFocused((f) => ({ ...f, password: false }));
+                    setTouched((t) => ({ ...t, password: true }));
+                  }}
                   aria-invalid={!!passwordError}
                   aria-describedby={passwordError ? `${passwordId}-error` : undefined}
-                  className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
-                  placeholder="Password"
+                  className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 pr-16 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                  placeholder=""
                 />
                 <label
                   htmlFor={passwordId}
-                  className="pointer-events-none absolute left-4 top-2 bg-transparent px-1 text-xs text-muted-foreground transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-xs peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:text-xs"
+                  className={`pointer-events-none absolute left-4 z-10 text-muted-foreground transition-all duration-200 ${
+                    password || focused.password
+                      ? 'top-2 text-xs bg-white/10 px-1 rounded'
+                      : 'top-1/2 -translate-y-1/2 text-base bg-transparent px-0'
+                  }`}
                 >
                   Password
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute inset-y-0 right-0 my-1 mr-1 inline-flex items-center rounded-md px-3 text-sm text-muted-foreground transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 inline-flex items-center rounded-md px-2 py-1 text-sm text-muted-foreground transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -286,22 +316,30 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
                   autoComplete="new-password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  onBlur={() => setTouched((t) => ({ ...t, confirmPassword: true }))}
+                  onFocus={() => setFocused((f) => ({ ...f, confirmPassword: true }))}
+                  onBlur={() => {
+                    setFocused((f) => ({ ...f, confirmPassword: false }));
+                    setTouched((t) => ({ ...t, confirmPassword: true }));
+                  }}
                   aria-invalid={!!confirmPasswordError}
                   aria-describedby={confirmPasswordError ? `${confirmPasswordId}-error` : undefined}
-                  className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
-                  placeholder="Confirm Password"
+                  className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 pr-16 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                  placeholder=""
                 />
                 <label
                   htmlFor={confirmPasswordId}
-                  className="pointer-events-none absolute left-4 top-2 bg-transparent px-1 text-xs text-muted-foreground transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-xs peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:text-xs"
+                  className={`pointer-events-none absolute left-4 z-10 text-muted-foreground transition-all duration-200 ${
+                    confirmPassword || focused.confirmPassword
+                      ? 'top-2 text-xs bg-white/10 px-1 rounded'
+                      : 'top-1/2 -translate-y-1/2 text-base bg-transparent px-0'
+                  }`}
                 >
                   Confirm Password
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((s) => !s)}
-                  className="absolute inset-y-0 right-0 my-1 mr-1 inline-flex items-center rounded-md px-3 text-sm text-muted-foreground transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 inline-flex items-center rounded-md px-2 py-1 text-sm text-muted-foreground transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
                 >
                   {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

@@ -1,14 +1,12 @@
 'use client'
 
-import React, { useState, useCallback, useMemo, type ChangeEvent, type ReactNode } from 'react'
+import React, { useState, useCallback, useMemo, type ChangeEvent } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useApp } from '@/contexts/AppContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
-import { cn } from '@/lib/utils'
-import type { HTMLAttributes } from 'react'
 import {
   User,
   Mail,
@@ -28,6 +26,24 @@ import {
   DollarSign,
   AlertCircle
 } from 'lucide-react'
+
+// Simple className utility function
+const cn = (...classes: (string | undefined | null | false)[]) => {
+  return classes.filter(Boolean).join(' ')
+}
+
+// Import types from contexts
+import type { User as AuthUser } from '@/contexts/AuthContext'
+import type { Application } from '@/contexts/AppContext'
+
+// Extended User interface for profile data
+interface ExtendedUser extends AuthUser {
+  phone?: string;
+  location?: string;
+  bio?: string;
+  experience?: string;
+  skills?: string[];
+}
 
 type LoadingProps = {
   className?: string;
@@ -71,58 +87,28 @@ type FormData = {
   availability: string;
 };
 
-interface User {
-  id?: string;
-  name?: string;
-  email?: string;
-  avatar?: string;
-  phone?: string;
-  location?: string;
-  bio?: string;
-  experience?: string;
-  skills?: string[];
-}
-
-interface Application {
-  id: string;
-  status: 'pending' | 'accepted' | 'rejected';
-  jobId: string;
-  workerId: string;
-  createdAt: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  isLoading: boolean;
-  error: Error | null;
-  logout?: () => Promise<void>;
-}
-
-interface AppContextType {
-  getApplicationsByWorker: (workerId: string) => Application[];
-  isLoading: boolean;
-  error: Error | null;
-  clearError?: () => void;
-}
-
 export const ProfilePage = React.memo((): JSX.Element => {
-  const { user, isLoading: authLoading, error: authError } = useAuth<AuthContextType>()
-  const { getApplicationsByWorker, isLoading: appLoading, error: appError } = useApp<AppContextType>()
+  const { user, loading: authLoading } = useAuth()
+  const { getApplicationsByWorker } = useApp()
+  
+  // Cast user to extended type for profile features
+  const extendedUser = user as ExtendedUser | null
+  
   const [isEditing, setIsEditing] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(authError?.message || appError?.message || null)
+  const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState<FormData>(() => ({
-    name: user?.name || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
-    location: user?.location || '',
-    bio: user?.bio || '',
-    experience: user?.experience || '',
-    skills: user?.skills || [],
+    name: extendedUser?.name || '',
+    email: extendedUser?.email || '',
+    phone: extendedUser?.phone || '',
+    location: extendedUser?.location || '',
+    bio: extendedUser?.bio || '',
+    experience: extendedUser?.experience || '',
+    skills: extendedUser?.skills || [],
     languages: [],
     availability: 'Full-time'
   }))
 
-  const isLoading = authLoading || appLoading
+  const isLoading = authLoading
 
   const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -141,23 +127,23 @@ export const ProfilePage = React.memo((): JSX.Element => {
 
   const handleCancel = useCallback(() => {
     setFormData({
-      name: user?.name || '',
-      email: user?.email || '',
-      phone: user?.phone || '',
-      location: user?.location || '',
-      bio: user?.bio || '',
-      experience: user?.experience || '',
-      skills: user?.skills || [],
+      name: extendedUser?.name || '',
+      email: extendedUser?.email || '',
+      phone: extendedUser?.phone || '',
+      location: extendedUser?.location || '',
+      bio: extendedUser?.bio || '',
+      experience: extendedUser?.experience || '',
+      skills: extendedUser?.skills || [],
       languages: [],
       availability: 'Full-time'
     })
     setIsEditing(false)
     setError(null)
-  }, [user])
+  }, [extendedUser])
 
   const applications = useMemo(() => {
-    return user?.id ? getApplicationsByWorker(user.id) : []
-  }, [user?.id, getApplicationsByWorker])
+    return extendedUser?.id ? getApplicationsByWorker(extendedUser.id) : []
+  }, [extendedUser?.id, getApplicationsByWorker])
 
   if (isLoading) {
     return <Loading />
@@ -167,7 +153,7 @@ export const ProfilePage = React.memo((): JSX.Element => {
     return <ErrorMessage message={error} />
   }
 
-  if (!user) {
+  if (!extendedUser) {
     return <NoAuth />
   }
 
@@ -188,113 +174,143 @@ export const ProfilePage = React.memo((): JSX.Element => {
                   </button>
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-white">{user.name || 'User'}</h1>
-                  <p className="text-gray-300">{user.email}</p>
+                  <h2 className="text-2xl font-bold text-white">{extendedUser.name}</h2>
+                  <p className="text-gray-300">{extendedUser.email}</p>
                   <div className="flex items-center space-x-2 mt-1">
                     <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-sm text-gray-300">4.8 Rating</span>
+                    <span className="text-yellow-400 font-medium">4.8</span>
+                    <span className="text-gray-400">(24 reviews)</span>
                   </div>
                 </div>
               </div>
               <Button
                 onClick={() => setIsEditing(!isEditing)}
-                variant="secondary"
-                className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {isEditing ? <X className="w-4 h-4 mr-2" /> : <Edit className="w-4 h-4 mr-2" />}
-                {isEditing ? 'Cancel' : 'Edit Profile'}
+                {isEditing ? (
+                  <><X className="w-4 h-4 mr-2" /> Cancel</>
+                ) : (
+                  <><Edit className="w-4 h-4 mr-2" /> Edit Profile</>
+                )}
               </Button>
             </div>
           </CardHeader>
         </Card>
 
-        {/* Profile Information */}
+        {/* Profile Details */}
         <Card className="bg-white/10 backdrop-blur-md border-white/20">
           <CardHeader>
-            <CardTitle className="text-white">Profile Information</CardTitle>
+            <CardTitle className="text-white flex items-center">
+              <User className="w-5 h-5 mr-2" />
+              Personal Information
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Name</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <User className="w-4 h-4 inline mr-2" />
+                  Full Name
+                </label>
                 {isEditing ? (
                   <Input
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="bg-white/10 border-white/20 text-white placeholder-gray-400"
+                    className="bg-white/10 border-white/20 text-white"
                   />
                 ) : (
-                  <p className="text-white">{user.name || 'Not provided'}</p>
+                  <p className="text-white">{extendedUser.name || 'Not provided'}</p>
                 )}
               </div>
+
+              {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <Mail className="w-4 h-4 inline mr-2" />
+                  Email
+                </label>
                 {isEditing ? (
                   <Input
                     name="email"
                     type="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="bg-white/10 border-white/20 text-white placeholder-gray-400"
+                    className="bg-white/10 border-white/20 text-white"
                   />
                 ) : (
-                  <p className="text-white">{user.email || 'Not provided'}</p>
+                  <p className="text-white">{extendedUser.email || 'Not provided'}</p>
                 )}
               </div>
+
+              {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Phone</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <Phone className="w-4 h-4 inline mr-2" />
+                  Phone
+                </label>
                 {isEditing ? (
                   <Input
                     name="phone"
+                    type="tel"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="bg-white/10 border-white/20 text-white placeholder-gray-400"
+                    className="bg-white/10 border-white/20 text-white"
                   />
                 ) : (
-                  <p className="text-white">{user.phone || 'Not provided'}</p>
+                  <p className="text-white">{extendedUser.phone || 'Not provided'}</p>
                 )}
               </div>
+
+              {/* Location */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Location</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <MapPin className="w-4 h-4 inline mr-2" />
+                  Location
+                </label>
                 {isEditing ? (
                   <Input
                     name="location"
                     value={formData.location}
                     onChange={handleInputChange}
-                    className="bg-white/10 border-white/20 text-white placeholder-gray-400"
+                    className="bg-white/10 border-white/20 text-white"
                   />
                 ) : (
-                  <p className="text-white">{user.location || 'Not provided'}</p>
+                  <p className="text-white">{extendedUser.location || 'Not provided'}</p>
                 )}
               </div>
             </div>
-            
+
+            {/* Bio */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Bio</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Bio
+              </label>
               {isEditing ? (
                 <textarea
                   name="bio"
                   value={formData.bio}
                   onChange={handleInputChange}
-                  rows={3}
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows={4}
+                  className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Tell us about yourself..."
                 />
               ) : (
-                <p className="text-white">{user.bio || 'No bio provided'}</p>
+                <p className="text-white">{extendedUser.bio || 'No bio provided'}</p>
               )}
             </div>
 
             {isEditing && (
-              <div className="flex space-x-2">
-                <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
+              <div className="flex space-x-4">
+                <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700 text-white">
                   <Save className="w-4 h-4 mr-2" />
                   Save Changes
                 </Button>
-                <Button onClick={handleCancel} variant="secondary">
-                  Cancel
-                </Button>
+                <Button onClick={handleCancel} variant="secondary" className="border-white/20 text-white hover:bg-white/10">
+                   <X className="w-4 h-4 mr-2" />
+                   Cancel
+                 </Button>
               </div>
             )}
           </CardContent>
@@ -303,32 +319,35 @@ export const ProfilePage = React.memo((): JSX.Element => {
         {/* Skills & Experience */}
         <Card className="bg-white/10 backdrop-blur-md border-white/20">
           <CardHeader>
-            <CardTitle className="text-white">Skills & Experience</CardTitle>
+            <CardTitle className="text-white flex items-center">
+              <Award className="w-5 h-5 mr-2" />
+              Skills & Experience
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Skills</h3>
                 <div className="flex flex-wrap gap-2">
-                  {(user.skills || []).map((skill, index) => (
+                  {(extendedUser.skills || []).map((skill: string, index: number) => (
                     <Badge key={index} className="bg-blue-600 text-white">
                       {skill}
                     </Badge>
                   ))}
-                  {(!user.skills || user.skills.length === 0) && (
+                  {(!extendedUser.skills || extendedUser.skills.length === 0) && (
                     <p className="text-gray-400">No skills added yet</p>
                   )}
                 </div>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Experience</h3>
-                <p className="text-white">{user.experience || 'No experience added yet'}</p>
+                <p className="text-white">{extendedUser.experience || 'No experience added yet'}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Applications */}
+        {/* Recent Applications */}
         <Card className="bg-white/10 backdrop-blur-md border-white/20">
           <CardHeader>
             <CardTitle className="text-white">Recent Applications</CardTitle>
@@ -340,7 +359,7 @@ export const ProfilePage = React.memo((): JSX.Element => {
                   <div key={application.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                     <div>
                       <p className="text-white font-medium">Job #{application.jobId}</p>
-                      <p className="text-gray-400 text-sm">{new Date(application.createdAt).toLocaleDateString()}</p>
+                      <p className="text-gray-400 text-sm">{new Date(application.appliedAt).toLocaleDateString()}</p>
                     </div>
                     <Badge 
                       className={`${

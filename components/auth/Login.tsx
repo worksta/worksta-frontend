@@ -19,6 +19,7 @@ export function Login({ onToggleMode }: LoginProps) {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [touched, setTouched] = useState({ email: false, password: false });
+  const [focused, setFocused] = useState({ email: false, password: false });
 
   const { login } = useAuth();
 
@@ -170,15 +171,23 @@ export function Login({ onToggleMode }: LoginProps) {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                  onFocus={() => setFocused((f) => ({ ...f, email: true }))}
+                  onBlur={() => {
+                    setFocused((f) => ({ ...f, email: false }));
+                    setTouched((t) => ({ ...t, email: true }));
+                  }}
                   aria-invalid={!!emailError}
                   aria-describedby={emailError ? `${emailId}-error` : undefined}
                   className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
-                  placeholder="Email"
+                  placeholder=""
                 />
                 <label
                   htmlFor={emailId}
-                  className="pointer-events-none absolute left-4 top-2 bg-transparent px-1 text-xs text-muted-foreground transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-xs peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:text-xs"
+                  className={`pointer-events-none absolute left-4 z-10 text-muted-foreground transition-all duration-200 ${
+                    email || focused.email
+                      ? 'top-2 text-xs bg-white/10 px-1 rounded'
+                      : 'top-1/2 -translate-y-1/2 text-base bg-transparent px-0'
+                  }`}
                 >
                   Email
                 </label>
@@ -198,22 +207,30 @@ export function Login({ onToggleMode }: LoginProps) {
                   autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                  onFocus={() => setFocused((f) => ({ ...f, password: true }))}
+                  onBlur={() => {
+                    setFocused((f) => ({ ...f, password: false }));
+                    setTouched((t) => ({ ...t, password: true }));
+                  }}
                   aria-invalid={!!passwordError}
                   aria-describedby={passwordError ? `${passwordId}-error` : undefined}
-                  className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
-                  placeholder="Password"
+                  className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 pr-16 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                  placeholder=""
                 />
                 <label
                   htmlFor={passwordId}
-                  className="pointer-events-none absolute left-4 top-2 bg-transparent px-1 text-xs text-muted-foreground transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-xs peer-[&:not(:placeholder-shown)]:top-2 peer-[&:not(:placeholder-shown)]:text-xs"
+                  className={`pointer-events-none absolute left-4 z-10 text-muted-foreground transition-all duration-200 ${
+                    password || focused.password
+                      ? 'top-2 text-xs bg-white/10 px-1 rounded'
+                      : 'top-1/2 -translate-y-1/2 text-base bg-transparent px-0'
+                  }`}
                 >
                   Password
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute inset-y-0 right-0 my-1 mr-1 inline-flex items-center rounded-md px-3 text-sm text-muted-foreground transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 inline-flex items-center rounded-md px-2 py-1 text-sm text-muted-foreground transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? "Hide" : "Show"}

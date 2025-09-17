@@ -7,17 +7,18 @@ type InputSize = 'default' | 'sm' | 'lg'
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string
   error?: string
-  variant?: 'default' | 'filled'
+  variant?: 'default' | 'filled' | 'glass'
   size?: InputSize
 }
 
 const inputVariants = cva(
-  'form-input w-full px-4 py-3 bg-bg-tertiary border border-border-color rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400',
+  'form-input w-full px-4 py-3 bg-bg-tertiary border border-border-color rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 placeholder:text-white/40 placeholder:font-medium relative overflow-hidden',
   {
     variants: {
       variant: {
         default: 'bg-transparent',
         filled: 'bg-bg-tertiary',
+        glass: 'backdrop-filter backdrop-blur-20 backdrop-saturate-180 bg-white/10 border-white/20 placeholder:text-white/60 text-white focus:bg-white/15 focus:border-white/30 focus:ring-white/20',
       },
       size: {
         sm: 'px-3 py-2 text-sm rounded-lg',
