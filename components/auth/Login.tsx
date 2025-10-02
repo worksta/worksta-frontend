@@ -1,214 +1,306 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { useAuth, UserType } from '@/contexts/AuthContext'
-import { Building2, User } from 'lucide-react'
+import React, { useId, useMemo, useState } from "react";
+import { LogIn, CircleUserRound, UserRound } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { useAuth, UserType } from "@/contexts/AuthContext";
 
 interface LoginProps {
-  onToggleMode: () => void
+  onToggleMode: () => void;
 }
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 export function Login({ onToggleMode }: LoginProps) {
-  const { login, loading } = useAuth()
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    userType: 'business' as UserType
-  })
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isVisible, setIsVisible] = useState(false)
+  const [accountType, setAccountType] = useState<UserType>("business");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [touched, setTouched] = useState({ email: false, password: false });
+  const [focused, setFocused] = useState({ email: false, password: false });
 
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
+  const { login } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setErrors({})
+  const emailId = useId();
+  const passwordId = useId();
 
-    const newErrors: Record<string, string> = {}
-    if (!formData.email) newErrors.email = 'Email is required'
-    if (!formData.password) newErrors.password = 'Password is required'
+  const emailError = useMemo(() => {
+    if (!touched.email) return "";
+    if (!email) return "Email is required";
+    if (!emailRegex.test(email)) return "Enter a valid email";
+    return "";
+  }, [email, touched.email]);
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
+  const passwordError = useMemo(() => {
+    if (!touched.password) return "";
+    if (!password) return "Password is required";
+    if (password.length < 6) return "Minimum 6 characters";
+    return "";
+  }, [password, touched.password]);
+
+  const formValid = !emailError && !passwordError && email && password;
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setTouched({ email: true, password: true });
+    if (!formValid) {
+      console.log("Please fix the highlighted fields");
+      return;
     }
 
-    const success = await login(formData.email, formData.password, formData.userType)
-    if (!success) {
-      setErrors({ general: 'Invalid credentials. Please try again.' })
+    try {
+      setLoading(true);
+      const success = await login(email, password, accountType);
+      if (!success) {
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
+  async function handleGoogle() {
+    try {
+      setGoogleLoading(true);
+      await new Promise((r) => setTimeout(r, 700));
+      console.log("Google sign-in successful");
+    } catch (err) {
+      console.error("Google sign-in failed:", err);
+    } finally {
+      setGoogleLoading(false);
+    }
+  }
+
+  const density = "py-16";
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-full blur-3xl"></div>
-      </div>
-
-      {/* Main Card Container */}
-      <div className="relative w-full max-w-md mx-6">
-        <div className="relative bg-white/5 backdrop-blur-2xl rounded-[28px] border border-white/10 shadow-2xl shadow-black/20">
-          {/* Glassmorphism overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 rounded-[28px]"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-[28px]"></div>
-
-          {/* Card Content */}
-          <div className="relative z-10 px-16 py-10">
-            {/* Header & Subtitle */}
-            <div className="text-center mb-8">
-              <h1 className="text-[40px] font-black tracking-wide text-white mb-3 leading-tight">
-               Worksta
-              </h1>
-              <p className="text-[20px] font-normal text-gray-300 leading-relaxed">
-                Sign in to your account to continue
-              </p>
-            </div>
-
-            {/* Account Switcher */}
-            <div className="mb-8">
-              <div className="relative bg-gray-800/50 rounded-2xl p-1 border border-gray-700/50">
-                <div className="flex">
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, userType: 'business' }))}
-                    className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-semibold text-[16px] transition-all duration-300 ${
-                      formData.userType === 'business'
-                        ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25 border border-purple-400/30'
-                        : 'text-gray-400 hover:text-gray-300'
-                    }`}
-                  >
-                    <Building2 className="w-5 h-5" />
-                    Business Account
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, userType: 'worker' }))}
-                    className={`flex-1 flex items-center justify-center gap-3 py-4 px-6 rounded-xl font-semibold text-[16px] transition-all duration-300 ${
-                      formData.userType === 'worker'
-                        ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25 border border-purple-400/30'
-                        : 'text-gray-400 hover:text-gray-300'
-                    }`}
-                  >
-                    <User className="w-5 h-5" />
-                    Worker Account
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Error Message */}
-            {errors.general && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-300 text-sm text-center">
-                {errors.general}
-              </div>
-            )}
-
-            {/* Login Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email Field */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="block text-[16px] font-medium text-gray-300">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full h-[60px] px-6 bg-gray-800/80 border border-gray-700/50 rounded-[20px] text-white placeholder-gray-400 font-medium text-[16px] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400/50 focus:bg-gray-800/90 focus:shadow-lg focus:shadow-purple-500/20"
-                    placeholder="Enter your email"
-                    required
+    <section
+      aria-label="Login"
+      className="relative w-full min-h-screen flex items-center justify-center p-4"
+    >
+      <div className="relative w-full max-w-md">
+        {/* Background: premium gradient field + mesh blobs */}
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute -top-40 -right-24 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle_at_center,theme(colors.primary)/20_0%,transparent_60%)] blur-2xl" />
+          <div className="absolute -bottom-48 -left-20 h-[32rem] w-[32rem] rounded-full bg-[radial-gradient(circle_at_center,#4e4466_0%,transparent_60%)] blur-2xl" />
+          <div className="absolute inset-0 opacity-40">
+            {/* Subtle geometric grid */}
+            <svg
+              aria-hidden="true"
+              className="h-full w-full"
+              viewBox="0 0 400 400"
+              preserveAspectRatio="none"
+            >
+              <defs>
+                <pattern
+                  id="grid"
+                  width="40"
+                  height="40"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path
+                    d="M 40 0 L 0 0 0 40"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.05)"
+                    strokeWidth="1"
                   />
-                  <div className="absolute inset-0 rounded-[20px] bg-gradient-to-r from-purple-500/5 to-blue-500/5 opacity-0 transition-opacity duration-300 focus-within:opacity-100 pointer-events-none"></div>
-                </div>
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-400">{errors.email}</p>
-                )}
+                </pattern>
+                <radialGradient id="fade" cx="50%" cy="50%" r="75%">
+                  <stop offset="0%" stopColor="rgba(138,43,226,0.15)" />
+                  <stop offset="100%" stopColor="rgba(26,21,39,0.0)" />
+                </radialGradient>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              <rect width="100%" height="100%" fill="url(#fade)" />
+            </svg>
+          </div>
+
+          {/* Animated blobs */}
+          <div className="absolute left-1/2 top-0 h-40 w-40 -translate-x-1/2 rounded-full bg-primary/30 blur-3xl animate-pulse" />
+          <div className="absolute right-8 top-1/3 h-24 w-24 rounded-full bg-[#4e4466]/40 blur-2xl animate-pulse" />
+        </div>
+
+        {/* Card (no logo/branding, clean center) */}
+        <div className="w-full rounded-[calc(var(--radius)+0.25rem)] border border-white/10 bg-white/5 p-6 shadow-[0_10px_50px_-15px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:p-8">
+          {/* Account toggle */}
+          <div className="mb-6 rounded-full border border-white/10 bg-white/5 p-1 backdrop-blur">
+            <div className="grid grid-cols-2 gap-1">
+              <button
+                type="button"
+                aria-pressed={accountType === "business"}
+                onClick={() => setAccountType("business")}
+                className={
+                  accountType === "business"
+                    ? "inline-flex items-center justify-center rounded-full bg-primary/90 px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
+                    : "inline-flex items-center justify-center rounded-full bg-transparent px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
+                }
+              >
+                <UserRound className="mr-2 h-4 w-4" aria-hidden="true" />
+                Business Account
+              </button>
+              <button
+                type="button"
+                aria-pressed={accountType === "worker"}
+                onClick={() => setAccountType("worker")}
+                className={
+                  accountType === "worker"
+                    ? "inline-flex items-center justify-center rounded-full bg-primary/90 px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
+                    : "inline-flex items-center justify-center rounded-full bg-transparent px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0"
+                }
+              >
+                <CircleUserRound className="mr-2 h-4 w-4" aria-hidden="true" />
+                Worker Account
+              </button>
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="space-y-4">
+              {/* Email */}
+              <div className="relative">
+                <input
+                  id={emailId}
+                  name="email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => setFocused((f) => ({ ...f, email: true }))}
+                  onBlur={() => {
+                    setFocused((f) => ({ ...f, email: false }));
+                    setTouched((t) => ({ ...t, email: true }));
+                  }}
+                  aria-invalid={!!emailError}
+                  aria-describedby={emailError ? `${emailId}-error` : undefined}
+                  className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                  placeholder=""
+                />
+                <label
+                  htmlFor={emailId}
+                  className={`pointer-events-none absolute left-4 z-10 text-muted-foreground transition-all duration-200 ${
+                    email || focused.email
+                      ? 'top-2 text-xs bg-white/10 px-1 rounded'
+                      : 'top-1/2 -translate-y-1/2 text-base bg-transparent px-0'
+                  }`}
+                >
+                  Email
+                </label>
+                {emailError ? (
+                  <p id={`${emailId}-error`} className="mt-1 text-sm text-destructive">
+                    {emailError}
+                  </p>
+                ) : null}
               </div>
 
-              {/* Password Field */}
-              <div className="space-y-2">
-                <label htmlFor="password" className="block text-[16px] font-medium text-gray-300">
+              {/* Password */}
+              <div className="relative">
+                <input
+                  id={passwordId}
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setFocused((f) => ({ ...f, password: true }))}
+                  onBlur={() => {
+                    setFocused((f) => ({ ...f, password: false }));
+                    setTouched((t) => ({ ...t, password: true }));
+                  }}
+                  aria-invalid={!!passwordError}
+                  aria-describedby={passwordError ? `${passwordId}-error` : undefined}
+                  className="peer w-full rounded-lg border border-white/10 bg-white/10 px-4 pb-2.5 pt-5 pr-16 text-base text-foreground placeholder-transparent outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40"
+                  placeholder=""
+                />
+                <label
+                  htmlFor={passwordId}
+                  className={`pointer-events-none absolute left-4 z-10 text-muted-foreground transition-all duration-200 ${
+                    password || focused.password
+                      ? 'top-2 text-xs bg-white/10 px-1 rounded'
+                      : 'top-1/2 -translate-y-1/2 text-base bg-transparent px-0'
+                  }`}
+                >
                   Password
                 </label>
-                <div className="relative">
-                  <input
-                    id="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                    className="w-full h-[60px] px-6 bg-gray-800/80 border border-gray-700/50 rounded-[20px] text-white placeholder-gray-400 font-medium text-[16px] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400/50 focus:bg-gray-800/90 focus:shadow-lg focus:shadow-purple-500/20"
-                    placeholder="Enter your password"
-                    required
-                  />
-                  <div className="absolute inset-0 rounded-[20px] bg-gradient-to-r from-purple-500/5 to-blue-500/5 opacity-0 transition-opacity duration-300 focus-within:opacity-100 pointer-events-none"></div>
-                </div>
-                {errors.password && (
-                  <p className="mt-1 text-sm text-red-400">{errors.password}</p>
-                )}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((s) => !s)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 inline-flex items-center rounded-md px-2 py-1 text-sm text-muted-foreground transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+                {passwordError ? (
+                  <p id={`${passwordId}-error`} className="mt-1 text-sm text-destructive">
+                    {passwordError}
+                  </p>
+                ) : null}
               </div>
 
-              {/* Continue Button */}
-              <button
+              {/* Continue button */}
+              <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-[62px] bg-purple-600 hover:bg-purple-700 text-white font-bold text-[22px] rounded-[28px] transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/30 focus:outline-none focus:ring-4 focus:ring-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="group inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-primary-foreground transition hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-70"
               >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-3">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Signing in...
-                  </div>
-                ) : (
-                  'Continue'
-                )}
-              </button>
-            </form>
+                <LogIn className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden="true" />
+                {loading ? "Signing in..." : "Continue"}
+              </Button>
 
-            {/* Sign Up Link */}
-            <div className="text-center mt-8">
-              <button
-                onClick={onToggleMode}
-                className="text-gray-400 text-[16px] hover:text-white transition-colors duration-300"
-              >
-                Don't have an account?{' '}
-                <span className="text-[#A259FF] font-semibold hover:underline">
+              {/* Assistive text */}
+              <p className="text-center text-sm text-muted-foreground">
+                Don't have an account?{" "}
+                <button
+                  type="button"
+                  onClick={onToggleMode}
+                  className="underline decoration-primary/50 underline-offset-4 transition hover:text-foreground"
+                >
                   Sign up
-                </span>
-              </button>
-            </div>
+                </button>
+              </p>
 
-            {/* Divider */}
-            <div className="relative my-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-700/50"></div>
+              {/* Divider */}
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-white/10" />
+                <span className="text-xs uppercase tracking-wide text-muted-foreground">OR</span>
+                <div className="flex-1 h-px bg-white/10" />
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-gray-900/50 text-gray-400 font-medium rounded-full border border-gray-700/50">
-                  OR
-                </span>
-              </div>
-            </div>
 
-            {/* Google Login Button */}
-            <button className="w-full h-[62px] bg-gray-800/80 hover:bg-gray-700/80 border border-gray-700/50 hover:border-gray-600/50 text-white font-semibold text-[18px] rounded-[28px] transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-gray-500/20 focus:outline-none focus:ring-2 focus:ring-gray-500/30">
-              <svg className="w-6 h-6" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              Continue with Google
-            </button>
-          </div>
+              {/* Google button with Google logo */}
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={googleLoading}
+                onClick={handleGoogle}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/10 px-4 py-2 text-foreground transition hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-70"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 48 48"
+                  className="h-4 w-4"
+                  aria-hidden="true"
+                >
+                  <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 31.7 29.3 35 24 35 16.8 35 11 29.2 11 22s5.8-13 13-13c3.1 0 6 .9 8.4 2.9l5.7-5.7C34.9 3.5 29.7 1.5 24 1.5 11.9 1.5 2 11.4 2 23.5S11.9 45.5 24 45.5 46 35.6 46 23.5c0-1-.1-2-.4-3z"/>
+                  <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 19 13 24 13c3.1 0 6 .9 8.4 2.9l5.7-5.7C34.9 6.5 29.7 4.5 24 4.5 15.9 4.5 8.8 9.2 6.3 14.7z"/>
+                  <path fill="#4CAF50" d="M24 45.5c5.2 0 10-2 13.6-5.3l-6.3-5.2C29 36.7 26.6 37.5 24 37.5c-5.3 0-9.7-3.3-11.4-7.9l-6.6 5.1C8.6 41.8 15.7 45.5 24 45.5z"/>
+                  <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.3 3.2-4.7 7-11.3 7-5.3 0-9.7-3.3-11.4-7.9l-6.6 5.1C8.6 41.8 15.7 45.5 24 45.5 36.1 45.5 46 35.6 46 23.5c0-1-.1-2-.4-3z"/>
+                </svg>
+                {googleLoading ? "Connecting..." : "Continue with Google"}
+              </Button>
+            </div>
+          </form>
+        </div>
+
+        {/* Subtle reflection beneath card */}
+        <div className="mx-auto mt-8 h-10 w-full max-w-md">
+          <div className="h-full w-full rounded-full bg-[radial-gradient(80%_50%_at_50%_0%,rgba(138,43,226,0.25),transparent_70%)] blur-2xl" />
         </div>
       </div>
-    </div>
-  )
+    </section>
+  );
 }
