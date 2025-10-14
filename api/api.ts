@@ -93,9 +93,10 @@ export interface AuthRegisterRequest {
   business: boolean;
 }
 
-export interface BusinessRef {
-  id: UUID;
-  name: string;
+export interface JobApplication {
+  workerID: UUID;
+  accepted: boolean;
+  coverMessage?: string | null;
 }
 
 export interface JobShift {
@@ -105,6 +106,8 @@ export interface JobShift {
   endTime: ISOTimeString;
   hourlyRate?: number;
   fixedAmount?: number;
+  available?: boolean;
+  jobApplications?: JobApplication[];
 }
 
 export interface JobShiftCreate {
@@ -117,20 +120,33 @@ export interface JobShiftCreate {
 
 export interface JobPosting {
   id: UUID;
+  businessId: UUID;
   title: string;
   description: string;
   location: string;
-  tags: string[];
+  jobRequirements?: string[];
+  tags?: string[];
   shifts: JobShift[];
-  business: BusinessRef;
 }
 
 export interface JobCreateRequest {
   title: string;
   description: string;
   location: string;
-  tags: string[];
+  jobRequirements?: string[];
+  tags?: string[];
   shifts: readonly JobShiftCreate[];
+}
+
+/** Authenticated worker's own application summary item */
+export interface WorkerApplicationItem {
+  shiftId: UUID;
+  postingId: UUID;
+  title: string;
+  date: ISODateString;
+  startTime: ISOTimeString;
+  endTime: ISOTimeString;
+  accepted: boolean;
 }
 
 export interface GetJobsParams {
@@ -191,7 +207,12 @@ function validateJobCreateRequest(payload: JobCreateRequest) {
   if (!payload.title?.trim()) throw new APIError('title is required', 400, { field: 'title' });
   if (!payload.description?.trim()) throw new APIError('description is required', 400, { field: 'description' });
   if (!payload.location?.trim()) throw new APIError('location is required', 400, { field: 'location' });
-  if (!Array.isArray(payload.tags)) throw new APIError('tags must be an array', 400, { field: 'tags' });
+  if (payload.tags !== undefined && !Array.isArray(payload.tags)) {
+    throw new APIError('tags must be an array when provided', 400, { field: 'tags' });
+  }
+  if (payload.jobRequirements !== undefined && !Array.isArray(payload.jobRequirements)) {
+    throw new APIError('jobRequirements must be an array when provided', 400, { field: 'jobRequirements' });
+  }
   if (!Array.isArray(payload.shifts) || payload.shifts.length === 0) {
     throw new APIError('at least one shift is required', 400, { field: 'shifts' });
   }
@@ -299,7 +320,7 @@ export class WorkstaAPI {
     return this.request<JobPosting[]>('/jobs/', {
       method: 'GET',
       query,
-      auth: false, // Public listing; token will be attached automatically if present
+      // Attach Authorization if a token is present (default behavior)
       signal: opts?.signal,
     });
     }
@@ -323,6 +344,26 @@ export class WorkstaAPI {
     await this.request<void>(`/jobs/${encodeURIComponent(shiftId)}/apply/`, {
       method: 'POST',
       body: { coverMessage: payload.coverMessage },
+      requireAuth: true,
+      signal: opts?.signal,
+      expectBody: false,
+    });
+  }
+
+  /** List the authenticated worker's applications (role: WORKER) */
+  async getMyApplications(opts?: { signal?: AbortSignal }): Promise<WorkerApplicationItem[]> {
+    return this.request<WorkerApplicationItem[]>('/jobs/applications/mine', {
+      method: 'GET',
+      requireAuth: true,
+      signal: opts?.signal,
+    });
+  }
+
+  /** Accept a worker's application for a shift (role: BUSINESS) */
+  async acceptApplication(shiftId: UUID, workerId: UUID, opts?: { signal?: AbortSignal }): Promise<void> {
+    const path = `/jobs/${encodeURIComponent(shiftId)}/applications/${encodeURIComponent(workerId)}/accept`;
+    await this.request<void>(path, {
+      method: 'POST',
       requireAuth: true,
       signal: opts?.signal,
       expectBody: false,

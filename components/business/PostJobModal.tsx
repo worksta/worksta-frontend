@@ -11,6 +11,14 @@ interface PostJobModalProps {
   onClose: () => void
 }
 
+type ShiftForm = {
+  date: string
+  startTime: string
+  endTime: string
+  pay: string
+  payType: 'hourly' | 'fixed'
+}
+
 export function PostJobModal({ onClose }: PostJobModalProps) {
   const { user } = useAuth()
   const { addJob } = useApp()
@@ -20,12 +28,10 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
     title: '',
     description: '',
     location: '',
-    pay: '',
-    payType: 'hourly' as 'hourly' | 'fixed',
-    date: '',
-    time: '',
-    duration: '',
-    requirements: ['']
+    requirements: [''] as string[],
+    shifts: [
+      { date: '', startTime: '', endTime: '', pay: '', payType: 'hourly' as const }
+    ] as ShiftForm[]
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const helperId = 'gig-posting-helper'
@@ -40,10 +46,14 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
     if (!formData.title) newErrors.title = 'Title is required'
     if (!formData.description) newErrors.description = 'Description is required'
     if (!formData.location) newErrors.location = 'Location is required'
-    if (!formData.pay) newErrors.pay = 'Pay is required'
-    if (!formData.date) newErrors.date = 'Date is required'
-    if (!formData.time) newErrors.time = 'Time is required'
-    if (!formData.duration) newErrors.duration = 'Duration is required'
+    if (!formData.shifts || formData.shifts.length === 0) newErrors.shifts = 'At least one shift is required'
+
+    formData.shifts.forEach((s, i) => {
+      if (!s.date) newErrors[`shift_${i}_date`] = 'Date is required'
+      if (!s.startTime) newErrors[`shift_${i}_start`] = 'Start time is required'
+      if (!s.endTime) newErrors[`shift_${i}_end`] = 'End time is required'
+      if (!s.pay) newErrors[`shift_${i}_pay`] = 'Pay is required'
+    })
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -51,22 +61,19 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
       return
     }
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
+    // Submit to context (which calls the API)
     addJob({
-      businessId: user?.id || '',
-      businessName: user?.name || '',
       title: formData.title,
       description: formData.description,
       location: formData.location,
-      pay: parseFloat(formData.pay),
-      payType: formData.payType,
-      date: formData.date,
-      time: formData.time,
-      duration: formData.duration,
-      status: 'active',
-      requirements: formData.requirements.filter(req => req.trim() !== '')
+      requirements: formData.requirements.filter(r => r.trim() !== ''),
+      shifts: formData.shifts.map(s => ({
+        date: s.date,
+        startTime: s.startTime,
+        endTime: s.endTime,
+        payType: s.payType,
+        pay: parseFloat(s.pay)
+      }))
     })
 
     setLoading(false)
@@ -91,6 +98,27 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
     setFormData(prev => ({
       ...prev,
       requirements: prev.requirements.filter((_, i) => i !== index)
+    }))
+  }
+
+  const addShift = () => {
+    setFormData(prev => ({
+      ...prev,
+      shifts: [...prev.shifts, { date: '', startTime: '', endTime: '', pay: '', payType: 'hourly' }]
+    }))
+  }
+
+  const updateShift = (index: number, patch: Partial<ShiftForm>) => {
+    setFormData(prev => ({
+      ...prev,
+      shifts: prev.shifts.map((s, i) => i === index ? { ...s, ...patch } : s)
+    }))
+  }
+
+  const removeShift = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      shifts: prev.shifts.filter((_, i) => i !== index)
     }))
   }
 
@@ -138,19 +166,16 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
                   <li><span className="text-text-primary font-medium">Job Title</span>: The name of the role you want to fill (e.g., Barista, Kitchen Helper).</li>
                   <li><span className="text-text-primary font-medium">Description & Responsibilities</span>: Outline main tasks and duties involved.</li>
                   <li><span className="text-text-primary font-medium">Location</span>: Where the job will take place (address or region).</li>
-                  <li><span className="text-text-primary font-medium">Pay Amount & Type</span>: Specify the salary and whether it's hourly, fixed, or includes tips.</li>
-                  <li><span className="text-text-primary font-medium">Date & Time</span>: When the gig starts and its expected duration or schedule type.</li>
-                  <li><span className="text-text-primary font-medium">Requirements & Skills</span>: List mandatory certifications, experience level, and special skills.</li>
-                  <li><span className="text-text-primary font-medium">Shift Details</span>: Include breaks, physical demands, equipment provided, and any special conditions.</li>
-                  <li><span className="text-text-primary font-medium">Additional Info</span>: Benefits offered, cancellation policy, contact details, and application deadline.</li>
-                  <li><span className="text-text-primary font-medium">Attachments</span>: Upload any supporting documents or flyers to provide more context.</li>
+                  <li><span className="text-text-primary font-medium">Pay Amount & Type</span>: Specify per-shift pay as hourly or fixed.</li>
+                  <li><span className="text-text-primary font-medium">Date & Time</span>: When each shift starts and its duration or end time.</li>
+                  <li><span className="text-text-primary font-medium">Requirements & Skills</span>: List certifications, experience level, and special skills.</li>
                 </ul>
                 <div className="flex gap-3 pt-2">
                   <button
                     type="button"
                     className="btn btn-secondary btn-sm"
                     onClick={() => {
-                      navigator.clipboard.writeText(`Please fill out the details below to create a clear and comprehensive gig posting that attracts the right candidates for your F&B role. Be as specific as possible to set expectations and help candidates self-assess fit:\n\nJob Title: The name of the role you want to fill (e.g., Barista, Kitchen Helper).\n\nDescription & Responsibilities: Outline main tasks and duties involved.\n\nLocation: Where the job will take place (address or region).\n\nPay Amount & Type: Specify the salary and whether it's hourly, fixed, or includes tips.\n\nDate & Time: When the gig starts and its expected duration or schedule type.\n\nRequirements & Skills: List mandatory certifications, experience level, and special skills.\n\nShift Details: Include breaks, physical demands, equipment provided, and any special conditions.\n\nAdditional Info: Benefits offered, cancellation policy, contact details, and application deadline.\n\nAttachments: Upload any supporting documents or flyers to provide more context.\n\nThis detailed information ensures your posting clearly communicates the job and helps you find the best gig workers for your F&B business.`)
+                      navigator.clipboard.writeText(`Please fill out the details below to create a clear and comprehensive gig posting that attracts the right candidates for your F&B role. Be as specific as possible to set expectations and help candidates self-assess fit:\n\nJob Title: The name of the role you want to fill (e.g., Barista, Kitchen Helper).\n\nDescription & Responsibilities: Outline main tasks and duties involved.\n\nLocation: Where the job will take place (address or region).\n\nPer-Shift Details:\n- Date:\n- Start Time:\n- Duration:\n- Pay Amount:\n- Pay Type (hourly or fixed):\n\nRequirements & Skills:\n- Certifications:\n- Experience level:\n- Special skills:`)
                     }}
                     aria-label="Copy helper text"
                   >
@@ -161,7 +186,7 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
                     className="btn btn-primary btn-sm"
                     onClick={() => setFormData(prev => ({
                       ...prev,
-                      description: prev.description?.trim() ? prev.description : `Description & Responsibilities:\n- Main tasks:\n- Duties:\n\nRequirements & Skills:\n- Certifications:\n- Experience level:\n- Special skills:\n\nShift Details:\n- Breaks:\n- Physical demands:\n- Equipment provided:\n- Special conditions:\n\nAdditional Info:\n- Benefits:\n- Cancellation policy:\n- Contact details:\n- Application deadline:`
+                      description: prev.description?.trim() ? prev.description : `Description & Responsibilities:\n- Main tasks:\n- Duties:\n\nRequirements & Skills:\n- Certifications:\n- Experience level:\n- Special skills:\n\nShifts:\n- Date:\n- Start Time:\n- Duration:\n- Pay Amount & Type:`
                     }))}
                   >
                     Use template
@@ -233,117 +258,112 @@ export function PostJobModal({ onClose }: PostJobModalProps) {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <label className="flex items-center gap-2 text-lg font-semibold text-text-primary">
-                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                Pay Amount *
-              </label>
-              <div className="relative">
-                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-text-muted text-lg font-semibold">$</div>
-                <input
-                  type="number"
-                  value={formData.pay}
-                  onChange={(e) => setFormData(prev => ({ ...prev, pay: e.target.value }))}
-                  className="w-full pl-10 pr-6 py-4 rounded-xl border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 transition-all duration-300 text-lg placeholder:text-text-muted"
-                  placeholder="25.00"
-                  min="0"
-                  step="0.01"
-                  required
-                />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-500/5 to-orange-500/5 pointer-events-none"></div>
-              </div>
-              {errors.pay && (
-                <p className="text-sm text-red-400 mt-1">{errors.pay}</p>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <label className="flex items-center gap-2 text-lg font-semibold text-text-primary">
-                <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                Pay Type *
-              </label>
-              <div className="relative">
-                <select
-                  value={formData.payType}
-                  onChange={(e) => setFormData(prev => ({ ...prev, payType: e.target.value as 'hourly' | 'fixed' }))}
-                  className="w-full px-6 py-4 rounded-xl border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all duration-300 text-lg appearance-none cursor-pointer"
-                  required
-                >
-                  <option value="hourly">💰 Per Hour</option>
-                  <option value="fixed">💵 Fixed Amount</option>
-                </select>
-                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <ChevronDown className="w-5 h-5 text-text-muted" />
-                </div>
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500/5 to-red-500/5 pointer-events-none"></div>
-              </div>
-            </div>
-
-            <div className="space-y-3">
+            {/* Shifts Section */}
+            <div className="lg:col-span-2 space-y-4">
               <label className="flex items-center gap-2 text-lg font-semibold text-text-primary">
                 <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
-                Date *
+                Shifts *
               </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                  className="w-full px-6 py-4 rounded-xl border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500/50 transition-all duration-300 text-lg"
-                  required
-                />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500/5 to-rose-500/5 pointer-events-none"></div>
-              </div>
-              {errors.date && (
-                <p className="text-sm text-red-400 mt-1">{errors.date}</p>
-              )}
-            </div>
 
-            <div className="space-y-3">
-              <label className="flex items-center gap-2 text-lg font-semibold text-text-primary">
-                <div className="w-2 h-2 bg-indigo-400 rounded-full"></div>
-                Start Time *
-              </label>
-              <div className="relative">
-                <input
-                  type="time"
-                  value={formData.time}
-                  onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-                  className="w-full px-6 py-4 rounded-xl border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 text-lg"
-                  required
-                />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500/5 to-purple-500/5 pointer-events-none"></div>
-              </div>
-              {errors.time && (
-                <p className="text-sm text-red-400 mt-1">{errors.time}</p>
+              {errors.shifts && (
+                <p className="text-sm text-red-400 mt-1">{errors.shifts}</p>
               )}
-            </div>
 
-            <div className="space-y-3">
-              <label className="flex items-center gap-2 text-lg font-semibold text-text-primary">
-                <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
-                Duration *
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={formData.duration}
-                  onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
-                  className="w-full px-6 py-4 rounded-xl border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300 text-lg placeholder:text-text-muted"
-                  placeholder="e.g., 5 hours, Full day, 2-3 days"
-                  required
-                />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/5 to-blue-500/5 pointer-events-none"></div>
-              </div>
-              {errors.duration && (
-                <p className="text-sm text-red-400 mt-1">{errors.duration}</p>
-              )}
-              <div className="text-sm text-text-muted flex items-center gap-2">
-                <span>⏱️ Tip: Be specific about expected work duration</span>
+              <div className="space-y-4">
+                {formData.shifts.map((shift, index) => (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 rounded-xl border border-border-color/40 bg-bg-secondary/30">
+                    <div className="space-y-2">
+                      <label className="text-sm text-text-secondary">Date</label>
+                      <input
+                        type="date"
+                        value={shift.date}
+                        onChange={(e) => updateShift(index, { date: e.target.value })}
+                        className="w-full px-4 py-3 rounded-lg border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-pink-500/40 focus:border-pink-500/50 transition-all"
+                        required
+                      />
+                      {errors[`shift_${index}_date`] && <p className="text-xs text-red-400">{errors[`shift_${index}_date`]}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm text-text-secondary">Start Time</label>
+                      <input
+                        type="time"
+                        value={shift.startTime}
+                        onChange={(e) => updateShift(index, { startTime: e.target.value })}
+                        className="w-full px-4 py-3 rounded-lg border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/50 transition-all"
+                        required
+                      />
+                      {errors[`shift_${index}_start`] && <p className="text-xs text-red-400">{errors[`shift_${index}_start`]}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm text-text-secondary">End Time</label>
+                      <input
+                        type="time"
+                        value={shift.endTime}
+                        onChange={(e) => updateShift(index, { endTime: e.target.value })}
+                        className="w-full px-4 py-3 rounded-lg border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500/50 transition-all"
+                        required
+                      />
+                      {errors[`shift_${index}_end`] && <p className="text-xs text-red-400">{errors[`shift_${index}_end`]}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm text-text-secondary">Pay Amount</label>
+                      <div className="relative">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">$</div>
+                        <input
+                          type="number"
+                          value={shift.pay}
+                          onChange={(e) => updateShift(index, { pay: e.target.value })}
+                          className="w-full pl-8 pr-4 py-3 rounded-lg border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500/50 transition-all"
+                          min="0"
+                          step="0.01"
+                          required
+                        />
+                      </div>
+                      {errors[`shift_${index}_pay`] && <p className="text-xs text-red-400">{errors[`shift_${index}_pay`]}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm text-text-secondary">Pay Type</label>
+                      <div className="relative">
+                        <select
+                          value={shift.payType}
+                          onChange={(e) => updateShift(index, { payType: e.target.value as ShiftForm['payType'] })}
+                          className="w-full px-4 py-3 rounded-lg border-2 border-border-color/50 bg-bg-secondary/50 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500/50 transition-all appearance-none"
+                          required
+                        >
+                          <option value="hourly">Per Hour</option>
+                          <option value="fixed">Fixed</option>
+                        </select>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <ChevronDown className="w-4 h-4 text-text-muted" />
+                        </div>
+                      </div>
+                    </div>
+                    {formData.shifts.length > 1 && (
+                      <div className="md:col-span-5 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => removeShift(index)}
+                          className="px-3 py-2 text-red-400 hover:text-red-300 hover:bg-red-400/20 rounded-lg transition-all border border-red-400/30 hover:border-red-400/50"
+                        >
+                          <X className="w-4 h-4 inline-block mr-1" />
+                          Remove shift
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addShift}
+                  className="w-full px-6 py-4 border-2 border-dashed border-pink-500/30 text-pink-400 hover:text-pink-300 hover:border-pink-500/50 hover:bg-pink-500/10 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 font-medium hover:scale-[1.02]"
+                >
+                  <div className="p-1 rounded-lg bg-pink-500/20">
+                    <span className="text-lg">+</span>
+                  </div>
+                  Add Shift
+                </button>
               </div>
             </div>
-
-            <div></div>
 
             <div className="lg:col-span-2 space-y-4">
               <label className="flex items-center gap-2 text-lg font-semibold text-text-primary">

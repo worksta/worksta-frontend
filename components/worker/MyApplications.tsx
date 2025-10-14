@@ -105,7 +105,25 @@ export function MyApplications() {
         <div className="grid gap-4">
           {filteredApplications.map((application) => {
             const job = getJobForApplication(application.jobId)
-            if (!job) return null
+
+            // Fallbacks from snapshot fields
+            const title = job?.title || application.title || 'Job'
+            const description = job?.description || ''
+            const location = job?.location || '—'
+            const date = job?.date || application.date || ''
+            const start = job ? job.time : application.startTime || ''
+            // Derive duration when job missing
+            const computeDuration = (startTime?: string, endTime?: string) => {
+              if (!startTime || !endTime) return ''
+              const [sh, sm, ss] = startTime.split(':').map(Number)
+              const [eh, em, es] = endTime.split(':').map(Number)
+              const startSec = (sh || 0) * 3600 + (sm || 0) * 60 + (ss || 0)
+              const endSec = (eh || 0) * 3600 + (em || 0) * 60 + (es || 0)
+              const diffMin = Math.max(0, Math.round((endSec - startSec) / 60))
+              const h = Math.floor(diffMin / 60), m = diffMin % 60
+              return m === 0 ? `${h} hours` : `${h}h ${m}m`
+            }
+            const duration = job?.duration || computeDuration(application.startTime, application.endTime)
 
             return (
               <Card key={application.id} className="hover-lift group glass-effect border-border-color/30">
@@ -115,7 +133,7 @@ export function MyApplications() {
                       <div className="flex items-center gap-3 mb-2">
                         <div className="flex items-center gap-2">
                           <Building2 className="w-4 h-4 text-text-muted" />
-                          <span className="text-sm text-text-muted">{job.businessName}</span>
+                          <span className="text-sm text-text-muted">{job?.businessName || ''}</span>
                         </div>
                         <Badge 
                           variant={
@@ -126,29 +144,35 @@ export function MyApplications() {
                           {application.status}
                         </Badge>
                       </div>
-                      
-                      <h3 className="text-xl font-semibold text-text-primary mb-2">{job.title}</h3>
-                      <p className="text-secondary mb-4 line-clamp-2">{job.description}</p>
-                      
+
+                      <h3 className="text-xl font-semibold text-text-primary mb-2">{title}</h3>
+                      {description && <p className="text-secondary mb-4 line-clamp-2">{description}</p>}
+
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm mb-4">
                         <div className="flex items-center gap-2 text-text-secondary">
                           <MapPin className="w-4 h-4" />
-                          <span>{job.location}</span>
+                          <span>{location}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-text-secondary">
-                          <DollarSign className="w-4 h-4" />
-                          <span className="font-semibold text-accent-primary">
-                            ${job.pay}{job.payType === 'hourly' ? '/hr' : ''}
-                          </span>
-                        </div>
+                        {job && (
+                          <div className="flex items-center gap-2 text-text-secondary">
+                            <DollarSign className="w-4 h-4" />
+                            <span className="font-semibold text-accent-primary">
+                              ${job.pay}{job.payType === 'hourly' ? '/hr' : ''}
+                            </span>
+                          </div>
+                        )}
                         <div className="flex items-center gap-2 text-text-secondary">
                           <Calendar className="w-4 h-4" />
-                          <span>{formatDate(job.date)} at {formatTime(job.time)}</span>
+                          <span>
+                            {date ? `${formatDate(date)} at ${start ? formatTime(start) : ''}` : ''}
+                          </span>
                         </div>
-                        <div className="flex items-center gap-2 text-text-secondary">
-                          <Clock className="w-4 h-4" />
-                          <span>{job.duration}</span>
-                        </div>
+                        {duration && (
+                          <div className="flex items-center gap-2 text-text-secondary">
+                            <Clock className="w-4 h-4" />
+                            <span>{duration}</span>
+                          </div>
+                        )}
                       </div>
                       
                       {application.message && (

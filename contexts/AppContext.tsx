@@ -1,6 +1,9 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { workstaApi } from '@/api/api'
+import type { JobPosting, WorkerApplicationItem } from '@/api/api'
+import { useAuth } from '@/contexts/AuthContext'
 
 export interface Job {
   id: string
@@ -21,21 +24,40 @@ export interface Job {
 
 export interface Application {
   id: string
-  jobId: string
+  jobId: string                      // shiftId
   workerId: string
   workerName: string
   workerAvatar: string
   status: 'pending' | 'accepted' | 'rejected'
   appliedAt: string
   message?: string
+
+  // Snapshot fields to render even if the related job isn't in the list
+  postingId?: string                 // postingId from backend
+  title?: string
+  date?: string
+  startTime?: string                 // "HH:MM:SS"
+  endTime?: string                   // "HH:MM:SS"
 }
 
 interface AppContextType {
   jobs: Job[]
   applications: Application[]
-  addJob: (job: Omit<Job, 'id' | 'createdAt'>) => void
-  applyToJob: (jobId: string, workerId: string, workerName: string, workerAvatar: string, message?: string) => void
-  updateApplicationStatus: (applicationId: string, status: 'accepted' | 'rejected') => void
+  addJob: (job: {
+    title: string
+    description: string
+    location: string
+    requirements: string[]
+    shifts: Array<{
+      date: string
+      startTime: string
+      endTime: string
+      payType: 'hourly' | 'fixed'
+      pay: number
+    }>
+  }) => void
+  applyToJob: (jobId: string, workerId: string, workerName: string, workerAvatar: string, message?: string) => Promise<void>
+  updateApplicationStatus: (applicationId: string, status: 'accepted' | 'rejected') => Promise<void>
   getJobsByBusiness: (businessId: string) => Job[]
   getApplicationsByWorker: (workerId: string) => Application[]
   getApplicationsByJob: (jobId: string) => Application[]
@@ -53,177 +75,292 @@ interface Notification {
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
-const demoJobs: Job[] = [
-  {
-    id: '1',
-    businessId: '1',
-    businessName: 'Sakura Restaurant',
-    title: 'Urgent: Evening Server Needed',
-    description: 'We need an experienced server for tonight\'s dinner service. Must have experience with Japanese cuisine and be able to handle busy periods.',
-    location: 'Orchard Road, Singapore',
-    pay: 18,
-    payType: 'hourly',
-    date: '2024-01-20',
-    time: '17:00',
-    duration: '5 hours',
-    status: 'active',
-    createdAt: '2024-01-19T10:00:00Z',
-    requirements: ['Experience with Japanese cuisine', 'Professional appearance', 'Good English communication']
-  },
-  {
-    id: '2',
-    businessId: '2',
-    businessName: 'Noodle House',
-    title: 'Kitchen Assistant - Weekend',
-    description: 'Looking for a reliable kitchen assistant to help with food prep and cleaning during weekend rush.',
-    location: 'Chinatown, Singapore',
-    pay: 250,
-    payType: 'fixed',
-    date: '2024-01-21',
-    time: '10:00',
-    duration: '8 hours',
-    status: 'active',
-    createdAt: '2024-01-19T08:30:00Z',
-    requirements: ['Basic kitchen experience', 'Ability to work fast', 'Team player']
-  },
-  {
-    id: '3',
-    businessId: '1',
-    businessName: 'Sakura Restaurant',
-    title: 'Bartender for Private Event',
-    description: 'Need an experienced bartender for a private corporate event. Must know classic cocktails and sake service.',
-    location: 'Marina Bay, Singapore',
-    pay: 25,
-    payType: 'hourly',
-    date: '2024-01-22',
-    time: '18:00',
-    duration: '6 hours',
-    status: 'active',
-    createdAt: '2024-01-19T15:20:00Z',
-    requirements: ['Certified bartender', 'Corporate event experience', 'Knowledge of sake']
-  },
-  {
-    id: '4',
-    businessId: '2',
-    businessName: 'Noodle House',
-    title: 'Delivery Driver',
-    description: 'Need a reliable driver with own vehicle for food delivery during lunch hours.',
-    location: 'Central Singapore',
-    pay: 15,
-    payType: 'hourly',
-    date: '2024-01-20',
-    time: '11:00',
-    duration: '4 hours',
-    status: 'closed',
-    createdAt: '2024-01-18T12:00:00Z',
-    requirements: ['Own motorcycle/car', 'Valid driving license', 'GPS navigation skills']
+// Cookie reader to hydrate token (client-only)
+const TOKEN_COOKIE = 'worksta_jwt'
+function getCookie(name: string): string | null {
+  if (typeof document === 'undefined') return null
+  const cookies = document.cookie ? document.cookie.split('; ') : []
+  for (const c of cookies) {
+    const [k, v] = c.split('=')
+    if (k === name) return decodeURIComponent(v || '')
   }
-]
+  return null
+}
 
-const demoApplications: Application[] = [
-  {
-    id: '1',
-    jobId: '1',
-    workerId: '3',
-    workerName: 'Alex Chen',
-    workerAvatar: '👨‍🍳',
-    status: 'pending',
-    appliedAt: '2024-01-19T12:00:00Z',
-    message: 'I have 3 years of experience working at Japanese restaurants and am familiar with traditional service protocols.'
-  },
-  {
-    id: '2',
-    jobId: '2',
-    workerId: '4',
-    workerName: 'Maria Santos',
-    workerAvatar: '👩‍🍳',
-    status: 'accepted',
-    appliedAt: '2024-01-19T09:15:00Z',
-    message: 'I have worked in busy kitchens and am very efficient with food prep. Available all weekend.'
-  },
-  {
-    id: '3',
-    jobId: '3',
-    workerId: '3',
-    workerName: 'Alex Chen',
-    workerAvatar: '👨‍🍳',
-    status: 'rejected',
-    appliedAt: '2024-01-19T16:30:00Z',
-    message: 'I am a certified bartender with experience in high-end venues and knowledge of Japanese sake.'
+// JWT helpers (base64url decode) to derive business UUID from token
+function decodeJWTPayload(token: string): any | null {
+  try {
+    const parts = token.split('.')
+    if (parts.length !== 3) return null
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/')
+    const json = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    )
+    return JSON.parse(json)
+  } catch {
+    return null
   }
-]
+}
+
+function deriveBusinessIdFromToken(): string | null {
+  const token = getCookie(TOKEN_COOKIE)
+  if (!token) return null
+  const payload = decodeJWTPayload(token)
+  if (!payload || typeof payload !== 'object') return null
+  // Prefer common id claims
+  const id = (payload.sub || payload.id || payload.uid) as string | undefined
+  const role = (payload.role || payload.type || payload.scope) as string | undefined
+  if (!id) return null
+  if (typeof role === 'string' && role.toLowerCase().includes('business')) {
+    return id
+  }
+  // If role unknown, still return id (backend enforces access)
+  return id
+}
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [jobs, setJobs] = useState<Job[]>([])
   const [applications, setApplications] = useState<Application[]>([])
   const [notifications, setNotifications] = useState<Notification[]>([])
+  const { user } = useAuth()
+
+  // Helpers to map API data into local Job shape
+  const toHM = (t: string) => t.slice(0, 5)
+
+  function computeDuration(startTime: string, endTime: string): string {
+    const [sh, sm, ss] = startTime.split(':').map(Number)
+    const [eh, em, es] = endTime.split(':').map(Number)
+    const start = (sh || 0) * 3600 + (sm || 0) * 60 + (ss || 0)
+    const end = (eh || 0) * 3600 + (em || 0) * 60 + (es || 0)
+    const diffMin = Math.max(0, Math.round((end - start) / 60))
+    const hours = Math.floor(diffMin / 60)
+    const minutes = diffMin % 60
+    if (minutes === 0) return `${hours} hours`
+    return `${hours}h ${minutes}m`
+  }
+
+  function mapPostingsToJobs(postings: JobPosting[]): Job[] {
+    const result: Job[] = []
+    postings.forEach((p) => {
+      const reqs = (p.jobRequirements && p.jobRequirements.length > 0 ? p.jobRequirements : p.tags) || []
+      p.shifts.forEach((s) => {
+        const payType: 'hourly' | 'fixed' = s.hourlyRate != null ? 'hourly' : 'fixed'
+        const pay = s.hourlyRate != null ? s.hourlyRate : (s.fixedAmount ?? 0)
+        result.push({
+          id: s.id,
+          businessId: p.businessId,
+          businessName: '',
+          title: p.title,
+          description: p.description,
+          location: p.location,
+          pay,
+          payType,
+          date: s.date,
+          time: toHM(s.startTime),
+          duration: computeDuration(s.startTime, s.endTime),
+          status: 'active',
+          createdAt: new Date().toISOString(),
+          requirements: reqs
+        })
+      })
+    })
+    return result
+  }
+
+  // Build applications list for business from jobApplications on each shift
+  function mapBusinessApplications(postings: JobPosting[]): Application[] {
+    const apps: Application[] = []
+    postings.forEach((p) => {
+      p.shifts.forEach((s) => {
+        if (s.jobApplications && s.jobApplications.length > 0) {
+          s.jobApplications.forEach((ja) => {
+            apps.push({
+              id: `${s.id}:${ja.workerID}`,
+              jobId: s.id,
+              workerId: ja.workerID,
+              workerName: ja.workerID, // no profile API available; show workerID
+              workerAvatar: '',
+              status: ja.accepted ? 'accepted' : 'pending',
+              appliedAt: new Date().toISOString(),
+              message: ja.coverMessage || undefined,
+              postingId: p.id,
+              title: p.title,
+              date: s.date,
+              startTime: s.startTime,
+              endTime: s.endTime,
+            })
+          })
+        }
+      })
+    })
+    return apps
+  }
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedJobs = localStorage.getItem('worksta_jobs')
-      const storedApplications = localStorage.getItem('worksta_applications')
+    let cancelled = false
 
-      if (storedJobs) {
-        setJobs(JSON.parse(storedJobs))
-      } else {
-        setJobs(demoJobs)
-        localStorage.setItem('worksta_jobs', JSON.stringify(demoJobs))
-      }
+    // Hydrate API token from cookie so authorized calls work after reload
+    const token = getCookie(TOKEN_COOKIE)
+    if (token) {
+      workstaApi.setToken(token)
+    }
 
-      if (storedApplications) {
-        setApplications(JSON.parse(storedApplications))
-      } else {
-        setApplications(demoApplications)
-        localStorage.setItem('worksta_applications', JSON.stringify(demoApplications))
+    const fetchJobs = async () => {
+      try {
+        const postings = await workstaApi.getJobs()
+        if (!cancelled) {
+          const mapped = mapPostingsToJobs(postings)
+          setJobs(mapped)
+        }
+      } catch (err) {
+        console.error('Failed to fetch jobs from API.', err)
+        if (!cancelled) {
+          setJobs([])
+        }
       }
-    } else {
-      // Set default data for server-side rendering
-      setJobs(demoJobs)
-      setApplications(demoApplications)
+    }
+
+    // Initial fetch
+    fetchJobs()
+
+    // Polling: refresh periodically to reflect jobs created by others
+    const interval = setInterval(fetchJobs, 20000)
+
+    // Refetch on tab focus/visibility
+    const onFocus = () => fetchJobs()
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') fetchJobs()
+    }
+    window.addEventListener('focus', onFocus)
+    document.addEventListener('visibilitychange', onVisibility)
+
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+      window.removeEventListener('focus', onFocus)
+      document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [])
 
-  const addJob = (job: Omit<Job, 'id' | 'createdAt'>) => {
-    const newJob: Job = {
-      ...job,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString()
-    }
-    const updatedJobs = [newJob, ...jobs]
-    setJobs(updatedJobs)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('worksta_jobs', JSON.stringify(updatedJobs))
+    const addJob = (job: {
+      title: string
+      description: string
+      location: string
+      requirements: string[]
+      shifts: Array<{
+        date: string
+        startTime: string
+        endTime: string
+        payType: 'hourly' | 'fixed'
+        pay: number
+      }>
+    }) => {
+      const toHHMMSS = (t: string) => `${t.length === 5 ? t : '00:00'}:00`
+
+      const apiShifts = job.shifts.map(s => {
+        const startTime = toHHMMSS(s.startTime)
+        const endTime = toHHMMSS(s.endTime)
+        return {
+          date: s.date,
+          startTime,
+          endTime,
+          ...(s.payType === 'hourly' ? { hourlyRate: s.pay } : { fixedAmount: s.pay })
+        }
+      })
+
+      const payload = {
+        title: job.title,
+        description: job.description,
+        location: job.location,
+        jobRequirements: job.requirements || [],
+        tags: job.requirements || [],
+        shifts: apiShifts
+    } as const
+
+    workstaApi
+      .createJob(payload)
+      .then(async () => {
+        try {
+          // Immediate refresh to include jobs created by anyone
+          const fresh = await workstaApi.getJobs()
+          const mapped = mapPostingsToJobs(fresh)
+          setJobs(mapped)
+          addNotification('Job created successfully!', 'success')
+        } catch (e) {
+          addNotification('Job created, but failed to refresh list. Please reload.', 'info')
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to create job via API:', err)
+        addNotification('Failed to create job. Please try again.', 'error')
+      })
+  }
+
+  const applyToJob = async (jobId: string, workerId: string, workerName: string, workerAvatar: string, message?: string) => {
+    try {
+      await workstaApi.applyToShift(jobId, { coverMessage: (message || '').trim() })
+      const newApplication: Application = {
+        id: Date.now().toString(),
+        jobId,
+        workerId,
+        workerName,
+        workerAvatar,
+        status: 'pending',
+        appliedAt: new Date().toISOString(),
+        message
+      }
+      setApplications(prev => [...prev, newApplication])
+      addNotification('Application submitted successfully!', 'success')
+    } catch (e) {
+      console.error('Failed to apply to shift:', e)
+      addNotification('Failed to submit application.', 'error')
     }
   }
 
-  const applyToJob = (jobId: string, workerId: string, workerName: string, workerAvatar: string, message?: string) => {
-    const newApplication: Application = {
-      id: Date.now().toString(),
-      jobId,
-      workerId,
-      workerName,
-      workerAvatar,
-      status: 'pending',
-      appliedAt: new Date().toISOString(),
-      message
-    }
-    const updatedApplications = [...applications, newApplication]
-    setApplications(updatedApplications)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('worksta_applications', JSON.stringify(updatedApplications))
-    }
-    addNotification('Application submitted successfully!', 'success')
-  }
+  const updateApplicationStatus = async (applicationId: string, status: 'accepted' | 'rejected') => {
+    const app = applications.find(a => a.id === applicationId)
+    if (!app) return
 
-  const updateApplicationStatus = (applicationId: string, status: 'accepted' | 'rejected') => {
-    const updatedApplications = applications.map(app =>
-      app.id === applicationId ? { ...app, status } : app
-    )
-    setApplications(updatedApplications)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('worksta_applications', JSON.stringify(updatedApplications))
+    if (status === 'accepted') {
+      try {
+        await workstaApi.acceptApplication(app.jobId, app.workerId)
+        // Optimistically update local state
+        setApplications(prev =>
+          prev.map(a => (a.id === applicationId ? { ...a, status: 'accepted' } : a))
+        )
+        addNotification('Application accepted.', 'success')
+
+        // Refresh jobs to reflect shift closed
+        try {
+          const fresh = await workstaApi.getJobs()
+          setJobs(mapPostingsToJobs(fresh))
+        } catch {
+          // ignore
+        }
+
+        // Immediate refresh of business applications using business UUID from JWT
+        const businessUUID = deriveBusinessIdFromToken()
+        if (businessUUID) {
+          try {
+            const postings = await workstaApi.getJobs({ bid: businessUUID })
+            setApplications(mapBusinessApplications(postings))
+          } catch {
+            // ignore; polling/focus refetch will catch up
+          }
+        }
+      } catch {
+        addNotification('Failed to accept application.', 'error')
+      }
+    } else {
+      // No reject API specified; local-only update
+      setApplications(prev =>
+        prev.map(a => (a.id === applicationId ? { ...a, status: 'rejected' } : a))
+      )
+      addNotification('Application rejected.', 'info')
     }
-    addNotification(`Application ${status}!`, status === 'accepted' ? 'success' : 'info')
   }
 
   const getJobsByBusiness = (businessId: string) => {
@@ -255,6 +392,90 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const removeNotification = (id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id))
   }
+
+  // Keep business applications in sync if a business is authenticated
+  useEffect(() => {
+    if (!user || user.type !== 'business') return
+
+    let cancelled = false
+    const businessUUID = deriveBusinessIdFromToken()
+    if (!businessUUID) return
+
+    const fetchBusinessApps = async () => {
+      try {
+        const postings = await workstaApi.getJobs({ bid: businessUUID })
+        if (!cancelled) {
+          const apps = mapBusinessApplications(postings)
+          setApplications(apps)
+        }
+      } catch {
+        if (!cancelled) setApplications([])
+      }
+    }
+
+    fetchBusinessApps()
+    const interval = setInterval(fetchBusinessApps, 20000)
+    const onFocus = () => fetchBusinessApps()
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') fetchBusinessApps()
+    }
+    window.addEventListener('focus', onFocus)
+    document.addEventListener('visibilitychange', onVisibility)
+
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+      window.removeEventListener('focus', onFocus)
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
+  }, [user])
+
+  // Keep worker applications in sync if a worker is authenticated
+  useEffect(() => {
+    if (!user || user.type !== 'worker') return
+
+    let cancelled = false
+
+    const fetchMyApps = async () => {
+      try {
+        const items = await workstaApi.getMyApplications()
+        if (!cancelled) {
+          setApplications(items.map((it) => ({
+            id: `${it.shiftId}:${user.id}`,
+            jobId: it.shiftId,
+            workerId: user.id,
+            workerName: user.name,
+            workerAvatar: user.avatar || '',
+            status: it.accepted ? 'accepted' : 'pending',
+            appliedAt: new Date().toISOString(),
+              postingId: it.postingId,
+              title: it.title,
+              date: it.date,
+              startTime: it.startTime,
+              endTime: it.endTime,
+          })))
+        }
+      } catch {
+        if (!cancelled) setApplications([])
+      }
+    }
+
+    fetchMyApps()
+    const interval = setInterval(fetchMyApps, 20000)
+    const onFocus = () => fetchMyApps()
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') fetchMyApps()
+    }
+    window.addEventListener('focus', onFocus)
+    document.addEventListener('visibilitychange', onVisibility)
+
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+      window.removeEventListener('focus', onFocus)
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
+  }, [user])
 
   return (
     <AppContext.Provider value={{

@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import clsx from 'clsx'
 
-type TabType = 'dashboard' | 'jobs' | 'applications' | 'profile' | 'search'
+export type TabType = 'dashboard' | 'jobs' | 'applications' | 'profile' | 'search'
 
 interface SidebarProps {
   activeTab?: TabType

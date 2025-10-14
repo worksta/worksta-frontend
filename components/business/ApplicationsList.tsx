@@ -14,11 +14,11 @@ export function ApplicationsList() {
   const { jobs, applications, updateApplicationStatus } = useApp()
   const [filter, setFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all')
 
-  // Get all applications for jobs posted by this business
+  // Jobs posted by this business (for additional details if loaded)
   const businessJobs = jobs.filter(job => job.businessId === user?.id)
-  const businessApplications = applications.filter(app => 
-    businessJobs.some(job => job.id === app.jobId)
-  )
+
+  // Applications are sourced from backend for business in AppContext; use directly
+  const businessApplications = applications
 
   const filteredApplications = businessApplications.filter(app => 
     filter === 'all' || app.status === filter
@@ -40,6 +40,26 @@ export function ApplicationsList() {
     })
   }
 
+  const formatTime = (timeString: string) => {
+    if (!timeString) return ''
+    return new Date(`2024-01-01T${timeString}`).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    })
+  }
+
+  const computeDuration = (startTime?: string, endTime?: string) => {
+    if (!startTime || !endTime) return ''
+    const [sh, sm, ss] = startTime.split(':').map(Number)
+    const [eh, em, es] = endTime.split(':').map(Number)
+    const startSec = (sh || 0) * 3600 + (sm || 0) * 60 + (ss || 0)
+    const endSec = (eh || 0) * 3600 + (em || 0) * 60 + (es || 0)
+    const diffMin = Math.max(0, Math.round((endSec - startSec) / 60))
+    const h = Math.floor(diffMin / 60), m = diffMin % 60
+    return m === 0 ? `${h} hours` : `${h}h ${m}m`
+  }
+
   const statusCounts = {
     all: businessApplications.length,
     pending: businessApplications.filter(app => app.status === 'pending').length,
@@ -54,7 +74,7 @@ export function ApplicationsList() {
           <h1 className="heading-lg">Applications</h1>
           <p className="text-secondary">Manage applications for your job postings</p>
         </div>
-        
+
         <div className="flex gap-2">
           {Object.entries(statusCounts).map(([status, count]) => (
             <button
@@ -90,7 +110,18 @@ export function ApplicationsList() {
         <div className="grid gap-6">
           {filteredApplications.map((application) => {
             const job = getJobForApplication(application.jobId)
-            if (!job) return null
+
+            const title = job?.title || application.title || 'Job'
+            const location = job?.location || '—'
+            const date = job?.date || application.date || ''
+            const timeLabel = job?.time || (application.startTime ? formatTime(application.startTime) : '')
+            const duration = job?.duration || computeDuration(application.startTime, application.endTime)
+            const payBlock = job ? (
+              <div className="flex items-center gap-3 text-text-secondary">
+                <DollarSign className="w-4 h-4" />
+                <span>${job.pay}{job.payType === 'hourly' ? '/hr' : ''}</span>
+              </div>
+            ) : null
 
             return (
               <Card key={application.id} className="hover-lift group glass-effect border-border-color/30 h-fit">
@@ -98,7 +129,7 @@ export function ApplicationsList() {
                   <div className="flex items-start justify-between">
                     <div className="flex gap-5 flex-1">
                       <div className="text-3xl">{application.workerAvatar}</div>
-                      
+
                       <div className="flex-1">
                         <div className="flex items-center gap-4 mb-3">
                           <h3 className="text-lg font-semibold">{application.workerName}</h3>
@@ -111,11 +142,11 @@ export function ApplicationsList() {
                             {application.status}
                           </Badge>
                         </div>
-                        
+
                         <p className="text-secondary text-sm mb-4">
-                          Applied for: <strong>{job.title}</strong>
+                          Applied for: <strong>{title}</strong>
                         </p>
-                        
+
                         {application.message && (
                           <div className="bg-bg-tertiary p-4 rounded-lg mb-5">
                             <p className="text-sm text-text-secondary">
@@ -123,16 +154,13 @@ export function ApplicationsList() {
                             </p>
                           </div>
                         )}
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-sm">
                           <div className="flex items-center gap-3 text-text-secondary">
                             <MapPin className="w-4 h-4" />
-                            <span>{job.location}</span>
+                            <span>{location}</span>
                           </div>
-                          <div className="flex items-center gap-3 text-text-secondary">
-                            <DollarSign className="w-4 h-4" />
-                            <span>${job.pay}{job.payType === 'hourly' ? '/hr' : ''}</span>
-                          </div>
+                          {payBlock}
                           <div className="flex items-center gap-3 text-text-secondary">
                             <Calendar className="w-4 h-4" />
                             <span>Applied {formatDate(application.appliedAt)}</span>
@@ -140,7 +168,7 @@ export function ApplicationsList() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {application.status === 'pending' && (
                       <div className="flex gap-3 ml-6">
                         <Button 
@@ -160,18 +188,18 @@ export function ApplicationsList() {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="mt-5 pt-5 border-t border-border-color">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
                       <div>
                         <span className="text-text-muted">Job Date: </span>
                         <span className="text-text-secondary">
-                          {new Date(job.date).toLocaleDateString()} at {job.time}
+                          {date ? `${new Date(date).toLocaleDateString()} at ${timeLabel}` : '—'}
                         </span>
                       </div>
                       <div>
                         <span className="text-text-muted">Duration: </span>
-                        <span className="text-text-secondary">{job.duration}</span>
+                        <span className="text-text-secondary">{duration || '—'}</span>
                       </div>
                     </div>
                   </div>

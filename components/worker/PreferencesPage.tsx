@@ -41,6 +41,7 @@ export function PreferencesPage() {
     setPreferences(prev => ({
       ...prev,
       [category]: {
+        // @ts-ignore FIXME
         ...prev[category as keyof typeof prev],
         [key]: value
       }

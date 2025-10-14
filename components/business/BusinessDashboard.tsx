@@ -14,6 +14,13 @@ import { PostJobModal } from './PostJobModal'
 import { AnalyticsPage } from './AnalyticsPage'
 import { PreferencesPage } from '../worker/PreferencesPage'
 import { HelpSupportPage } from '../worker/HelpSupportPage'
+import { TabType as SidebarTabType } from '@/components/layout/Sidebar'
+
+declare global {
+  interface WindowEventMap {
+    openPostJobModal: CustomEvent<void>
+  }
+}
 
 type TabType = 'dashboard' | 'jobs' | 'applications' | 'analytics' | 'profile' | 'preferences' | 'help'
 
@@ -57,7 +64,8 @@ export function BusinessDashboard() {
       <AnimatedBackground />
 
       <div className="relative z-10 flex w-full">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        {/* FIXME nasty type casting here, but it works for now. there are many TabTypes everywhere, but only SidebarTabTypes are valid for Sidebar. */}/}
+        <Sidebar activeTab={activeTab as unknown as SidebarTabType} onTabChange={setActiveTab as unknown as (tab: SidebarTabType) => void} />
         <div className="flex-1 flex flex-col">
           <Header onNavigate={(tab) => setActiveTab(tab as TabType)} />
 

@@ -6,19 +6,15 @@ import { AuthPage } from '@/components/auth/AuthPage'
 import { BusinessDashboard } from '@/components/business/BusinessDashboard'
 import { WorkerDashboard } from '@/components/worker/WorkerDashboard'
 import { ToastContainer } from '@/components/ui/Toast'
-import { useEffect } from 'react'
 
 export default function Home() {
-  const { user, logout } = useAuth()
+  const { user, loading } = useAuth()
   const { notifications, removeNotification } = useApp()
-  
-  // Always show login page when the app loads
-  useEffect(() => {
-    // Clear any existing user session when the app loads
-    if (typeof window !== 'undefined') {
-      logout()
-    }
-  }, [])
+
+  // Wait for auth hydration; prevents flashing login while validating token cookie
+  if (loading) {
+    return null
+  }
 
   if (!user) {
     return <AuthPage />
